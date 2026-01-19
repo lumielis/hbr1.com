@@ -1,0 +1,124 @@
+﻿<html><head>
+<link rel="shortcut icon" href="icons/favicon.ico" >
+<link href="skin/pack.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+<script language="javascript" type="text/javascript">
+ $(document).ready(function() {
+setInterval("window.location.reload(true)", 1800000);
+ });   
+</script>
+</head>
+<body onload="onload();goforit()">
+<div id="mainView">
+
+<span>
+<li class="reloadButton button" onclick="window.location.reload()"></li>
+<li class="configButton button" onclick="toggleSide()"></li>
+<li class="closeButton button" onclick="window.close()"></li></span>
+<font face="Arial Black" size="" color="">
+<span class="font">&nbsp;<b>HBR1</b></span></font>
+<div id="jquery_jplayer"></div>
+
+<div class="jp-single-player">
+	<div class="jp-interface">
+		<ul class="jp-controls">
+			<li><a href="#" id="jplayer_play" class="jp-play" tabindex="1">play</a></li>
+			<li><a href="#" id="jplayer_pause" class="jp-pause" tabindex="1">pause</a></li>
+                                          <li><a href="#" id="jplayer_stop" class="jp-stop" tabindex="1">stop</a></li>
+			<li><a href="#" id="jplayer_volume_min" class="jp-volume-min" tabindex="1">min volume</a></li>
+			<li><a href="#" id="jplayer_volume_max" class="jp-volume-max" tabindex="1">max volume</a></li>
+		</ul>
+		<div id="jplayer_volume_bar" class="jp-volume-bar">
+			<div id="jplayer_volume_bar_value" class="jp-volume-bar-value"></div>
+		</div><b><span class="font2"><font face="Arial Black" size="" color="">
+		<div id="jplayer_play_time" class="jp-play-time"></div></font></span></b>
+	</div>
+	
+</div><br><br><font face="Arial Black">
+<div align="right"><span class="font3"><b>I.D.M. Tranceponder</b></span><span class="font4">&nbsp;<span id="javascript_countdown_time"></span></span><span class="font4"><span id="jplayer_buffering" 
+class="jplayer-buffering"></span></span></div>
+<script type="text/javascript">
+	var javascript_countdown = function () {
+		var time_left = 0; //number of seconds for countdown
+		var keep_counting = 1;
+		var no_time_left_message = '';
+		function countdown() {
+			if(time_left < 2) {
+				keep_counting = 0;
+			}
+			time_left = time_left - 1;
+		}
+		function add_leading_zero( n ) {
+			if(n.toString().length < 2) {
+				return '0' + n;
+			} else {
+				return n;
+			}
+		}
+		function format_output() {
+			var hours, minutes, seconds;
+			seconds = time_left % 60;
+			minutes = Math.floor(time_left / 60) % 60;
+			hours = Math.floor(time_left / 3600);	
+			seconds = add_leading_zero( seconds );
+			minutes = add_leading_zero( minutes );
+			hours = add_leading_zero( hours );
+			return minutes + ':' + seconds;
+		}
+		function show_time_left() {
+			document.getElementById('javascript_countdown_time').innerHTML = format_output();//time_left;
+		}
+		function no_time_left() {
+			document.getElementById('javascript_countdown_time').innerHTML = no_time_left_message;
+		}
+		return {
+			count: function () {
+				countdown();
+				show_time_left();
+			},
+			timer: function () {
+				javascript_countdown.count();		
+				if(keep_counting) {
+					setTimeout("javascript_countdown.timer();", 1000);
+				} else {
+					no_time_left();
+				}
+			},
+			init: function (n) {
+				time_left = n;
+				javascript_countdown.timer();
+			}
+		};
+	}();
+	javascript_countdown.init(1800);
+</script>
+</div>
+
+<div id="configView">
+
+<span>
+<li class="refreshButton button" onclick="change_image()"></li>
+<li class="reloadButton button" onclick="window.location.reload()"></li>
+<li class="configButton button" onclick="toggleSide()"></li>
+<li class="closeButton button" onclick="window.close()"></li></span>
+<br>
+<center>
+<div id="iFrame1" style="z-index:0">
+<IFRAME id="myiframe"  frameborder="no" overflow="hidden" width="340" height="240" scrolling="no" src="js/vis1.html">
+</IFRAME>
+</div>	
+</center>
+
+<font face="Arial Black">
+<div style="border: 0px solid black; white-space: nowrap; float:left;">
+<span class="font4">&nbsp;&copy;2011 Andy Scott</span>
+<span style="display: inline-block; margin-right: 155px;"></span>
+<span class="font4"><span id="clock"></span></span>
+</div></font>
+
+</div>
+</div>
+</body>
+</html>

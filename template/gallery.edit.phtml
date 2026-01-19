@@ -1,0 +1,319 @@
+<html>
+<head>
+<title>Photo Gallery</title>
+
+<script language="JavaScript">
+<!--
+
+PageID = 'gallery';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+//-->
+</script>
+
+<style type="text/css"> <!--
+body { scrollbar-base-color:#170040; scrollbar-track-color:#000000; scrollbar-face-color:#100030; scrollbar-highlight-color:#000050; scrollbar-3d-light-color:#000000; scrollbar-dark-shadow-color:#000000; scrollbar-shadow-color:#002060; scrollbar-arrow-color:#002060 }
+.txt { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 10px }
+.small { font-size: 10px; font-family: Arial, mono }
+.head { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 11px }
+.big { font-size: 12px }
+.blue { BORDER-LEFT: #000088 1px solid; BORDER-TOP: #000088 1px solid; BORDER-RIGHT: #0000CC 1px solid; BORDER-BOTTOM: #0000CC 1px solid; FONT: 8pt verdana, mono; MARGIN-LEFT: 2px; COLOR: #00FFFF; BACKGROUND-COLOR: #000060; scrollbar-base-color:#000000; scrollbar-track-color:#000066; scrollbar-face-color:#000088; scrollbar-highlight-color:#0000CC; scrollbar-3d-light-color:#0000CC; scrollbar-dark-shadow-color:#000088; scrollbar-shadow-color:#000088; scrollbar-arrow-color:#6666FF; }
+.blue2 { BORDER-LEFT: #0000CC 1px solid; BORDER-TOP: #0000CC 1px solid; BORDER-RIGHT: #000088 1px solid; BORDER-BOTTOM: #000088 1px solid; FONT: 8pt verdana, mono; COLOR: #FFFFFF; BACKGROUND-COLOR: #000060 }
+a:link {color: #5588FF; text-decoration: none;}
+a:visited {color: #5588FF; text-decoration: none;}
+a:hover {color: #AAAA22; text-decoration: none;}
+--> </style>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellSpacing=0 cellPadding=0 border=0 width="583">
+  <tr> 
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td class=head align=middle><font color=#9999ff><b>GALLERY MANAGER</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align=center background="/images/body_bg.jpg" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="javascript:history.back();"><font color="#77AA00">GO_BACK</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align="center" background="/images/body_bg.jpg" height="1%">
+      <br>
+      <IF_PAGE_ERROR><font color=#FF0000 class="txt"><PAGE_MESSAGE></font><br>&nbsp;</IF>
+      <IF_PAGE_MESSAGE><font color=#009900 class="txt"><PAGE_MESSAGE></font><br>&nbsp;</IF>
+      <table border="0" cellspacing="1" cellpadding="2">
+      <FORM_GALLERY step="1" enctype="multipart/form-data" method="post">
+      <HIDDEN_GALLERY_ID>
+      <input type="hidden" name="cat_id" value="<FORMV_CAT_ID>">
+      <input type="hidden" name="gallery_from" value="<FORMV_GALLERY_FROM>">
+      <input type="hidden" name="gallery_count" value="<FORMV_GALLERY_COUNT>">
+      <input type="hidden" name="photo_from" value="<FORMV_PHOTO_FROM>">
+      <input type="hidden" name="photo_count" value="<FORMV_PHOTO_COUNT>">
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">General Info</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_title><font color="#ff0000"></IF>Title</b></td>
+          <td><INPUT_GALLERY_TITLE class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_info><font color="#ff0000"></IF>Info</b></td>
+          <td><AREA_GALLERY_INFO class="blue" cols="50" rows="6"></td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Current Photos</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center">
+            <table border="0" cellspacing="0" cellpadding="0">
+            <GALLERY_PICTURES order="id" ordir="asc">
+              <IF_TIMES=2>
+              </tr>
+              <tr>
+                <td colspan="2"><img src="/images/spacer.gif" width="1" height="2"></td>
+              </tr>
+              <tr>
+                <td bgcolor="#004499" colspan="2"><img src="/images/spacer.gif" width="1" height="1"></td>
+              </tr>
+              <tr>
+                <td colspan="2"><img src="/images/spacer.gif" width="1" height="2"></td>
+              </tr>
+              <tr>
+              </IF>
+                <td>
+
+                  <table border="0" cellspacing="0" cellpadding="0">
+                    <input type="hidden" name="gallery_picture_id_<COUNTER>" value="<GALLERY_PICTURE_ID>">
+                    <input type="hidden" name="gallery_picture_file_<COUNTER>" value="<GALLERY_PICTURE_FILE>">
+                    <tr>
+                      <IF_TIMES=2><td><img src="/images/spacer.gif" width="1" height="1"></td><ELSE><td><img src="/images/spacer.gif" width="8" height="1"></td></IF>
+                      <td><img src="<URL_GALLERY_TUMBNAIL>/<GALLERY_PICTURE_FILE>" width="110" height="82" border="0"></td>
+                      <td><img src="/images/spacer.gif" width="1" height="1"></td>
+                      <td valign="top">
+                        <table border="0" cellspacing="2" cellpadding="0">
+                          <tr>
+                            <td class="txt"><input type="checkbox" name="gallery_picture_remove_<COUNTER>" value="1"><font color="#999999">Remove It!</font></td>
+                          </tr>
+                          <tr>
+                            <td class="txt" align="right"><font color="#999999">Title</font></td>
+                          </tr>
+                          <tr>
+                            <td align="right"><input type="text" name="gallery_picture_title_<COUNTER>" value="<GALLERY_PICTURE_TITLE>" class="blue" size="14" maxlength="100"></td>
+                          </tr>
+                          <tr>
+                            <td class="txt" align="right"><font color="#999999">Copyright</font></td>
+                          </tr>
+                          <tr>
+                            <td align="right"><input type="text" name="gallery_picture_copyright_<COUNTER>" value="<GALLERY_PICTURE_COPYRIGHT>" class="blue" size="14" maxlength="255"></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+            
+                </td>
+            </GALLERY_PICTURES>
+            <IF_TIMES=2>
+            <ELSE>
+                <td>&nbsp;</td>
+            </IF>
+              </tr>
+              <tr>
+                <td colspan="2"><img src="/images/spacer.gif" width="1" height="2"></td>
+              </tr>
+              <tr>
+                <td bgcolor="#004499" colspan="2"><img src="/images/spacer.gif" width="1" height="1"></td>
+              </tr>
+              <tr>
+                <td colspan="2"><img src="/images/spacer.gif" width="1" height="2"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">New Photos</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2"><font color="#999999">Please note, the aspected ratio is 4 to 3</font></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_photo_file_1><font color="#ff0000"></IF>Photo</b></td>
+          <td><FILE_GALLERY_PHOTO_FILE_1 class="blue" size="30"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_title_1><font color="#ff0000"></IF>Title</b></td>
+          <td><INPUT_GALLERY_PHOTO_TITLE_1 class="blue" size="50" maxlength="100"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_copyright_1><font color="#ff0000"></IF>Copyright</b></td>
+          <td><INPUT_GALLERY_PHOTO_COPYRIGHT_1 class="blue" size="50" maxlength="100"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_photo_file_2><font color="#ff0000"></IF>Photo</b></td>
+          <td><FILE_GALLERY_PHOTO_FILE_2 class="blue" size="30"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_title_2><font color="#ff0000"></IF>Title</b></td>
+          <td><INPUT_GALLERY_PHOTO_TITLE_2 class="blue" size="50" maxlength="100"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_copyright_2><font color="#ff0000"></IF>Copyright</b></td>
+          <td><INPUT_GALLERY_PHOTO_COPYRIGHT_2 class="blue" size="50" maxlength="100"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_photo_file_3><font color="#ff0000"></IF>Photo</b></td>
+          <td><FILE_GALLERY_PHOTO_FILE_3 class="blue" size="30"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_title_3><font color="#ff0000"></IF>Title</b></td>
+          <td><INPUT_GALLERY_PHOTO_TITLE_3 class="blue" size="50" maxlength="100"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=gallery_copyright_3><font color="#ff0000"></IF>Copyright</b></td>
+          <td><INPUT_GALLERY_PHOTO_COPYRIGHT_3 class="blue" size="50" maxlength="100"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Administration</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="4"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=gallery_submitter><font color="#ff0000"></IF>Your Name</b></td>
+          <td class="txt"><font color="#999999"><IF_GALLERY_ID>Your name:<ELSE>This is also your login to edit this gallery</IF></font></td>
+        </tr>
+        <tr>
+          <td><INPUT_GALLERY_SUBMITTER class="blue" maxlength="32" size="20"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=gallery_password><font color="#ff0000"></IF>Password</b></td>
+          <td class="txt"><font color="#999999"><IF_GALLERY_ID>Your Password:<ELSE>The password to edit the gallery.</IF></font></td>
+        </tr>
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><PASSWORD_GALLERY_PASSWORD class="blue" maxlength="32" size="20"></td>
+                <IF_GALLERY_ID>
+                <ELSE>
+                <td class="txt">&nbsp;&nbsp;Re:&nbsp;</td>
+                <td><PASSWORD_GALLERY_PASSWORD2 class="blue" maxlength="32" size="20"></td>
+                </IF>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td><SUBMIT value="Save" class="blue2"></td>
+        </tr>
+      </form>
+      </table>
+      <br>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align=center background="/images/body_bg.jpg" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="javascript:history.back();"><font color="#77AA00">GO_BACK</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align="left" width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align="middle" background="/images/title_bg.gif" height="1%"> 
+      <table cellSpacing="0" cellPadding="0" border="0">
+        <tr> 
+          <td class="txt" align="middle"><font color="#9999FF"><i>© 2001-2002 by <a href="http://www.hbr1.com/" target="_top">HBR1</a></i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align="left" width="1%" background="/images/footer_left.gif"><img src="/images/spacer.gif" width="64" height="8"></td>
+    <td align="middle" background="/images/footer_bg.gif"><img src="/images/spacer.gif" width="1" height="1"></td>
+    <td align="right" width="1%" background="/images/footer_right.gif"><img src="/images/spacer.gif" width="64" height="8"></td>
+  </tr>
+</table>
+
+</body>
+</html>
+  

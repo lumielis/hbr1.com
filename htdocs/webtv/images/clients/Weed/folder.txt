@@ -1,0 +1,12 @@
+Text=5|115|credits_Weed
+Font=Arial,Impact,mono|0|9
+Anchor=http://alt.venus.co.uk/weed
+Precache=0
+Refresh=10000
+Image=S_BlueNewtonBlackHole.jpg
+Image=S_colddawn.jpg
+Image=S_PhoenixGalacticAmmoniteWeed.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0

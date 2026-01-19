@@ -1,0 +1,168 @@
+<html>
+<head>
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta name="description" content="Music on Futurenet">
+<style type="text/css">
+<!--
+body {
+  scrollbar-base-color: #170040;
+  scrollbar-track-color: #000000;
+  scrollbar-face-color: #100030;
+  scrollbar-highlight-color: #000050;
+  scrollbar-3d-light-color: #000000;
+  scrollbar-dark-shadow-color: #000000;
+  scrollbar-shadow-color: #002060;
+  scrollbar-arrow-color: #002060;
+  margin-bottom: 0px;
+}
+body, td, th {
+  font-family: Verdana, Arial, Helvetica, sans-serif, Mono;
+  font-size: 10px;
+}
+.small {
+  font-size: 10px;
+  font-family: Arial, mono;
+}
+.head {
+  font-size: 11px
+}
+.big {
+  font-size: 12px
+}
+.blue {
+  BORDER-LEFT: #000088 1px solid;
+  BORDER-TOP: #000088 1px solid;
+  BORDER-RIGHT: #0000CC 1px solid;
+  BORDER-BOTTOM: #0000CC 1px solid;
+  FONT: 8pt verdana, mono;
+  MARGIN-LEFT: 2px;
+  COLOR: #00FFFF;
+  BACKGROUND-COLOR: #000060;
+  scrollbar-base-color: #000000;
+  scrollbar-track-color: #000066;
+  scrollbar-face-color: #000088;
+  scrollbar-highlight-color: #0000CC;
+  scrollbar-3d-light-color: #0000CC;
+  scrollbar-dark-shadow-color: #000088;
+  scrollbar-shadow-color: #000088;
+  scrollbar-arrow-color: #6666FF;
+}
+.blue2 {
+  BORDER-LEFT: #0000CC 1px solid;
+  BORDER-TOP: #0000CC 1px solid;
+  BORDER-RIGHT: #000088 1px solid;
+  BORDER-BOTTOM: #000088 1px solid;
+  FONT: 8pt verdana, mono;
+  COLOR: #FFFFFF;
+  BACKGROUND-COLOR: #000060;
+}
+a {
+  text-decoration: none;
+}
+a:link {
+  color: #5588FF;
+}
+a:visited {
+  color: #5588FF;
+}
+a:hover {
+  color: #FF0055;
+}
+-->
+</style>
+<title>HBR1 - #[PRINT $Station->{'Title'}]# - Java Player powered by JOrbis</title>
+</head>
+<body bgcolor="#110044" text="#fffaf0" link="#5588FF" alink="#FF0055"
+	vlink="#5588FF" leftMargin=3 topMargin=3 marginheight="3" marginwidth="3">
+<script language="JavaScript" src="/cgi-htm/jscript/color.js"></script>
+
+<script language="JavaScript">
+<!--
+
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function playerCallback( id, arg ) {
+	if( id == "gain" ) {
+		expires = new Date( new Date().getTime() + 31536000000 );
+		document.cookie = "JOrbisGain=" + arg + "; Expires=" + expires.toGMTString();
+		//alert( document.cookie );
+	}
+	else if( id == "title" ) {
+		//document.title = arg + " - (#[PRINT $Station->{'Title'}]# - Music on Futurenet)";
+		document.title = arg + " (HBR1 - Music on Futurenet)";
+	}
+	else if( id == "start" ) {
+		document.title = "Starting stream on #[PRINT $Station->{'Title'}]#";
+	}
+	else if( id == "stop" ) {
+		document.title = "HBR1 - #[PRINT $Station->{'Title'}]# - Java Player powered by JOrbis";
+	}
+}
+
+//-->
+</script>
+
+<table border="0" cellspacing="2" cellpadding="0">
+<tr>
+	<td class="head" style="padding-left: 14px;">HBR1 -
+		<script language="JavaScript">
+		<!--
+		document.write( TextLight( '#[PRINT $Station->{'Title'}]#', '33AA00', 'DDFF99' ) );
+		//-->
+		</script>
+		<noscript>
+		<font color="#DDFF99">#[PRINT $Station->{'Title'}]#</font>
+		</noscript>
+		<font color="#999999" class="small">
+		- Java Player powered by <a href="http://www.jcraft.com/jorbis" target="_blank">JOrbis</a></font>
+	</td>
+</tr>
+<tr>
+	<td>
+<applet
+	code="JOrbisPlayer.class"
+	codebase="../java/jorbis"
+	name="Player" MAYSCRIPT
+	width="420"
+	Height="85"
+>
+	<param name="playlist" value="#[PRINT $Station->{'JOrbisPL'}]#" />
+	<param name="gain" value="#[PRINT $Cookie{'JOrbisGain'} || '0.0']#" />
+	<param name="data" value="../java/data/" />
+</applet>
+	</td>
+</tr>
+</table>
+
+</body>
+</html>

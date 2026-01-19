@@ -1,0 +1,40 @@
+<html>
+<head>
+
+<title>HBR1.com - Photo Gallery</title>
+
+<script language="JavaScript">
+<!--
+
+function initPage() {
+  if( parent && parent.frames && parent.frames['bottom'] ) {
+    parent.frames['bottom'].document.activePage = 'gallery';
+    if( parent.frames['bottom'].updatePage )
+      parent.frames['bottom'].updatePage();
+  }
+}
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( ! top.location.hostname.match( /www\.hbr1\.com/i ) ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://www.hbr1.com?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+//-->
+</script>
+
+</head>
+
+<frameset rows="100%,*" frameborder="0" border="0" framespacing="0" onload="initPage()">
+  <frame name="gallery" src="../run/main.xp?action=gallery" noresize scrolling="auto" marginwidth="0" marginheight="0">
+  <frame src="" noresize scrolling="no" marginwidth="0" marginheight="0">
+</frameset>
+
+</html>

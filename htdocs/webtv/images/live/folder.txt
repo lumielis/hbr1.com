@@ -1,0 +1,6 @@
+Refresh=1000
+Precache=0
+Enabled=0
+Repeat=-1
+Shuffle=0
+Image=live.jpg

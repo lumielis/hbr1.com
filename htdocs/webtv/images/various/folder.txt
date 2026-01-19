@@ -1,0 +1,6 @@
+Refresh=10000
+Precache=0
+Enabled=0
+Repeat=0
+Shuffle=1
+Image=freiburgfront.jpg

@@ -1,0 +1,6 @@
+Enabled=1
+Folder=clients
+Folder=nature
+Folder=advert
+Folder=live
+Folder=anim1

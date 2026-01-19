@@ -1,0 +1,15 @@
+Text=5|115|Yumade
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.dtbmusic.net/site/index.php
+Refresh=10000
+Precache=0
+Image=Djpa_231101.jpg
+Image=Yumade_cabaret_front.jpg
+Image=Pa2.jpg
+Image=yumadestudio.jpg
+Image=Yumade_cabaret_close.jpg
+Image=Yumadecabaret_2.jpg
+Shuffle=0
+Enabled=0
+Repeat=0
+Color=0

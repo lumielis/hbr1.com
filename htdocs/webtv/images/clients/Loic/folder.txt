@@ -1,0 +1,10 @@
+Text=5|115|Loic
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.dtbmusic.net/site/index.php
+Precache=0
+Refresh=10000
+Image=loic.jpg
+Enabled=0
+Shuffle=0
+Repeat=0
+Color=0

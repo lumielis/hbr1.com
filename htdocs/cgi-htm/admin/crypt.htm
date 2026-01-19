@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>Crypt</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<FORM_CRYPT method="post" step="1">
+<table border="1">
+	<tr>
+		<td class="txt">Key</td>
+		<td class="txt"><INPUT_CRYPT_KEY class="txt" size="50"></td>
+	</tr>
+	<tr>
+		<td class="txt">Input</td>
+		<td class="txt"><INPUT_CRYPT_INPUT class="txt" size="50"></td>
+	</tr>
+	<tr>
+		<td class="txt">Output</td>
+		<td class="txt"><AREA_CRYPT_OUTPUT class="txt" cols="70" rows="7"></td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="txt">Email-Name</td>
+		<td class="txt"><INPUT_CRYPT_MAILTO_NAME class="txt" size="50"></td>
+	</tr>
+	<tr>
+		<td class="txt">Email-Address</td>
+		<td class="txt"><INPUT_CRYPT_MAILTO_MAIL class="txt" size="50"></td>
+	</tr>
+	<tr>
+		<td class="txt">Email-Out</td>
+		<td class="txt"><AREA_CRYPT_MAILTO_OUTPUT class="txt" cols="70" rows="7"></td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="txt">Authinfo-Password</td>
+		<td class="txt"><INPUT_CRYPT_AUTHINFO_PASSWORD class="txt" size="50"></td>
+	</tr>
+	<tr>
+		<td class="txt">Authinfo-Output</td>
+		<td class="txt"><INPUT_CRYPT_AUTHINFO_OUTPUT class="txt" size="50"></td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="txt">&nbsp;</td>
+		<td class="txt"><SUBMIT value="Encrypt" class="txt"></td>
+	</tr>
+</table>		
+
+</form>
+
+</body>
+
+</html>

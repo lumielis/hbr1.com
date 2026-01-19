@@ -1,0 +1,296 @@
+<html>
+<head>
+<title>TV Ticker</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+function writeColorTab( destination ) {
+  var c_def = new Array( 'FF0000', 'FFFF00', '00FF00', '00FFFF', '0000FF', 'FF00FF', 'FF0000' );
+  var c_size = 10;
+  var c1 = new Color();
+  var c2 = new Color();
+  var c3 = new Color();
+  document.write( '<table border="0" cellspacing="1" cellpadding="0" bgcolor="#000000">' );
+  for( k = 1; k <= c_size; k ++ ) {
+    document.write( '<tr />' );
+    for( i = 1; i < c_def.length; i ++ ) {
+      c1.FromString( c_def[ i - 1 ] );
+      c1.R = parseInt( c1.R / c_size * k );
+      c1.G = parseInt( c1.G / c_size * k );
+      c1.B = parseInt( c1.B / c_size * k );
+      c2.FromString( c_def[ i ] );
+      c2.R = parseInt( c2.R / c_size * k );
+      c2.G = parseInt( c2.G / c_size * k );
+      c2.B = parseInt( c2.B / c_size * k );
+      for( j = 0; j < c_size; j ++ ) {
+        c3.R = parseInt( c1.R + ( c2.R - c1.R ) / c_size * j );
+        c3.G = parseInt( c1.G + ( c2.G - c1.G ) / c_size * j );
+        c3.B = parseInt( c1.B + ( c2.B - c1.B ) / c_size * j );
+        ch = c3.AsString();
+        document.write( '<td bgcolor="#' + ch + '"><a href="javascript:setColor(' + destination + ',&quot;' + ch + '&quot;)"><img src="<URL_IMAGES>/spacer.gif" width="6" height="4" border="0"></a></td>' );
+      }
+    }
+  }
+  for( k = 0; k < c_size; k ++ ) {
+    document.write( '<tr />' );
+    for( i = 1; i < c_def.length; i ++ ) {
+      c1.FromString( c_def[ i - 1 ] );
+      c1.R = parseInt( c1.R + ( 255 - c1.R ) / c_size * k );
+      c1.G = parseInt( c1.G + ( 255 - c1.G ) / c_size * k );
+      c1.B = parseInt( c1.B + ( 255 - c1.B ) / c_size * k );
+      c2.FromString( c_def[ i ] );
+      c2.R = parseInt( c2.R + ( 255 - c2.R ) / c_size * k );
+      c2.G = parseInt( c2.G + ( 255 - c2.G ) / c_size * k );
+      c2.B = parseInt( c2.B + ( 255 - c2.B ) / c_size * k );
+      for( j = 0; j < c_size; j ++ ) {
+        c3.R = parseInt( c1.R + ( c2.R - c1.R ) / c_size * j );
+        c3.G = parseInt( c1.G + ( c2.G - c1.G ) / c_size * j );
+        c3.B = parseInt( c1.B + ( c2.B - c1.B ) / c_size * j );
+        ch = c3.AsString();
+        document.write( '<td bgcolor="#' + ch + '"><a href="javascript:setColor(' + destination + ',&quot;' + ch + '&quot;)"><img src="<URL_IMAGES>/spacer.gif" width="6" height="4" border="0"></a></td>' );
+      }
+    }
+  }
+  document.write( '</table>' );
+}
+
+function setColor( element, color ) {
+  if( element )
+    element.value = color;
+}
+
+//-->
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<FORM_TICKER_EDIT step="1" method="post" enctype="multipart/form-data" name="ticker">
+<HIDDEN_TICKER_ID>
+<HIDDEN_TICKER_IMAGE>
+<HIDDEN_TICKER_FLASH_MOVIE>
+<table border="1" width="100%">
+  <tr>
+    <td class="txt" bgcolor="#3366EE" colspan="2"><font color="#FFFFFF"><b>TICKER INFO</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt">Title</td>
+    <td class="txt">
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><INPUT_TICKER_TITLE class="txt" size="78"></td>
+        </tr>
+      </table>
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><IF_ERROR=ticker_title_color><font color="#FF0000"></IF>Color</td>
+          <td><INPUT_TICKER_TITLE_COLOR class="txt" size="8" maxlength="6"></td>
+          <td class="txt"><IF_ERROR=ticker_title_font_family><font color="#FF0000"></IF>Family</td>
+          <td><SELECT_TICKER_TITLE_FONT_FAMILY class="txt"></td>
+          <td class="txt"><IF_ERROR=ticker_title_font_size><font color="#FF0000"></IF>Size</td>
+          <td><SELECT_TICKER_TITLE_FONT_SIZE class="txt"></td>
+        </tr>
+      </table>
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><CHECK_TICKER_SHOW_TITLE> Show Title</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="txt">Content</td>
+    <td class="txt">
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><AREA_TICKER_CONTENT cols="77" rows="10" class="txt"></td>
+        </tr>
+      </table>
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><IF_ERROR=ticker_content_color><font color="#FF0000"></IF>Color</td>
+          <td><INPUT_TICKER_CONTENT_COLOR class="txt" size="8" maxlength="6"></td>
+          <td class="txt"><IF_ERROR=ticker_content_font_family><font color="#FF0000"></IF>Family</td>
+          <td><SELECT_TICKER_CONTENT_FONT_FAMILY class="txt"></td>
+          <td class="txt"><IF_ERROR=ticker_content_font_size><font color="#FF0000"></IF>Size</td>
+          <td><SELECT_TICKER_CONTENT_FONT_SIZE class="txt"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="txt">Padding</td>
+    <td class="txt">
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><IF_ERROR=ticker_border_horizontal><font color="#FF0000"></IF>Horizontal</td>
+          <td><INPUT_TICKER_BORDER_HORIZONTAL class="txt" size="4" maxlength="2"></td>
+          <td class="txt">&nbsp;</td>
+          <td class="txt"><IF_ERROR=ticker_border_vertical><font color="#FF0000"></IF>Vertical</td>
+          <td><INPUT_TICKER_BORDER_VERTICAL class="txt" size="4" maxlength="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="txt">Background</td>
+    <td class="txt">
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><INPUT_TICKER_BG_COLOR class="txt" size="8" maxlength="6"></td>
+                <td class="txt">&nbsp;</td>
+                <td class="txt"><IF_ERROR=ticker_bg_color><font color="#FF0000"></IF>BgColor</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><CHECK_TICKER_SHOW_IMAGE>Show Image</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <IF_TICKER_IMAGE>
+        <tr>
+          <td class="txt">Image</td>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="<URL_WEBTV>/ticker/images/<TICKER_IMAGE>" width="160" height="120"></td>
+                <td class="txt">&nbsp;</td>
+                <td class="txt"><CHECK_TICKER_IMAGE_REMOVE> Remove</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <ELSE>
+        <tr>
+          <td class="txt">Image</td>
+          <td><img src="<URL_WEBTV>/ticker/images/bg.jpg" width="160" height="120"></td>
+        </tr>
+        </IF>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td class="txt"><IF_ERROR=ticker_image_upload><font color="#FF0000"></IF>Upload an image:</td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td><FILE_TICKER_IMAGE_UPLOAD class="txt" size="40"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="txt">Objects</td>
+    <td class="txt">
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt">Flash</td>
+      	<IF_TICKER_FLASH_MOVIE>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+									<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+									 codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+									 WIDTH="160" HEIGHT="120" id="flash_movie" ALIGN="">
+									 <PARAM NAME=movie VALUE="<URL_WEBTV>/ticker/flash/<TICKER_FLASH_MOVIE>"> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE=#<TICKER_BG_COLOR>> <EMBED src="<URL_WEBTV>/ticker/flash/<TICKER_FLASH_MOVIE>" quality=high bgcolor=#<TICKER_BG_COLOR>  WIDTH="160" HEIGHT="120" NAME="flash_movie" ALIGN=""
+									 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+									</OBJECT>
+                </td>
+                <td class="txt">&nbsp;</td>
+                <td class="txt"><CHECK_TICKER_REMOVE_FLASHMOVIE> Remove</td>
+              </tr>
+            </table>
+          </td>
+        <ELSE>
+          <td><img src="<URL_WEBTV>/ticker/images/flash_logo.gif"></td>
+      	</IF>
+      	</tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td class="txt"><IF_ERROR=ticker_upload_flashmovie><font color="#FF0000"></IF>Upload a Flash Movie:</td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td><FILE_TICKER_UPLOAD_FLASHMOVIE class="txt" size="40"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="txt">Options</td>
+    <td class="txt">
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><IF_ERROR=ticker_delay><font color="#FF0000"></IF>Type of Ticker</td>
+          <td><SELECT_TICKER_OBJECT_TYPE class="txt"></td>
+        </tr>
+      </table>
+      <table border="0" cellspacing="1" cellpadding="2">
+        <tr>
+          <td class="txt"><IF_ERROR=ticker_delay><font color="#FF0000"></IF>Display</td>
+          <td><INPUT_TICKER_DELAY size="6" maxlength="3" class="txt"></td>
+          <td class="txt">seconds&nbsp;&nbsp;</td>
+          <td class="txt"><IF_ERROR=ticker_status><font color="#FF0000"></IF>Status</td>
+          <td><SELECT_TICKER_STATUS class="txt"></td>
+          <td class="txt">&nbsp;</td>
+          <td class="txt"><IF_ERROR=ticker_anchor_color><font color="#FF0000"></IF>Link-Color</td>
+          <td><INPUT_TICKER_ANCHOR_COLOR class="txt" size="8" maxlength="6"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<br>
+<SUBMIT name="submit" value="Save" class="txt">
+<SUBMIT name="submit_return" value="Save and Return" class="txt">
+</form>
+
+      <hr>
+      <form name="frmColor" action="">
+      <script language="JavaScript">
+      writeColorTab( 'document.frmColor.txtColor' );
+      </script>
+      <input type="text" name="txtColor" size="8" maxlength="6">
+      </form>
+
+    </td>
+    <td valign="top" width="10">&nbsp;</td>
+    <td valign="top">
+
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td colspan="3" class="txt" height="20" valign="top">Preview:</td>
+        </tr>
+        <tr>
+          <td colspan="3"><img src="<URL_IMAGES>/ltop.jpg"></td>
+        </tr>
+        <tr>
+          <td><img src="<URL_WEBTV>/ticker/images/index_left.jpg"></td>
+          <td align="center"><iframe width="160" height="120" frameborder="0" border="0" scrolling="no" src="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=preview&ticker_id=<TICKER_ID>"></iframe></td>
+          <td><img src="<URL_WEBTV>/ticker/images/index_right.jpg"></td>
+        </tr>
+        <tr>
+          <td colspan="3"><img src="<URL_IMAGES>/lbot.gif"></td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+
+</body>
+
+</html>

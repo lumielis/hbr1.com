@@ -1,0 +1,298 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="/style/client.css?1">
+<script language="JavaScript">
+<!--
+
+if( !top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+PageID = 'station';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+//-->
+</script>
+
+<title>HBR1 Stations</title>
+
+<style type="text/css">
+<!--
+.genre {
+	font-size: 10px;
+	font-family: Arial, Adobe Helvetica;
+}
+.station {
+	font-size: 11px;
+	font-family: Verdana, Arial, Sans Serif, Adobe Helvetica;
+}
+.sl1 {
+	font-weight: normal;
+}
+#current {
+	font-weight: bold;
+	color: #FFFF88;
+}
+-->
+</style>
+
+<script language="JavaScript" src="/cgi-htm/jscript/crypt.js"></script>
+<script language="JavaScript" src="/cgi-htm/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+email_key = "DFSE3-KX427-A2RRG-BL5XM-CB336";
+
+function decryptEmail( crypt, query ) {
+	location.href = 'mailto:' + xor_decrypt_hex( crypt, email_key ) + query;
+	return false;
+}
+
+function openJorbis( url ) {
+	url = location.protocol + "//" + location.host + url;
+	window.open( url, "jorbis", "width=430,height=110" );
+	//alert( url );
+	return false;
+}
+
+function openMuses( url )
+{
+	url = location.protocol + "//" + location.host + url;
+	window.open( url, "muses", "width=310,height=170" );
+	//alert( url );
+	return false;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td class="head" align="center"><font color="#9999ff"><b>STATION SPACE</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+
+    <br>
+		<!--
+<table cellSpacing="0" cellPadding="0" border="0" align="center">
+  <tr>
+    <td align="center"><img src="/images/spacer.gif" width="1" height="3"></td>
+  </tr>
+	<tr>
+		<td align="center">
+			<table border="0" cellspacing="0" cellpadding="0">
+			<form action="http://www.supportunicef.org/site/pp.aspx?c=9fLEJSOALpE&b=258155" method="get" target="unicef">
+				<tr>
+					<td>
+<input type="image" src="/images/station/donate.jpg?2" border="0" name="submit" alt="Make a Donation" vspace="5">
+					</td>
+				</tr>
+			</form>
+			</table>
+		</td>
+	</tr>
+	<tr>
+    <td align="center"><font color="#7799CC">Help to keep up the free Life in World</font></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="/images/spacer.gif" width="1" height="10"></td>
+  </tr>
+</table>
+-->
+
+<? if( $StationsOFF ) : ?>
+<? require '../template/stations.off.tpl' ?>
+<? else : ?>
+<? foreach( $Stations as $station ) : ?>
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="/images/spacer.gif" width="1" height="10"></td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
+            <tr>
+              <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17"></td>
+              <td class="station">
+                <b>
+                <script language="JavaScript">
+                <!--
+                document.write( '&nbsp;' + TextLight( "<?= $station['Title'] ?>", "33AA00", "DDFF99" ) );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#DDFF99">&nbsp;<?= $station['Title'] ?></font>
+                </noscript>
+                </b>
+              </td>
+              <td class="genre" align="right">
+                <script language="JavaScript">
+                <!--
+                document.write( TextFade( "<?= $station['Genre'] ?>", "FFFF88", "FF9966" ) + "&nbsp;" );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#FFFFFF"><?= $station['Genre'] ?>&nbsp;</font>
+                </noscript>
+              </td>
+              <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="1">
+            <tr>
+              <td><img src="/images/spacer.gif" width="25" height="1"></td>
+              <td class="txt">
+<table border="0" cellspacing="0" cellpadding="0">
+<tr><td>
+<? if( $station['Track_Data'] ) : ?>
+<? $caption = preg_replace( '/_/', ' ', $station['Track_Caption'] ) ?>
+<? if( $station['Track_Live'] ) : ?>
+<font color="FFFFAA">Running: </font>
+<font color="#999999">[Live] </font>
+<? elseif( $station['Track_Error'] ) : ?>
+<font color="ff9955">Last Played: </font>
+<? else : ?>
+<font color="FFFFAA">Running: </font>
+<font color="#999999">[-<?= $station['Track_Duration'] ?>] </font>
+<? endif ?>
+<?= fit_string( $station['Track_Caption'], 45, ' ...' ) ?>
+<? if( $station['MixID'] ) : ?>
+<font color="#6666AA"> (<a href="/cgi-bin/mixes.cgi?action=playlist&mix_id=<?= $station['MixID'] ?>">tracklist</a>)</font>
+<? endif ?>
+<? endif ?>
+</td></tr>
+<tr><td><img src="/images/spacer.gif" width="1" height="6"></td></tr>
+<tr><td>
+<? foreach( $station['Stream'] as $stream ) : ?>
+<? if( $stream['Playlist'] ) : ?><a class="<?= $stream['CSS_Class'] ?>" href="<?= $stream['Playlist'] ?>"><?= $stream['Title'] ?></a><? else : ?><?= $stream['Title'] ?><? endif ?>
+<? endforeach ?>,
+<a href="/cgi-bin/main.php?module=muses&station=<?= $station['Id'] ?>"
+	onclick="return openMuses('/cgi-bin/main.php?module=muses&station=<?= $station['Id'] ?>')"
+	target="hbr1_muses">Html Player</a>
+</td></tr>
+</table>
+            </td>
+              <td><img src="/images/spacer.gif" width="25" height="1"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+<? endforeach ?>
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="/images/spacer.gif" width="1" height="20"></td>
+      </tr>
+    </table>
+<? endif ?>
+	<div>
+    <font color="#7799CC">To listen in our streams you need a player that supports
+    	the <a href="http://www.vorbis.com/" target="_blank">Ogg Vorbis</a>
+    	or <a href="http://www.iis.fraunhofer.de/en/bf/amm/produkte/audiocodec/audiocodecs/heaac/index.jsp" target="_blank">AAC+</a>
+    	streaming format.
+    	The most popular players are listed below.
+    	<!-- iTunes is able to play AAC+ encoded streams since version 9. -->
+    </font>
+	</div>
+
+	<div style="margin-top: 3px; margin-bottom: 5px;">
+	<img src="/images/player/station_player.png?26" usemap="#map_station_player" border="0">
+	</div>
+
+    <map name="map_station_player">
+      <area shape="rect" coords="3,0,432,37" href="http://tunein.com/" target="_blank" alt="TuneIn Radio" title="TuneIn Radio">
+      <area shape="rect" coords="3,40,125,70" href="http://www.apple.com/itunes/" target="_blank" alt="iTunes" title="iTunes">
+      <area shape="rect" coords="145,40,265,70" href="http://www.winamp.com/" target="_blank" alt="Winamp" title="Winamp">
+      <area shape="rect" coords="280,40,430,70" href="http://gstreamer.freedesktop.org/" target="_blank" alt="GStreamer" title="GStreamer">
+    </map>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=middle background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="center" class="footer"><i><a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> - Music on Futurenet</i></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/footer_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/footer_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/footer_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+</body>
+</html>

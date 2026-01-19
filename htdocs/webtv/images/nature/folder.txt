@@ -1,0 +1,7 @@
+Refresh=10000
+Precache=0
+ImageEnd=15.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+ImageStart=1.jpg

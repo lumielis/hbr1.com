@@ -1,0 +1,10 @@
+Text=5|115|Julien Maingois
+Font=Arial,Impact,mono|0|9
+Anchor=judabrico@yahoo.com
+Refresh=10000
+Precache=0
+Image=S_songes.jpg
+Shuffle=0
+Enabled=1
+Repeat=0
+Color=0

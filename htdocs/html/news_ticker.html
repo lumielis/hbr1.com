@@ -1,0 +1,102 @@
+<html><head>
+<title></title>
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function disableselect(e){
+return false
+}
+function reEnable(){
+return true
+}
+//if IE4+
+document.onselectstart=new Function ("return false")
+//if NS6
+if (window.sidebar){
+document.onmousedown=disableselect
+document.onclick=reEnable
+}
+var message="";
+function clickIE() {if (document.all) {(message);return false;}}
+function clickNS(e) {if
+(document.layers||(document.getElementById&&!document.all)) {
+if (e.which==2||e.which==3) {(message);return false;}}}
+if (document.layers)
+{document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;}
+else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;}
+document.oncontextmenu=new Function("return false")
+
+var warte;
+function show(text){
+	window.status=text;
+	warte=40;
+	setTimeout("zuruecksetzen()",30);
+	}
+function zuruecksetzen(){
+	warte--;
+	if (warte>1)
+	setTimeout("zuruecksetzen()",30);
+	else
+	window.status="";
+}
+
+var speed = 100
+var pause = 3500
+var timerID = null
+var NewsRunning = false
+var MessageArray = new Array()
+MessageArray['0']="Einen erfolgreichen Tag wünscht Ihnen Ihr pferdewetten.de Team...";
+MessageArray['0'] = "Catterick: Recke-Schützling Beanney (M. Fitzgerald) gewinnt zum Totokurs von 100:10 ein Novices´ Hurdle über 3200 Meter...der von Mario Hofer trainierte Montecorvino (O. Nelmes) belegt in einem ´Bumper´ den Ehrenplatz...Lomicelli unplatziert... ";
+MessageArray['1'] = "Aufgepaßt: ein kleines Gewinnspiel finden Sie im Vorbericht über Hamburg-Bahrenfeld...viel Spass beim Rätseln und viel Erfolg...";
+MessageArray['2'] = "Cagnes-sur-Mer: Wim Paal gewinnt mit dem siebenjährigen Grand Slam As aus dem Besitz von E. Rothe den mit 30.000 Euro dotierten Prix de Gelsenkirchen... ";
+MessageArray['3'] = "Der Donnerstag-Abend traditionell mit den Rennen aus Hamburg und Gelsenkirchen...Beginn unserer Live-Übertragungen ist um ca. 18.15 Uhr...nachmittags sind wir für Sie in Frankreich, Italien und England...";
+MessageArray['4'] = "Dürfen wir Sie auf´s Glatteis führen... ? ... Wir übertragen an den kommenden beiden Sonntagen und dreimal im Februar EXKLUSIV das Rennspektakel aus der Schweiz ... White Turf in Arosa und St.Moritz ... mit Livevideo und Wettmöglichkeit ...";
+var currentMessage = 0
+var offset = 0
+
+function stopNews() {
+	if (NewsRunning)
+	clearTimeout(timerID)
+ 	NewsRunning = false
+}
+
+function startNews() {
+	stopNews()
+	showNews()
+}
+function showNews() {
+        var text = MessageArray[currentMessage]
+        if (offset < text.length) {
+                if (text.charAt(offset) == " ")
+                        offset++
+                var partialMessage = text.substring(0, offset + 1)
+                document.NewsForm.NewsField.value = partialMessage
+                offset++
+                timerID = setTimeout("showNews()", speed)
+		NewsRunning = true
+        } else {
+                offset = 0
+                currentMessage++
+                if (currentMessage == MessageArray.length)
+                        currentMessage = 0
+                timerID = setTimeout("showNews()", pause)
+		NewsRunning = true
+        }
+}
+
+//-->
+</script>
+</head>
+<body ONLOAD="startNews()" bgcolor="#FFFFFF" marginwidth="0" marginheight="3" topmargin="3" leftmargin="0">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr><td width="100%" valign="middle" align="left">
+
+	<form name="NewsForm" style="padding:0px;margin:0px">
+	<textarea wrap="SOFT" ROWS="3" name="NewsField" style="font-family: Verdana; font-size: 10px; padding: 4px; border: 1px solid #6A6A80; background-color: #FFFFFF; width: 590px; height:50px; scrollbar-arrow-color:#FFFFFF; scrollbar-base-color: #FFFFFF;scrollbar-darkshadow-color: #FFFFFF;scrollbar-face-color: #FFFFFF;scrollbar-highlight-color: #FFFFFF;scrollbar-shadow-color: #FFFFFF"></textarea>
+	</form>
+
+</td></tr>
+</table>
+</body>
+</html>

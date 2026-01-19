@@ -1,0 +1,54 @@
+<html>
+<head>
+<link rel="stylesheet" href="<URL_DISPLAY>/style/admin.css">
+<script language="JavaScript">
+<!--
+function onLoad() {
+	<IF_PAGE_ERROR>alert("!!! ALERT !!!\n\n<PAGE_MESSAGE>\n\n!!! ALERT !!!");</IF>
+	<IF_PAGE_MESSAGE>alert("<PAGE_MESSAGE>");</IF>
+}
+window.onload = onLoad;
+//-->
+</script>
+</head>
+<body>
+
+<h1 class="title"><ENV_APP_NAME> v<ENV_APP_VERSION></h1>
+
+<IF_MESSAGE_LOG>
+<p><ul class="message_log">
+<LOOP_MESSAGE_LOG>
+	<li class="message_log_<MESSAGE_LOG=type_name>"><MESSAGE_LOG=msg></li>
+</LOOP_MESSAGE_LOG>
+</ul></p>
+</IF>
+
+<table border="1" cellspacing="1" cellpadding="4">
+	<tr>
+		<th colspan="6" class="text" id="header">ACCESS GROUPS</th>
+	</tr>
+	<tr>
+		<th class="text" id="info">Id</th>
+		<th class="text" id="info">Name</th>
+		<th class="text" id="info">Info</th>
+		<th class="text" id="info">User</th>
+		<th class="text" id="info" colspan="2">Action</th>
+	</tr>
+<SHOW_TABLE_ACCESS_GROUP>
+	<tr>
+		<td class="text"><ACCESS_GROUP_GROUP_ID></td>
+		<td class="text"><ACCESS_GROUP_NAME></td>
+		<td class="text"><ACCESS_GROUP_INFO>&nbsp;</td>
+		<td class="text" align="center"><ACCESS_GROUP_USER_COUNT></td>
+	<IF_ACCESS_GROUP_GROUP_ID>
+		<td class="text" align="center"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&access_group_id=<ACCESS_GROUP_ID>">EDIT</a></td>
+		<td class="text" align="center"><a class="alert" href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=kill&group_id=<ACCESS_GROUP_GROUP_ID>" onclick="return confirm('Deleting group \'<ACCESS_GROUP_NAME>\'?')">DELETE</a></td>
+	<ELSE>
+		<td class="text" align="center" colspan="2">-</td>
+	</IF>
+	</tr>
+</SHOW_TABLE_ACCESS_GROUP>
+</table>
+
+</body>
+</html>

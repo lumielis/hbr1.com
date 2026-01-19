@@ -1,0 +1,87 @@
+<html>
+
+<head>
+
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+
+<style type="text/css">
+<!--
+.text {
+  font-family: Verdana, Arial;
+  font-size: 10px;
+}
+#blue {
+  BORDER-LEFT: #000088 1px solid;
+  BORDER-TOP: #000088 1px solid;
+  BORDER-RIGHT: #0000CC 1px solid;
+  BORDER-BOTTOM: #0000CC 1px solid;
+  FONT: 8pt verdana, mono;
+  MARGIN-LEFT: 2px;
+  COLOR: #00FFFF;
+  BACKGROUND-COLOR: #000060;
+  scrollbar-base-color: #000000;
+  scrollbar-track-color: #000066;
+  scrollbar-face-color: #000088;
+  scrollbar-highlight-color: #0000CC;
+  scrollbar-3d-light-color: #0000CC;
+  scrollbar-dark-shadow-color: #000088;
+  scrollbar-shadow-color: #000088;
+  scrollbar-arrow-color: #6666FF;
+}
+#blue2 {
+  BORDER-LEFT: #0000CC 1px solid;
+  BORDER-TOP: #0000CC 1px solid;
+  BORDER-RIGHT: #000088 1px solid;
+  BORDER-BOTTOM: #000088 1px solid;
+  FONT: 8pt verdana, mono;
+  COLOR: #FFFFFF;
+  BACKGROUND-COLOR: #000060;
+}
+--> 
+</style>
+
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" class="sb1" marginwidth="0" marginheight="0" leftmargin="0" topmargin="0">
+
+<table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
+<FORM_CHAT step="1" method="post" name="chat">
+  <tr>
+    <td valign="bottom" align="right">
+
+      <table cellspacing="0" cellpadding="0" border="0" background="<URL_IMAGES>/chat/inpbg.gif">
+        <tr>
+          <td><img src="<URL_IMAGES>/chat/inpl.gif"></td>
+          <td valign="top"><img src="<URL_IMAGES>/chat/inptl.gif"></td>
+          <td valign="bottom"><INPUT_CHAT_NAME size="10" maxlength="50" autocomplete="off" class="text" id="blue">
+          <td>&nbsp;</td>
+          <td valign="bottom"><INPUT_CHAT_CONTENT size="40" maxlength="255" autocomplete="off" class="text" id="blue">
+          <td>&nbsp;</td>
+          <td valign="bottom"><input type="submit" value="OK" class="text" id="blue2"></td>
+          <td valign="top"><img src="<URL_IMAGES>/chat/inptr.gif"></td>
+          <td><img src="<URL_IMAGES>/chat/inpr.gif"></td>
+        </tr>
+      </table>
+
+    </td>
+    <td><img src="<URL_IMAGES>/spacer.gif" width="120" height="1"></td>
+  </tr>
+</form>
+</table>
+
+<script language="JavaScript">
+<!--
+
+ChatReload = '<FORMV_CHAT_RELOAD>';
+if( ChatReload ) {
+  parent.frames['chat_main'].location.reload();
+}
+document.forms['chat'].elements['chat_content'].focus();
+
+//-->
+</script>
+
+</body>
+
+</html>

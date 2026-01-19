@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>Galleries on HBR1</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="/style/client.css?1" />
+<script language="JavaScript">
+<!--
+PageID = 'gallery';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( ! top.location.hostname.match( /www\.hbr1\.com/i ) ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://www.hbr1.com?' + location.pathname + location.search;
+	top.location.href = redirect;
+}
+//-->
+</script>
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellSpacing=0 cellPadding=0 border=0 width="583">
+  <tr> 
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td class=head align=middle><font color=#9999ff><b>GALLERY ENTRANCE</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+    <td align="center" background="/images/body_bg2.gif" valign="top">
+
+<br>
+<p class="head"><font color="#99ff00">Welcome to the progressive gallery on futurenet</font><br><font color="#999999" class="copyright">Select one of the styles below</font></p>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<? $pos = 0 ?>
+<? while( $row = $Db->fetch_row( $r_cat ) ) : ?>
+<? $pic = get_random_cat_pic( $row ) ?>
+<? if( ($pos % 3) == 0 ) : ?>
+<? if( $pos ) : ?>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><img src="/images/spacer.gif" width="1" height="13"></td>
+  </tr>
+<? else : ?>
+<? endif ?>
+  <tr>
+<? endif ?>
+<? $pos++ ?>
+  <td align="center" valign="top" width="33%">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+    <td align="center" height="15" valign="top">
+    	<a href="<?= $filename ?>?module=gallery&show=cat&catid=<?= $row['MCG_Index'] ?>">
+    		<font color="#6699FF"><strong><?= $row['MCG_Name'] ?></strong></font></a></td>
+      </tr>
+      <tr>
+        <td align="center">
+          <table border="0" cellspacing="0" cellpadding="0" width="142" height="110" background="/images/gallery/layout/category_select_border.gif">
+            <tr>
+              <td align="center"><a href="<?= $filename ?>?module=gallery&show=cat&catid=<?= $row['MCG_Index'] ?>">
+              	<img src="/gp/tn/<?= $pic['GAP_File'] ?>" width="110" height="82" alt="&quot;<?= $pic['GAP_File'] ?>&quot; &copy; <?= $pic['GAP_Copyright'] ?>" border="0"></a></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" class="copyright"><font color="#99DDFF"><?= $pic['GAP_Copyright'] ? '&copy; ' . bbc_to_html( $pic['GAP_Copyright'] ) : '&nbsp;' ?></font></td>
+      </tr>
+    </table>
+  </td>
+<? endwhile ?>
+</tr>
+</table>
+<br>
+<br>
+
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=middle background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="center" class="footer"><i><a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> - Music on Futurenet</i></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="/images/footer_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/footer_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/footer_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+</body>
+</html>

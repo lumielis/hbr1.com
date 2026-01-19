@@ -1,0 +1,8 @@
+AuthType Basic
+AuthUserFile /home/pille/WWWRoot/www.hbr1.com/htdocs/admin/.htpasswd
+AuthName "Data Keeper"
+require valid-user
+Order deny,allow
+Deny from all
+Satisfy any
+

@@ -1,0 +1,293 @@
+<html>
+<head>
+<title>Party Base</title>
+<style type="text/css"> <!--
+body { scrollbar-base-color:#170040; scrollbar-track-color:#000000; scrollbar-face-color:#100030; scrollbar-highlight-color:#000050; scrollbar-3d-light-color:#000000; scrollbar-dark-shadow-color:#000000; scrollbar-shadow-color:#002060; scrollbar-arrow-color:#002060 }
+.txt { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 10px }
+.small { font-size: 10px; font-family: Arial, mono }
+.head { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 11px }
+.big { font-size: 12px }
+.blue { BORDER-LEFT: #000088 1px solid; BORDER-TOP: #000088 1px solid; BORDER-RIGHT: #0000CC 1px solid; BORDER-BOTTOM: #0000CC 1px solid; FONT: 8pt verdana, mono; MARGIN-LEFT: 2px; COLOR: #00FFFF; BACKGROUND-COLOR: #000060; scrollbar-base-color:#000000; scrollbar-track-color:#000066; scrollbar-face-color:#000088; scrollbar-highlight-color:#0000CC; scrollbar-3d-light-color:#0000CC; scrollbar-dark-shadow-color:#000088; scrollbar-shadow-color:#000088; scrollbar-arrow-color:#6666FF; }
+.blue2 { BORDER-LEFT: #0000CC 1px solid; BORDER-TOP: #0000CC 1px solid; BORDER-RIGHT: #000088 1px solid; BORDER-BOTTOM: #000088 1px solid; FONT: 8pt verdana, mono; COLOR: #FFFFFF; BACKGROUND-COLOR: #000060 }
+a:link {color: #5588FF; text-decoration: none;}
+a:visited {color: #5588FF; text-decoration: none;}
+a:hover {color: #AAAA22; text-decoration: none;}
+--> </style>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellSpacing=0 cellPadding=0 border=0 width="583">
+  <tr> 
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td class=head align=middle><font color=#9999ff><b>ENTER A PARTY</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align=center background="/images/body_bg.jpg" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="javascript:history.back();"><font color="#77AA00">GO_BACK</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align="center" background="/images/body_bg.jpg" height="1%">
+      <br>
+      <IF_PAGE_ERROR><font color=#FF0000 class="txt"><PAGE_MESSAGE></font><br>&nbsp;</IF>
+      <IF_PAGE_MESSAGE><font color=#009900 class="txt"><PAGE_MESSAGE></font><br>&nbsp;</IF>
+      <table border="0" cellspacing="1" cellpadding="2">
+      <FORM_PARTY step="1" enctype="multipart/form-data" method="post">
+      <HIDDEN_PARTY_ID>
+      <input type="hidden" name="su" value="<FORMV_SU>">
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">General Info</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt"><b>Type</b></td>
+          <td><SELECT_PARTY_TYPE class="blue"></td>
+        </tr>
+        <tr>
+          <td class="txt"><b><IF_ERROR=party_title><font color="#ff0000"></IF>Title</b></td>
+          <td><INPUT_PARTY_TITLE class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_start_timestamp><font color="#ff0000"></IF>Start</b></td>
+          <td class="txt"><font color="#999999">Please enter the date in a format like mm/dd/yy.</font></td>
+        </tr>
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="2">
+              <tr>
+                <td class="txt"><IF_ERROR=party_start_timestamp_date><font color="#ff0000"></IF>Date</td>
+                <td><INPUT_PARTY_START_TIMESTAMP_DATE class="blue" maxlength="10" size="12"></td>
+                <td class="txt"><IF_ERROR=party_start_timestamp_time><font color="#ff0000"></IF>Time</td>
+                <td><INPUT_PARTY_START_TIMESTAMP_TIME class="blue" maxlength="8" size="12"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_end_timestamp><font color="#ff0000"></IF>End</b></td>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="2">
+              <tr>
+                <td class="txt"><IF_ERROR=party_end_timestamp_date><font color="#ff0000"></IF>Date</td>
+                <td><INPUT_PARTY_END_TIMESTAMP_DATE class="blue" maxlength="10" size="12"></td>
+                <td class="txt"><IF_ERROR=party_end_timestamp_time><font color="#ff0000"></IF>Time</td>
+                <td><INPUT_PARTY_END_TIMESTAMP_TIME class="blue" maxlength="8" size="12"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt"><font color="#999999">If you don't know the end of the party, so estimate it :-)</font></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">The Place</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_country><font color="#ff0000"></IF>Country</b></td>
+          <td class="txt"><font color="#999999">In which country is your party located?</font></td>
+        </tr>
+        <tr>
+          <td><SELECT_PARTY_COUNTRY class="blue"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_city><font color="#ff0000"></IF>City</b></td>
+          <td class="txt"><font color="#999999">Just the city or town in the near. More details at location please.</font></td>
+        </tr>
+        <tr>
+          <td><INPUT_PARTY_CITY class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_location><font color="#ff0000"></IF>Location</b></td>
+          <td class="txt"><font color="#999999">Please enter a short description to find the place:</font></td>
+        </tr>
+        <tr>
+          <td><AREA_PARTY_LOCATION class="blue" cols="50" rows="5"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Inside</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>DJ Lineup</b></td>
+          <td class="txt"><font color="#999999">The DJs:</font></td>
+        </tr>
+        <tr>
+          <td><AREA_PARTY_DJS class="blue" cols="50" rows="5"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Live Act's</b></td>
+          <td class="txt"><font color="#999999">(Only if there are live act's on the party)</font></td>
+        </tr>
+        <tr>
+          <td><AREA_PARTY_LIVE class="blue" cols="50" rows="5"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Ambient / Chillout</b></td>
+          <td class="txt"><font color="#999999">Artists in the chillout zone:</font></td>
+        </tr>
+        <tr>
+          <td><AREA_PARTY_CHILLOUT class="blue" cols="50" rows="5"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Decosign</b></td>
+          <td class="txt"><font color="#999999">Who is making the deco?</font></td>
+        </tr>
+        <tr>
+          <td><AREA_PARTY_DECO class="blue" cols="50" rows="5"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>More Info</b></td>
+          <td class="txt"><font color="#999999">If there is something important to know..</font></td>
+        </tr>
+        <tr>
+          <td><AREA_PARTY_MEMO class="blue" cols="50" rows="5"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Flyer</b></td>
+          <td class="txt"><font color="#999999">If you have one..</font></td>
+        </tr>
+        <tr>
+          <td><input type="file" name="party_flyer_file" size="30" class="blue"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Contact</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Organizer</b></td>
+          <td class="txt"><font color="#999999">Who is the organizer?</font></td>
+        </tr>
+        <tr>
+          <td><INPUT_PARTY_ORGANIZER class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>E-Mail</b></td>
+          <td class="txt"><font color="#999999">Contact E-Mail:</font></td>
+        </tr>
+        <tr>
+          <td><INPUT_PARTY_EMAIL class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Home</b></td>
+          <td class="txt"><font color="#999999">The webpage for more information:</font></td>
+        </tr>
+        <tr>
+          <td><INPUT_PARTY_URL class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Hotline</b></td>
+          <td class="txt"><font color="#999999">The hotline, very important:</font></td>
+        </tr>
+        <tr>
+          <td><INPUT_PARTY_HOTLINE class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Administration</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_submitter><font color="#ff0000"></IF>Your Name</b></td>
+          <td class="txt"><font color="#999999">This is also your login to edit the party</font></td>
+        </tr>
+        <tr>
+          <td><INPUT_PARTY_SUBMITTER class="blue" maxlength="32" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b><IF_ERROR=party_password><font color="#ff0000"></IF>Password</b></td>
+          <td class="txt"><font color="#999999"><IF_PARTY_SUBMITTER>Your Password:<ELSE>The password to edit the party later again.</IF></font></td>
+        </tr>
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><PASSWORD_PARTY_PASSWORD class="blue" maxlength="32" size="20"></td>
+                <IF_PARTY_SUBMITTER>
+                <ELSE>
+                <td class="txt">&nbsp;&nbsp;Re:&nbsp;</td>
+                <td><PASSWORD_PARTY_PASSWORD2 class="blue" maxlength="32" size="20"></td>
+                </IF>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td><SUBMIT value="Save" class="blue2"></td>
+        </tr>
+      </form>
+      </table>
+      <br>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align=center background="/images/body_bg.jpg" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="javascript:history.back();"><font color="#77AA00">GO_BACK</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align="left" width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align="middle" background="/images/title_bg.gif" height="1%"> 
+      <table cellSpacing="0" cellPadding="0" border="0">
+        <tr> 
+          <td align="middle" class="txt"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align="left" width="1%" background="/images/footer_left.gif"><img src="/images/spacer.gif" width="64" height="8"></td>
+    <td align="middle" background="/images/footer_bg.gif"><img src="/images/spacer.gif" width="1" height="1"></td>
+    <td align="right" width="1%" background="/images/footer_right.gif"><img src="/images/spacer.gif" width="64" height="8"></td>
+  </tr>
+</table>
+
+</body>
+</html>
+  

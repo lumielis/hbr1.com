@@ -1,0 +1,63 @@
+<html>
+<head>
+<meta http-equiv="content-type"
+	content="text/html; charset=#[SCALAR $ENV{CHARSET}]#">
+<meta http-equiv="refresh" content="9">
+<title>HBR1 Chat Users</title>
+
+<link rel="stylesheet" type="text/css" href="/style/client.css">
+<style type="text/css">
+<!--
+body {
+  scrollbar-base-color: #170040;
+  scrollbar-track-color: #000000;
+  scrollbar-face-color: #100030;
+  scrollbar-highlight-color: #000050;
+  scrollbar-3d-light-color: #000000;
+  scrollbar-dark-shadow-color: #000000;
+  scrollbar-shadow-color: #002060;
+  scrollbar-arrow-color: #002060;
+  background-color: #100040;
+}
+-->
+</style>
+
+<script language="JavaScript">
+<!--
+
+function showInfo( info ) {
+	alert( info );
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#100040" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=2 topMargin=5 marginheight="5" marginwidth="2" xbackground="http://www.hbr1.com/images/body_bg.jpg">
+
+<p class="Text">
+<table border="0" cellspacing="0" cellpadding="2">
+#[LOOP Users]#
+<tr>
+<td class="Text">
+<a
+	href="#"
+	onclick="
+		showInfo(
+			'Nickname is #[PRINT $Record->[0]]#\n' +
+			'Last message at #[PRINT formatTime( '%r', $Record->[1] )]# GMT\n' +
+			'Remote address is #[PRINT $Record->[3]]#'
+		);
+		return false;
+	"
+	alt="Last activity: #[PRINT formatTime( '%r', $Record->[1] )]#"
+>
+<font color="##[PRINT $Record->[2]]#">#[PRINT $Record->[0]]#</font>
+</a>
+</td>
+</tr>
+#[END LOOP]#
+</p>
+
+</body>
+</html>

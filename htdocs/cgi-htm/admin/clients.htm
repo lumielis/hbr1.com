@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>Clients</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=userman';
+url_images = '<URL_IMAGES>';
+//-->
+</script>
+
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br>&nbsp;</IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br>&nbsp;</IF>
+
+<table border=1 width=700 cellspacing=0 cellpadding=2>
+  <tr>
+    <td class="txt" bgcolor="#6E6E8C">
+      <script language="JavaScript">
+      <!--
+      linkOrder( 'category', '<font color="#FFFFFF">Category</font>' );
+      displayOrder( 'category', '&nbsp;<img src="<URL_IMAGES>/order_asc_w.gif">', '&nbsp;<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+      //-->
+      </script>
+    </td>
+    <td class="txt" bgcolor="#6E6E8C">
+      <script language="JavaScript">
+      <!--
+      linkOrder( 'id', '<font color="#FFFFFF">Id</font>' );
+      displayOrder( 'id', '&nbsp;<img src="<URL_IMAGES>/order_asc_w.gif">', '&nbsp;<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+      //-->
+      </script>
+    </td>
+    <td class="txt" bgcolor="#6E6E8C">
+      <script language="JavaScript">
+      <!--
+      linkOrder( 'first_name', '<font color="#FFFFFF">Name</font>' );
+      displayOrder( 'first_name', '&nbsp;<img src="<URL_IMAGES>/order_asc_w.gif">', '&nbsp;<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+      //-->
+      </script>
+    </td>
+    <td class="txt" bgcolor="#6E6E8C">
+      <script language="JavaScript">
+      <!--
+      linkOrder( 'charge', '<font color="#FFFFFF">Charge</font>' );
+      displayOrder( 'charge', '&nbsp;<img src="<URL_IMAGES>/order_asc_w.gif">', '&nbsp;<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+      //-->
+      </script>
+    </td>
+    <td class="txt" bgcolor="#6E6E8C">
+      <script language="JavaScript">
+      <!--
+      linkOrder( 'email', '<font color="#FFFFFF">eMail</font>' );
+      displayOrder( 'email', '&nbsp;<img src="<URL_IMAGES>/order_asc_w.gif">', '&nbsp;<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+      //-->
+      </script>
+    </td>
+  </tr>
+<CLIENTS>
+  <tr>
+    <td class="txt"><CLIENT_CATEGORY_NAME></a></td>
+    <td class="txt"><a href="<URL_SYSTEM>/admin.cgi?action=userman&part=profile&client=<CLIENT_ID>"><CLIENT_ID></a></td>
+    <td class="txt"><CLIENT_FIRST_NAME> <CLIENT_LAST_NAME></td>
+    <td class="txt"><a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&order=time&ordir=desc"><CLIENT_CHARGE> EURO</a></td>
+    <td class="txt"><a href="mailto:<CLIENT_EMAIL>"><CLIENT_EMAIL></a></td>
+  </tr>
+</CLIENTS>
+</table>
+
+<br>
+<hr width=600 align=left size=1>
+<br>
+
+<span class="txt">
+<a href="<URL_SYSTEM>/<ENV_FILE>?action=userman&part=profile">New Client</a>
+</span>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+Text=5|115|credits_John Wendt
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.skellington.com
+Refresh=10000
+Precache=0
+Image=S_Animatedheartandlungs.jpg
+Image=S_theflamingpipeorgan.jpg
+Image=S_TheHypKnowTronatnight.jpg
+Image=S_TheFacesofManbyDanDasMann.jpg
+Image=S_TheHypKnowTronbyTimBlack.jpg
+Image=S_VenutianRoses.jpg
+Shuffle=0
+Enabled=1
+Repeat=0
+Color=0

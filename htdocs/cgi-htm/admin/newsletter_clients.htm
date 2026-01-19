@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>News Clients</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>';
+url_images = '<URL_IMAGES>';
+//-->
+</script>
+
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font></IF>
+
+<FORM_NEWS step=1 method=get>
+<input type="hidden" name="from" value="<FORMV_FROM>">
+<input type="hidden" name="count" value="<FORMV_COUNT>">
+<input type="hidden" name="order" value="<FORMV_ORDER>">
+<input type="hidden" name="ordir" value="<FORMV_ORDIR>">
+
+<table border="1" width="100%" cellspacing="0" cellpadding="2">
+<tr>
+  <td class="txt" bgcolor="#217395">&nbsp;</td>
+  <td class="txt" bgcolor="#217395">
+    <a href="javascript:orderBy( 'email' );"><font color="#FFFFFF"><b>E-Mail</b></font></a>
+    <script language="JavaScript"> <!--
+    displayOrder( 'email', '<img src="<URL_IMAGES>/order_asc_w.gif">', '<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+    //--> </script>
+  </td>
+  <td class="txt" bgcolor="#217395">
+    <a href="javascript:orderBy( 'client' );"><font color="#FFFFFF"><b>User</b></font></a>
+    <script language="JavaScript"> <!--
+    displayOrder( 'client', '<img src="<URL_IMAGES>/order_asc_w.gif">', '<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+    //--> </script>
+  </td>
+  <td class="txt" bgcolor="#217395">
+    <a href="javascript:orderBy( 'status' );"><font color="#FFFFFF"><b>Status</b></font></a>
+    <script language="JavaScript"> <!--
+    displayOrder( 'status', '<img src="<URL_IMAGES>/order_asc_w.gif">', '<img src="<URL_IMAGES>/order_desc_w.gif">', '' );
+    //--> </script>
+  </td>
+</tr>
+<NEWS_CLIENTS>
+<tr>
+  <td class="txt"><SELECT_NEWS_CLIENT></td>
+  <td class="txt"><a href="mailto:<NEWS_CLIENT_EMAIL>"><NEWS_CLIENT_EMAIL></a></td>
+  <td class="txt">
+    <IF_CLIENT_FIRST_NAME>
+      <a href="<URL_SYSTEM>/<ENV_FILE>?action=userman&part=profile&client=<CLIENT_ID>"><b><CLIENT_FIRST_NAME> <CLIENT_LAST_NAME></b></a>
+    <ELSE>
+      Not a member
+    </IF>
+  </td>
+  <td class="txt">
+    <IF_NEWS_CLIENT_STATUS == 1>Active</IF>
+    <IF_NEWS_CLIENT_STATUS == 0>Inactive</IF>
+  </td>
+</tr>
+</NEWS_CLIENTS>
+</table>
+
+<br>
+<SUBMIT value="Remove" class="txt">
+</form>
+
+<table border=0 width=100%>
+<tr>
+  <td class="txt"><br></td>
+</tr>
+<tr>
+  <td align=center>
+  <table border=0 width=560>
+    <tr>
+      <td align="left" width="150" class="txt"><IF_ENTRY_PREV><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&from=<ENTRY_PREV>&count=<ENTRY_COUNT>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>"><img src="<URL_IMAGES>/zurueck.gif" border="0">Previous Clients</a></IF>&nbsp;</td>
+      <td align="center" width="260" class="txt">Entries <b><ENTRY_FROM></b>-<b><ENTRY_REAL></b> of total <b><ENTRY_MAX></b> users</td>
+      <td align="right" width="150" class="txt">&nbsp;<IF_ENTRY_NEXT><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&from=<ENTRY_TO>&count=<ENTRY_COUNT>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>">Next Clients&nbsp;<img src="<URL_IMAGES>/weiter.gif" border="0"></a></IF></td>
+    </tr>
+  </table>
+  </td>
+</tr>
+<tr>
+  <td align=center><hr noshade size=1></td>
+</tr>
+<tr>
+  <td class="txt" align=center>
+    user on page:
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=5">5</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=10">10</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=25">25</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=50">50</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=100">100</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=<ENTRY_MAX>">All</a>
+  </td>
+</tr>
+</table>
+
+<table border="0" cellspacing="4" cellpadding="4">
+  <tr>
+    <td class="txt">
+      <FORM_NEWS step=0 method=get part=>
+      <SUBMIT value="Write news" class="txt">
+      </form>
+    </td>
+    <td class="txt">
+      <FORM_NEWS step=0 method=get part=messages>
+      <input type="hidden" name="order" value="time">
+      <input type="hidden" name="ordir" value="desc">
+      <SUBMIT value="News archive" class="txt">
+      </form>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

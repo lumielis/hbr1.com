@@ -1,0 +1,8 @@
+Font=Arial,Impact,mono|0|9
+Anchor=0
+Precache=0
+Refresh=10000
+Enabled=0
+Shuffle=0
+Repeat=0
+Color=0

@@ -1,0 +1,51 @@
+# English language file for Unlimited FTP
+
+LABEL.STATUS=Status:
+
+
+BUTTON.BROWSE=Browse...
+BUTTON.SEND=Send
+
+DIALOG.OK=Ok
+DIALOG.YES=Yes
+DIALOG.YESALL=Yes to All
+DIALOG.NO=No
+DIALOG.NOALL=No to All
+DIALOG.CANCEL=Cancel
+DIALOG.OPEN=Open
+
+MESSAGE.TRANSFERCOMPLETE=Transfer Complete
+MESSAGE.TRANSFERRING=Transferring
+MESSAGE.TRANSFERRED=Transferred
+MESSAGE.DISCONNECTING=Disconnecting
+MESSAGE.CONNECTING=Connecting
+MESSAGE.ERROR=Error occured
+MESSAGE.IDLE=Idle
+
+FILEDIALOG.TITLE=Select file(s) or directory(s) to upload
+FILEDIALOG.FILENAME=Filename
+FILEDIALOG.FILETYPE=Files of type
+
+DIALOG.RESUME.TITLE=Resume Transfer?
+DIALOG.RESUME.MESSAGE=is partially transferred.  Would you like to resume this transfer?
+
+DIALOG.OVERWRITE.TITLE=Overwrite?
+DIALOG.OVERWRITE.MESSAGE=exists, overwrite?
+
+
+DIALOG.PASSWORD.TITLE=Password Required
+DIALOG.PASSWORD.MESSAGE=Enter your password:
+
+
+DIALOG.BUSY.TITLE=Please wait...
+DIALOG.BUSY.CONNECTING=Connecting to
+DIALOG.BUSY.CREATINGZIP=Creating Zip Archive
+DIALOG.BUSY.PUT=Preparing to Upload files...
+
+DIALOG.ERROR.TITLE=Error
+DIALOG.ERROR.ENTERPASSWORD=You must enter a passowrd
+DIALOG.ERROR.LOGONERROR=Username or password incorrect
+DIALOG.ERROR.CONNECTERROR=Could not connect to
+DIALOG.ERROR.FILENOTEXIST=One or more of the specified files does not exist
+DIALOG.ERROR.CONFIG=Configuration error, contact this sites administrator
+DIALOG.ERROR.TRANSFER=One or more files could not be transfered

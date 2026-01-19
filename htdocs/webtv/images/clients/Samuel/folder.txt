@@ -1,0 +1,12 @@
+Text=5|115|Samuel Monnier
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.p-gallery.net
+Precache=0
+Refresh=10000
+Image=S_19990628liquidms.jpg
+Image=S_venus.jpg
+Image=S_Nebula.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0

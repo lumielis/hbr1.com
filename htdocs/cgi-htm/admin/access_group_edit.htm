@@ -1,0 +1,57 @@
+<html>
+<head>
+<link rel="stylesheet" href="<URL_DISPLAY>/style/admin.css">
+<script language="JavaScript">
+<!--
+function onLoad() {
+	<IF_PAGE_ERROR>alert("!!! ALERT !!!\n\n<PAGE_MESSAGE>\n\n!!! ALERT !!!");</IF>
+	<IF_PAGE_MESSAGE>alert("<PAGE_MESSAGE>");</IF>
+}
+window.onload = onLoad;
+//-->
+</script>
+</head>
+<body>
+
+<h1 class="title"><ENV_APP_NAME> v<ENV_APP_VERSION></h1>
+
+<IF_MESSAGE_LOG>
+<p><ul class="message_log">
+<LOOP_MESSAGE_LOG>
+	<li class="message_log_<MESSAGE_LOG=type_name>"><MESSAGE_LOG=msg></li>
+</LOOP_MESSAGE_LOG>
+</ul></p>
+</IF>
+
+<FORM_ADMIN method="post" step="1">
+<HIDDEN_ACCESS_GROUP_ID>
+<input type="hidden" name="access_group_old_group_id" value="<ACCESS_GROUP_OLD_GROUP_ID>">
+<input type="hidden" name="access_group_old_name" value="<ACCESS_GROUP_OLD_NAME>">
+
+<table border="1" cellspacing="1" cellpadding="4">
+	<tr>
+		<th colspan="2" class="text" id="header">ACCESS GROUP INFO</th>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_group_group_id><font id="error">*</font></IF>Id<span id="text_top">*</span></td>
+		<td class="text"><INPUT_ACCESS_GROUP_GROUP_ID class="text" size="12" maxlength="10"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_group_name><font id="error">*</font></IF>Name<span id="text_top">*</span></td>
+		<td class="text"><INPUT_ACCESS_GROUP_NAME class="text" size="32" maxlength="30"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_group_info><font id="error">*</font></IF>Info</td>
+		<td class="text"><INPUT_ACCESS_GROUP_INFO class="text" size="32" maxlength="128"></td>
+	</tr>
+	<tr>
+		<td class="text">&nbsp;</td>
+		<td class="text"><SUBMIT value="Update" class="text"></td>
+	</tr>
+</table>
+
+
+</form>
+
+</body>
+</html>

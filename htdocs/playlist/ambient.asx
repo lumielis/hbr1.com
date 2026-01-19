@@ -1,0 +1,11 @@
+<ASX Version="3.0">
+<ENTRY>    
+  <REF HREF="http://radio.hbr1.com:19800/ambient.ogg" />
+  <TITLE>Dream Factory</TITLE>
+  <COPYRIGHT>HBR1.com</COPYRIGHT>
+  <AUTHOR>HBR1.com - Music on Futurenet</AUTHOR>
+	<PARAM name="Album" value="Music on Futurenet"/>
+	<PARAM name="Artist" value="Music on Futurenet"/>
+	<PARAM name="Genre" value="Finest Ambient Trance"/>
+</ENTRY>
+</ASX>

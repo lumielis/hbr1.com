@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+require 'include/settings.inc';
+require $path{'ssms'} . 'system.pl';
+require $path{'ssms'} . 'dbi.pl';
+&ssms::dbi::connect( $dbi{'dsn'}, $dbi{'user'}, $dbi{'pass'} );
+
+$sql = 'SELECT * FROM referer WHERE url = "' . $ENV{'QUERY_STRING'} . '"';
+&ssms::dbi::query( $sql, 1 );
+%row = &ssms::dbi::fetch( 1 );
+if( %row ) {
+	$sql = 'UPDATE referer SET hits = hits + 1 WHERE url = "' . $ENV{'QUERY_STRING'} . '"';
+}
+else {
+	$sql = 'INSERT INTO referer (url,hits) VALUES("' . $ENV{'QUERY_STRING'} . '",1)';
+}
+&ssms::dbi::exec( $sql );
+print "Status: 302 Moved\n";
+print "Location: ", $ENV{'QUERY_STRING'}, "\n\n";
+exit;

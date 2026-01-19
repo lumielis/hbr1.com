@@ -1,0 +1,170 @@
+<html>
+<head>
+<title>Newsletter</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>';
+url_images = '<URL_IMAGES>';
+mail_from = '<EVAL=$main::lotto{'news_mail'}>';
+font_face = '<EVAL=$main::form{'news_message_font_face'}>';
+font_size = '<EVAL=$main::form{'news_message_font_size'}>';
+convert = '<EVAL=$main::form{'news_message_break'}>';
+subject = '<EVAL=$main::form{'news_message_subject'}>';
+message = '<EVAL=$main::form{'news_message_message'}>';
+
+function previewMessage( m ) {
+  if( ! document.frames || ! document.frames[0] ) return;
+  var frame = document.frames[0];
+  if( ! frame.frames || ! frame.frames['header'] || ! frame.frames['body'] ) return;
+  message = m;
+  var header = document.frames[0].frames['header'];
+  var body = document.frames[0].frames['body'];
+  var font = '<font face="' + font_face + '" size="' + font_size + '" color="#000000">';
+  header.document.open( "text/html", "replace" );
+  header.document.write( '<body bgcolor="#0066FF" text="#FFFFFF" leftmargin="2" topmargin="2">' );
+  header.document.write( '<font face="Verdana" size="1"><b>From:</b> ' );
+  header.document.write( mail_from.replace( /</g, '&lt;' ).replace( />/g, '&gt;' ) );
+  header.document.write( '<br><b>Subject:</b> ' + subject + '</font></body>' );
+  header.document.close();
+  body.document.open( "text/html", "replace" );
+  body.document.write( '<body bgcolor="#FFFFFF" text="#000000" link="#0000FF" alink="#FF0000" vlink="#0000FF">' );
+  body.document.write( font );
+  body.document.write( ( convert ? message.replace( /\r\n/g, '<br>' ) : message ) );
+  body.document.write( '</font></body>' );
+  body.document.close();
+}
+
+function previewHeader( s ) {
+  if( ! document.frames || ! document.frames[0] ) return;
+  var frame = document.frames[0];
+  if( ! frame.frames || ! frame.frames['header'] || ! frame.frames['body'] ) return;
+  subject = s
+  var header = document.frames[0].frames['header'];
+  header.document.open( "text/html", "replace" );
+  header.document.write( '<body bgcolor="#0066FF" text="#FFFFFF" leftmargin="2" topmargin="2">' );
+  header.document.write( '<font face="Verdana" size="1"><b>From:</b> ' );
+  header.document.write( mail_from.replace( /</g, '&lt;' ).replace( />/g, '&gt;' ) );
+  header.document.write( '<br><b>Subject:</b> ' + subject + '</font></body>' );
+  header.document.close();
+}
+
+function setFontFace( s ) {
+  font_face = s;
+  previewMessage( message );
+}
+
+function setFontSize( s ) {
+  font_size = s;
+  previewMessage( message );
+}
+
+function setConvert( s ) {
+  convert = s;
+  previewMessage( message );
+}
+
+function initPreview() {
+  if( ! document.frames || ! document.frames[0] ) return;
+  document.frames[0].document.open( "text/html", "replace" );
+  document.frames[0].document.write( '<frameset rows="34,*" framespacing="0">' );
+  document.frames[0].document.write( '<frame name="header" noresize scrolling="no">' );
+  document.frames[0].document.write( '<frame name="body" noresize scrolling="yes">' );
+  document.frames[0].document.write( '</frameset>' );
+  document.frames[0].document.close();
+  previewHeader( subject );
+  previewMessage( message );
+}
+
+//-->
+</script>
+
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onload="initPreview()" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<iframe width="600" height="300"></iframe>
+
+<IF_PAGE_ERROR><br><br><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font></IF>
+<IF_PAGE_MESSAGE><br><br><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font></IF>
+
+<FORM_NEWS step=1>
+<table border="0" cellspacing="4" cellpadding="4">
+  <tr>
+    <td class="txt" valign="top"><IF_ERROR=news_message_subject><font color="#FF0000"></IF>Subject</font></td>
+    <td class="txt"><INPUT_NEWS_MESSAGE_SUBJECT id="default3" size="100" onkeypress="previewHeader(value)" onkeyup="previewHeader(value)"></td>
+  </tr>
+  <tr>
+    <td class="txt" valign="top"><IF_ERROR=news_message_message><font color="#FF0000"></IF>Message</font></td>
+    <td class="txt"><INPUT_NEWS_MESSAGE_MESSAGE id="default2" cols="100" rows="15" wrap="off" onkeypress="previewMessage(value)" onkeyup="previewMessage(value)"></td>
+  </tr>
+  <tr>
+    <td class="txt" valign="top">Options</td>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="txt"><INPUT_NEWS_MESSAGE_BREAK onclick="setConvert(checked)"></td>
+          <td class="txt"><b>Convert line breaks (\n) to HTML breaks (&lt;br&gt;)</b></td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td class="txt">Disable it, if you insert HTML code in Message field</td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <table border="0" cellspacing="0" cellpadding="2">
+              <tr>
+                <td class="txt">Font Face</td>
+                <td class="txt">&nbsp;&nbsp;&nbsp;</td>
+                <td class="txt">Font Size</td>
+              </tr>
+              <tr>
+                <td class="txt"><INPUT_NEWS_MESSAGE_FONT_FACE class="txt" onchange="setFontFace(value)"></td>
+                <td class="txt">&nbsp;</td>
+                <td class="txt"><INPUT_NEWS_MESSAGE_FONT_SIZE class="txt" onchange="setFontSize(value)"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="txt" colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="txt">&nbsp;</td>
+    <td class="txt"><SUBMIT value="Send News" class="txt"></td>
+  </tr>
+</table>
+
+</form>
+
+<hr noshade size="1">
+<table border="0" cellspacing="4" cellpadding="4">
+  <tr>
+    <td class="txt">
+      <FORM_NEWS step=0 method=get part=messages>
+      <input type="hidden" name="order" value="time">
+      <input type="hidden" name="ordir" value="desc">
+      <SUBMIT value="News archive" class="txt">
+      </form>
+    </td>
+    <td class="txt">
+      <FORM_NEWS step=0 method=get part=clients>
+      <input type="hidden" name="order" value="email">
+      <input type="hidden" name="ordir" value="asc">
+      <SUBMIT value="Clients in list" class="txt">
+      </form>
+    </td>
+  </tr>
+</table>
+
+
+</body>
+</html>

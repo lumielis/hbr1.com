@@ -1,0 +1,10 @@
+Text=5|115|credits_Rainbowpuddle
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.rainbowpuddle.com/graphics1.html
+Precache=0
+Refresh=10000
+Image=S_yoyo1tb.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0

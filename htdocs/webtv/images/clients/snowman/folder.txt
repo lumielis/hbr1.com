@@ -1,0 +1,10 @@
+Text=
+Font=Arial,Impact,mono|0|9
+Anchor=
+Precache=0
+Refresh=300
+Image=1.gif
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0

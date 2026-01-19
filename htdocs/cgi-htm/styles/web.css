@@ -1,0 +1,27 @@
+<!--
+BODY{scrollbar-base-color:#E7E3E7}
+a{text-decoration:none}
+.check {background-color: #ffffff}
+.klein{font-family: Verdana, Arial, Adobe Helvetica; font-size: 10px}
+.txt{font-family: Verdana, Arial, Adobe Helvetica; font-size: 10px}
+.middle { font-family: Verdana, Arial, Adobe Helvetica; font-size: 12px }
+.head{font-family: Arial, Verdana, Adobe Helvetica; font-size: 15px}
+.error{font-family: Verdana, Arial, Adobe Helvetica; font-size: 10px; color: #ff0000}
+.small { font-family: Arial; font-size: 8px }
+#justify{ text-align: justify }
+input#login{font-family: Verdana, Arial; font-size: 10px; border-style: solid;border-width: 1; width: 150px}
+input#suche{font-family: Verdana, Arial; font-size: 10px; border-style: solid;border-width: 1; width: 150px}
+input#gewinn1{font-family: Verdana, Arial; font-size: 10px; border-style: solid;border-width: 1; width: 20px}
+input#default1{font-family: Verdana, Arial; font-size: 10px; border-style: solid;border-width: 1; width: 150px}
+input#default2{font-family: Verdana, Arial; font-size: 10px; border-style: solid;border-width: 1; width: 100px }
+input#default3{font-family: Verdana, Arial; font-size: 10px; border-style: solid;border-width: 1 }
+select#datum{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1; width: 42px}
+select#suche1{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1; width: 100px}
+select#suche2{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1; width: 150px}
+select#default1{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1; width: 150px}
+select#default2{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1}
+select#lotto1{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1; width: 89px}
+textarea#default1{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1; width: 400px}
+textarea#default2{font-family: Verdana, Arial; font-size: 10px; border-style: solid; border-width: 1}
+input#nl{font-family: Verdana, Arial; font-size: 10px; width: 150px; border-style: solid; border-width: 1}
+-->

@@ -1,0 +1,374 @@
+<html>
+<head>
+
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+
+<style type="text/css">
+<!--
+td { font-family: Arial, Helvetica, sans-serif, Mono; font-size: 10px }
+.color_cell { font-family: Verdana; font-size: 3px }
+.blue { color: #99CCFF }
+#RoomImage { position: absolute; left: 5px; top: -380px; width: 1px; height: 1px; visibility: visible }
+#ColorTable { position: absolute; left: 10px; top: 10px; width: 1px; height: 1px }
+#ColorReview { position: absolute; left: 10px; top: 130px; width: 1px; height: 1px; visibility: hidden }
+#RoomList { position: absolute; left: 10px; top: 170px; width: 1px; height: 1px }
+#UserList { position: absolute; left: 10px; top: 220px; width: 1px; height: 1px }
+#SessionTime { position: absolute; left: 5px; top: 380px; width: 1px; height: 1px; visibility: hidden }
+select { font-family: Verdana, Arial; font-size: 10px; width: 160px; border-style: solid }
+input { font-family: Verdana, Arial; font-size: 10px; width: 160px }
+input#nl { border-style: solid; border-width: 1px }
+-->
+</style>
+
+<script language="JavaScript" src="../jscript/util.js"></script>
+<script language="JavaScript" src="../jscript/color.js"></script>
+<script language="JavaScript" src="../jscript/css.js"></script>
+<script language="JavaScript" src="../jscript/layer.js"></script>
+
+<script language="JavaScript"> 
+<!--
+
+function CreateColorMap() {
+
+  var color_cols = 10;
+  var cmc, cmr, i, j, k;
+  var col_tab = new Array( 'FF0000', 'FF8800', 'FFFF00', 'AAFF00', '00FF00', '00FF88'
+                         , '00FFFF', '0088FF', '0000FF', '8800FF', 'FF00FF', 'FF0088' );
+  var col = new Color();
+  var clw = new Color( 'FFFFFF' );
+  var clb = new Color( '000000' );
+  
+  var out = '<table border=0 cellspacing=1 cellpadding=0 bgcolor=#FFFFFF>';
+  
+  for( j = 0; j < col_tab.length; j ++ ) {
+    col.FromString( col_tab[j] );
+    out += '<tr>';
+    cmc = SmoothColor( clb, col, color_cols );
+    for( i = 1; i < color_cols; i ++ ) {
+      out += '<td bgcolor="#' + cmc[i] + '" class="color_cell" width="7" height="4"><a href="javascript:SetColor( &quot;' + cmc[i] + '&quot; );"><font color="#' + cmc[i] + '">OO</font></a></td>\n';
+    }
+    cmc = SmoothColor( col, clw, color_cols );
+    for( i = 1; i < color_cols; i ++ ) {
+      out += '<td bgcolor="#' + cmc[i] + '" class="color_cell" width="7" height="4"><a href="javascript:SetColor( &quot;' + cmc[i] + '&quot; );"><font color="#' + cmc[i] + '">OO</font></a></td>\n';
+    }
+    out += '</tr>';
+  }
+  
+  out += '</table>';
+  ColorTable.setContent( SetTableContent( 'colorful mind', out ) );
+  
+  if( parent && parent.Resized ) {
+    UpdateClients( parent.UserList );
+    UpdateRooms( parent.RoomList, parent.JSM_Room );
+    PreviewColor( parent.JSM_Color );
+    parent.Resized = 0;
+  }
+  
+  ArrangeLayers();
+  
+}
+
+function SetColor( color ) {
+  if( ! parent || ! parent.SetColor ) return;
+  parent.SetColor( color );
+  if( parent.FocusInput ) parent.FocusInput();
+}
+
+function PreviewColor( color ) {
+  var out = '<table width="128" height="10"><tr><td class="color_cell" bgcolor="#' + color + '">&nbsp;</td></tr></table>';
+  ColorReview.setContent( SetTableContent( 'preview', out ) );
+}
+
+function SelectUser( id ) {
+  if( parent && parent.PrivateMessage ) {
+    parent.PrivateMessage( id, 0 );
+  }
+}
+
+function UpdateClients( list ) {
+  var i, elm, opt;
+  if( ! list.length ) return LoginForm();
+  var out = '<table border="0" cellspacing="3" cellpadding="0">';
+  out += '<tr><td class="ns">';
+  out += '<select name="Client" class="nl" id="selectFixed" size="5" ondblclick="ClientAction(1); ClientForm(this.form);">';
+  for( i = 0; i < list.length; i += 3 ) out += '<option>' + list[i+1] + '</option>';
+  out += '</select></td></tr>';
+  out += '<tr><td><input type="submit" value="Write Something" onclick="ClientAction(1);"></td></tr>';
+  out += '<tr><td><a href="javascript:Logout();"><b>paranoia!!!</b></a></td></tr>';
+  out += '</table>';
+  UserList.setContent( SetTableContent( 'fraggles in room', out, '<form name="formClients" onSubmit="return ClientForm(this);">', '</form>' ) );
+}
+
+function UpdateRooms( list, room ) {
+  var out = '<table border="0" cellspacing="3" cellpadding="0"><tr><td>';
+  out += '<select name="Room" id="selectFixed" OnClick="ChangeRoom( this );">';
+  for( var i = 0; i < list.length; i += 2 ) out += '<option>' + list[i+1] + '</option>';
+  out += '</select></td></tr></table>';
+  RoomList.setContent( SetTableContent( 'hbr1&nbsp;rooms', out, '<form name="formRooms" onSubmit="return false;">', '</form>' ) );
+  SelectRoom( room );
+}
+
+function LoginForm() {
+  var size = document.all ? 15 : 10;
+  var nick = parent.JSM_Client ? parent.JSM_Client : 'Nickname';
+  var pass = parent.JSM_Pass ? parent.JSM_Pass : 'Passwort';
+  var out = '<table border="0" cellspacing="3" cellpadding="0">';
+  out += '<tr><td class="ns">';
+  out += '<input type="text" name="Nick" size="' + size + '" value="' + nick + '" id="nl"></td></tr>';
+  out += '<tr><td><input type="password" name="Pass" size="' + size + '" value="' + pass + '" id="nl"></td></tr>';
+  out += '<tr><td><input type="submit" value="Login"></td></tr>';
+  out += '</table>';
+  UserList.setContent( SetTableContent( 'come in', out, '<form name="formLogin" onSubmit="return Login( this );">', '</form>' ) );
+}
+
+function Login( Sender ) {
+  if( ! Sender || ! parent.document ) return false;
+  parent.JSM_Client = Sender.Nick.value;
+  parent.JSM_Pass = Sender.Pass.value;
+  if( document.curRoom ) parent.JSM_Room = document.curRoom;
+  if( parent.Login ) parent.Login();
+  return false;
+}
+
+function Logout() {
+  if( parent.Logout ) parent.Logout();
+}
+
+function ChangeRoom( Sender ) {
+  if( ! Sender || ! parent.document ) return false;
+  if( ! parent.ChangeRoom || Sender.selectedIndex < 0 ) return false;
+  if( document.curRoom == Sender.options[Sender.selectedIndex].text ) return true;
+  document.curRoom = Sender.options[Sender.selectedIndex].text;
+  parent.ChangeRoom( Sender.options[Sender.selectedIndex].text );
+  return true;
+}
+
+function SelectRoom( room ) {
+  if( ! room ) return false;
+  document.curRoom = room;
+  var obj = findNodeByName( RoomList.layer, 'SELECT', 'Room' );
+  if( ! obj && document.layers )
+    obj = RoomList.layer.document.forms['formRooms'].elements['Room'];
+  if( ! obj || ! obj.options ) return false;
+  for( var i = 0; i < obj.options.length; i ++ ) {
+    obj.options[i].selected = obj.options[i].text == room;
+  }
+  return true;
+}
+
+function updateSessionTime( from, to ) {
+  var now = new Date();
+  var dt = new Date();
+  RoomImageEnabled = false;
+  if( now.getTime() > from && now.getTime() < to ) {
+    ImageRun = true;
+  }
+  else {
+    if( RoomImageObject ) RoomImageObject.stop();
+    var out = '<table border=0 cellspacing=1 cellpadding=0>';
+    dt.setTime( from );
+    out += '<tr><td colspan=6><u>next live chat</u></td></tr>';
+    out += '<tr><td>begin:&nbsp;</td>';
+    out += '<td align=right class="blue">' + ( dt.getDate() < 10 ? '0' : '' ) + dt.getDate() + '.</td>';
+    out += '<td align=right class="blue">' + ( dt.getMonth() < 9 ? '0' : '' ) + ( dt.getMonth() + 1 ) + '.</td>';
+    out += '<td align=right class="blue">' + ( dt.getYear() < 100 ? '19' : '' ) + dt.getYear() + '&nbsp;&nbsp;</td>';
+    out += '<td align=right class="blue">' + ( dt.getHours() < 10 ? '0' : '' ) + dt.getHours() + ':</td>';
+    out += '<td align=right class="blue">' + ( dt.getMinutes() < 10 ? '0' : '' ) + dt.getMinutes() + '</td></tr>';
+    dt.setTime( to );
+    out += '<tr><td>end:&nbsp;</td>';
+    out += '<td align=right class="blue">' + ( dt.getDate() < 10 ? '0' : '' ) + dt.getDate() + '.</td>';
+    out += '<td align=right class="blue">' + ( dt.getMonth() < 9 ? '0' : '' ) + ( dt.getMonth() + 1 ) + '.</td>';
+    out += '<td align=right class="blue">' + ( dt.getYear() < 100 ? '19' : '' ) + dt.getYear() + '&nbsp;&nbsp;</td>';
+    out += '<td align=right class="blue">' + ( dt.getHours() < 10 ? '0' : '' ) + dt.getHours() + ':</td>';
+    out += '<td align=right class="blue">' + ( dt.getMinutes() < 10 ? '0' : '' ) + dt.getMinutes() + '</td></tr>';
+    out += '</table>';
+    SessionTime.setContent( SetTableContent( 'interview', out ) );
+    ImageRun = false;
+    ArrangeLayers();
+  }
+}
+
+function SetTableContent( title, content, before, after ) {
+  if( ! before ) before = '';
+  if( ! after ) after = '';
+  var out = before
+  + '<table border=0 cellspacing=0 cellpadding=0 width=184>'
+  + '<tr><td>'
+  + '<table border=0 cellspacing=0 cellpadding=0 width=100%>'
+  + '<tr><td background="../images/nav_header.gif" height=17><font color=#CCCCFF><b>&nbsp;&nbsp;' + title + '</b></font></td></tr>'
+  + '</table></td></tr><tr><td>'
+  + '<table border=0 cellspacing=1 cellpadding=2 bgcolor=#0F006F width=100%>'
+  + '<tr><td align=center>' + content + '</td></tr></table>'
+  + '</td></tr></table>' + after;
+  //alert( out );
+  return out;
+}
+
+function ClientAction( Sender ) {
+  document.Action = parseInt( Sender );
+  return false;
+}
+
+function ClientForm( Sender ) {
+  if( ! Sender ) return false;
+  var id, obj = Sender.elements['Client'];
+  if( obj.selectedIndex < 0 ) return false;
+  switch( document.Action ) {
+    case 1: // private message
+      id = parent.GetClientId( obj.options[obj.selectedIndex].text );
+      if( id ) parent.PrivateMessage( id );
+      break;
+  }
+  return false;
+}
+
+function SetRoomImage( url, title ) {
+  if( ! ImageRun ) return false;
+  if( ! RoomImageObject ) {
+    RoomImageObject = findNodeByName( RoomImage.layer, 'APPLET' );
+    if( ! RoomImageObject ) {
+      if( ! document.applets ) return false;
+      if( ! document.applets.length ) return false;
+      RoomImageObject = document.applets[0]
+    }
+  }
+  if( title ) RoomImageObject.setTitle( title );
+  RoomImageObject.setUrl( url );
+  RoomImageObject.start();
+  RoomImageEnabled = true;
+  ArrangeLayers();
+}
+
+function setProtocol( proto, host, port ) {
+  if( ! RoomImageObject ) {
+    RoomImageObject = findNodeByName( RoomImage.layer, 'APPLET' );
+    if( ! RoomImageObject ) {
+      if( ! document.applets ) return false;
+      if( ! document.applets.length ) return false;
+      RoomImageObject = document.applets[0]
+    }
+  }
+  RoomImageObject.setProtocol( proto, host, port );
+  parent.OnInitServer = null;
+}
+
+function setRefresh( refresh ) {
+  if( ! RoomImageObject ) {
+    RoomImageObject = findNodeByName( RoomImage.layer, 'APPLET' );
+    if( ! RoomImageObject ) {
+      if( ! document.applets ) return false;
+      if( ! document.applets.length ) return false;
+      RoomImageObject = document.applets[0]
+    }
+  }
+  RoomImageObject.setRefresh( refresh );
+}
+
+function OnLogin() {
+  return;
+  if( ! RoomImageEnabled && RoomImageObject ) {
+    RoomImageObject.start();
+    RoomImageEnabled = true;
+    ArrangeLayers();
+  }
+}
+
+function OnLogout() {
+  RoomImageEnabled = false;
+  if( RoomImageObject ) RoomImageObject.stop();
+  //ArrangeLayers();
+}
+
+function ArrangeLayers() {
+  var Top = 5;
+  RoomImage.hide();
+  ColorReview.hide();
+  ColorTable.hide();
+  UserList.hide();
+  RoomList.hide();
+  SessionTime.hide();
+  if( ! ImageRun ) {
+    SessionTime.setPosition( 5, Top );
+    SessionTime.show();
+    Top += 71;
+  }
+  else if( RoomImageEnabled ) {
+    RoomImage.setPosition( 5, Top );
+    RoomImage.show();
+    Top += 175;
+  }
+  ColorTable.setPosition( 5, Top );
+  ColorTable.show();
+  Top += 88;
+  RoomList.setPosition( 5, Top );
+  RoomList.show();
+  Top += 52;
+  UserList.setPosition( 5, Top );
+  UserList.show();
+}
+
+// initialization
+
+var ColorTable = new Layer( 'ColorTable' );
+var ColorReview = new Layer( 'ColorReview' );
+var UserList = new Layer( 'UserList' );
+var RoomList = new Layer( 'RoomList' );
+var RoomImage = new Layer( 'RoomImage' );
+var SessionTime = new Layer( 'SessionTime' );
+var RoomImageEnabled = false;
+var RoomImageObject = null;
+var ImageRun = true;
+var RoomImageTimer = null;
+
+if( parent ) {
+  parent.OnSetColor = PreviewColor;
+  parent.OnUserList = UpdateClients;
+  parent.OnRoomList = UpdateRooms;
+  parent.OnRoomImage = SetRoomImage;
+  parent.OnLogin = OnLogin;
+  parent.OnLogout = OnLogout;
+  parent.OnSessionTime = updateSessionTime;
+  parent.OnInitServer = setProtocol;
+  parent.OnSetRefresh = setRefresh;
+  if( parent.AddReloadFrame ) parent.AddReloadFrame( this );
+}
+
+//-->
+</script>
+
+</head>
+
+<body class="sb1" bgcolor="#000000" text="#FFFFFF" link="#CCCCCC" alink="#FF0000" vlink="#CCCCCC" marginwidth="0" marginheight="0" leftmargin="0" topmargin="0" OnLoad="setTimeout( 'CreateColorMap()', 300 );" OnUnload="Logout()">
+
+<div id="ColorTable"><font face="Verdana" size="2" color=#0000FF><b>is&nbsp;building...</b></font></div>
+<div id="ColorReview"><font face="Verdana" size="2" color=#0000FF><b>is&nbsp;loading...</b></font></div>
+<div id="RoomList"><font face="Verdana" size="2" color=#0000FF><b>is&nbsp;loading...</b></font></div>
+<div id="UserList"><font face="Verdana" size="2" color=#0000FF><b>is&nbsp;loading...</b></font></div>
+<div id="SessionTime"><font face="Verdana" size="2" color=#0000FF><b>no data available...</b></font></div>
+<div id="RoomImage">
+<table border=0 cellspacing=0 cellpadding=0 width=170>
+  <tr><td>
+    <table border=0 cellspacing=0 cellpadding=0 width=100%>
+      <tr><td background="../images/nav_header.gif"  height=17><font color=#CCCCFF><b>&nbsp;&nbsp;interview</b></font></td></tr>
+    </table>
+  </td></tr>
+  <tr><td>
+    <table border=0 cellspacing=1 cellpadding=2 bgcolor=#000000 width=100%>
+      <tr><td align=center>
+        <applet code="WebCam" width=176 height=144>
+          <param name="font_style" value="0">
+          <param name="font_size" value="10">
+          <param name="font_face" value="Verdana">
+          <param name="modify" value="0">
+          <param name="color" value="ffa4bf">
+          <param name="refresh" value="2500">
+        </applet>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</div>
+
+</body>
+</html>

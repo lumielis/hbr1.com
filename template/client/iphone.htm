@@ -1,0 +1,215 @@
+<html>
+<head>
+<meta http-equiv="content-type"
+	content="text/html; charset=#[PRINT $ENV{'CHARSET'}]#">
+<link rel="stylesheet" type="text/css" href="/style/client.css?1">
+<script language="JavaScript">
+<!--
+
+if( !top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+//-->
+</script>
+
+<title>HBR1 Stations</title>
+
+<style type="text/css">
+<!--
+body {
+	margin-top: 30pt;
+	margin-bottom: 30pt;
+}
+body, td, th {
+	font-size: 30pt;
+	line-height: 32pt;
+}
+.head {
+	font-size: 30pt;
+}
+.genre {
+	font-size: 26pt;
+	font-family: Arial, Adobe Helvetica;
+}
+.station {
+	font-size: 32pt;
+	line-height: 34pt;
+	font-family: Verdana, Arial, Sans Serif, Adobe Helvetica;
+}
+.info {
+	font-size: 30pt;
+}
+.play {
+	background-color: #660000;
+	border: 4px solid #990000;
+}
+.sl1 {
+	font-weight: normal;
+}
+a.sl1:link, a.sl1:visited {
+	color: #ffff00;
+	text-decoration: none;
+}
+#current {
+	font-weight: bold;
+	color: #FFFF88;
+}
+-->
+</style>
+
+<script language="JavaScript" src="/cgi-htm/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF">
+
+<table cellspacing="0" cellpadding="0" border="0" width="899" align="center">
+  <tr>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+  </tr>
+  <tr>
+    <td align="center" bgcolor="#110044" valign="top">
+    <div class="header" align="center" style="margin-top: 10px; margin-bottom: 30px;">
+    	<font color="#9999ff"><b>HBR1 @ iPhone</b></font></div>
+
+<div style="margin-bottom: 15px;">
+#[LOOP Stations]#
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="/images/spacer.gif" width="1" height="10"></td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
+      <tr>
+        <td>
+        	<div style="cursor: hand;" onclick="parent.location='#[PRINT $Station->{'IPhoneUrl'}]#'">
+          <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
+            <tr>
+              <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17"></td>
+              <td class="station" align="center">
+                <b>
+                <script language="JavaScript">
+                <!--
+                document.write( TextLight( '#[PRINT $Station->{Title}]#', '33AA00', 'DDFF99' ) );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#DDFF99">&nbsp;#[PRINT $Station->{Title}]#</font>
+                </noscript>
+                </b>
+              </td>
+              <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17"></td>
+            </tr>
+            <tr>
+              <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17"></td>
+              <td class="genre" align="center">
+                <script language="JavaScript">
+                <!--
+                document.write( TextLight( '#[PRINT $Station->{Genre}]#', 'FF9966', 'FFCC88' ) );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#FFFFFF">#[PRINT $Station->{Genre}]#&nbsp;</font>
+                </noscript>
+              </td>
+              <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17"></td>
+            </tr>
+          </table>
+	        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="1" width="100%">
+            <tr>
+              <td><img src="/images/spacer.gif" width="25" height="1"></td>
+              <td class="txt">
+
+<div style="margin-top: 20px; margin-bottom: 20px;">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr><td class="info">
+#[IF $Station->{'Track_Data'}]#
+#[SET $Station->{'Track_Caption'} =~ tr/_/ /;]#
+#[IF $Station->{'Track_Live'}]#
+<font color="FFFFAA">Running: </font>
+<font color="#999999">[Live] </font>
+#[ELSIF $Station->{'Track_Error'}]#
+<font color="ff9955">Last Played: </font>
+#[ELSE]#
+<font color="FFFFAA">Running: </font>
+<font color="#999999">[-#[PRINT $Station->{'Track_Duration'}]#] </font>
+#[END IF]#
+#[PRINT fitString( $Station->{'Track_Caption'}, 45, ' ...' )]#
+#[IF $Station->{'MixID'}]#
+<font color="#6666AA"> (<a href="/cgi-bin/mixes.cgi?action=playlist&mix_id=#[PRINT $Station->{'MixID'}]#"
+>tracklist</a>)</font>
+#[END IF]#
+#[END IF]#
+</td></tr>
+<tr><td><img src="/images/spacer.gif" width="1" height="6"></td></tr>
+</table>
+</div>
+            </td>
+              <td><img src="/images/spacer.gif" width="25" height="1"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+#[END LOOP STATIONS]#
+</div>
+
+    </td>
+  </tr>
+  <tr>
+    <td align=middle background="/images/footer_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=#[SCALAR $ENV{CHARSET}]#">
+<script language="JavaScript">
+<!--
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+function initPage() {
+  if( parent && parent.frames && parent.frames['bottom'] ) {
+    parent.frames['bottom'].document.activePage = 'station';
+    if( parent.frames['bottom'].updatePage )
+      parent.frames['bottom'].updatePage();
+  }
+}
+window.onload = initPage;
+
+//-->
+</script>
+
+<title>HBR1 Stations</title>
+
+<style type="text/css">
+<!--
+body {
+  scrollbar-base-color: #170040;
+  scrollbar-track-color: #000000;
+  scrollbar-face-color: #100030;
+  scrollbar-highlight-color: #000050;
+  scrollbar-3d-light-color: #000000;
+  scrollbar-dark-shadow-color: #000000;
+  scrollbar-shadow-color: #002060;
+  scrollbar-arrow-color: #002060;
+}
+td, th {
+  font-family: Verdana, Arial, Helvetica, sans-serif, Mono;
+  font-size: 10px;
+}
+.small {
+  font-size: 10px;
+  font-family: Arial, mono;
+}
+.head {
+  font-size: 11px
+}
+.big {
+  font-size: 12px
+}
+.blue {
+  BORDER-LEFT: #000088 1px solid;
+  BORDER-TOP: #000088 1px solid;
+  BORDER-RIGHT: #0000CC 1px solid;
+  BORDER-BOTTOM: #0000CC 1px solid;
+  FONT: 8pt verdana, mono;
+  MARGIN-LEFT: 2px;
+  COLOR: #00FFFF;
+  BACKGROUND-COLOR: #000060;
+  scrollbar-base-color: #000000;
+  scrollbar-track-color: #000066;
+  scrollbar-face-color: #000088;
+  scrollbar-highlight-color: #0000CC;
+  scrollbar-3d-light-color: #0000CC;
+  scrollbar-dark-shadow-color: #000088;
+  scrollbar-shadow-color: #000088;
+  scrollbar-arrow-color: #6666FF;
+}
+.blue2 {
+  BORDER-LEFT: #0000CC 1px solid;
+  BORDER-TOP: #0000CC 1px solid;
+  BORDER-RIGHT: #000088 1px solid;
+  BORDER-BOTTOM: #000088 1px solid;
+  FONT: 8pt verdana, mono;
+  COLOR: #FFFFFF;
+  BACKGROUND-COLOR: #000060;
+}
+a {
+  text-decoration: none;
+}
+a:link {
+  color: #5588FF;
+}
+a:visited {
+  color: #5588FF;
+}
+a:hover {
+  color: #FF0055;
+}
+-->
+</style>
+
+<script language="JavaScript" src="#[SCALAR $ENV{URL_HTML}]#/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align=left width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/header_left.gif"><img height=8 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=64></td>
+    <td align=middle background="#[SCALAR $ENV{URL_IMAGES}]#/header_bg.gif"><img height=1 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=1></td>
+    <td align=right width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/header_right.gif"><img height=8 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/body_left.gif"><img src="#[SCALAR $ENV{URL_IMAGES}]#/title_left.gif"></td>
+    <td align=center background="#[SCALAR $ENV{URL_IMAGES}]#/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td class="head" align="center"><font color="#9999ff"><b>STATION SPACE</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/body_right.gif"><img src="#[SCALAR $ENV{URL_IMAGES}]#/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/body_left.gif"><img height=1 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=55></td>
+    <td align="center" background="#[SCALAR $ENV{URL_IMAGES}]#/body_bg.jpg" valign="top">
+
+<!--
+    <br>
+<table cellSpacing="0" cellPadding="0" border="0" align="center">
+  <tr>
+    <td align="center">
+    	<table border="0" cellspacing="0" cellpadding="0">
+    		<tr>
+    			<td>
+			    	<table border="0" cellspacing="0" cellpadding="0">
+						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+						<input type="hidden" name="cmd" value="_xclick">
+						<input type="hidden" name="business" value="donate@hbr1.com">
+						<input type="hidden" name="item_name" value="HBR1 Donation">
+						<input type="hidden" name="item_number" value="HBR1_PAYPAL_DONATION">
+						<input type="hidden" name="no_note" value="1">
+						<input type="hidden" name="currency_code" value="EUR">
+						<input type="hidden" name="tax" value="0">
+			    		<tr>
+			    			<td><input type="image" src="#[SCALAR $ENV{URL_IMAGES}]#/station/donate.gif" border="0" name="submit" alt="Make a Donation via PayPal" vspace="5"></td>
+			    		</tr>
+						</form>
+			    	</table>
+			    </td>
+			</tr>
+			</table>
+		</td>
+  </tr>
+  <tr>
+    <td align="center"><font color="#7799CC">Help to keep up the free Music on Futurenet</font></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="1" height="10"></td>
+  </tr>
+</table>
+-->
+<div style="margin-top: 20px; margin-bottom: 10px;">
+<table width="200" height="80" background="/images/wtc2.jpg?1" style="border: 2px solid #330099">
+<tr>
+	<td align="center" colspan="2"><span class="big" style="color: white; background-color: black;"><b>Loose Change ?</b></span></td>
+</tr>
+<tr>
+	<td align="center" colspan="2"><span style="color: white; background-color: black;">watch it</span></td>
+</tr>
+<tr>
+	<td align="center">
+		<span style="background-color: black">&nbsp;
+		<a href="http://video.google.com/videoplay?docid=7866929448192753501" target="911"><b>english</b></a>
+		&nbsp;</span>
+	</td>
+	<td align="center">
+		<span style="background-color: black">&nbsp;
+		<a href="http://video.google.de/videoplay?docid=1659812406812735870" target="911"><b>german</b></a>
+		&nbsp;</span>
+	</td>
+</tr>
+</table>
+</div>
+
+#[LOOP Stations]#
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="1" height="10"></td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
+            <tr>
+              <td width="1%"><img src="#[SCALAR $ENV{URL_IMAGES}]#/station/station_left.gif" width="16" height="17"></td>
+              <td class="head">
+                <b>
+                <script language="JavaScript">
+                <!--
+                document.write( '&nbsp;' + TextLight( '#[FIELD $Station->{Title}]#', '33AA00', 'DDFF99' ) );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#DDFF99">&nbsp;#[FIELD $Station->{Title}]#</font>
+                </noscript>
+                </b>
+              </td>
+              <td class="txt" align="right">
+                <script language="JavaScript">
+                <!--
+                document.write( TextFade( '#[FIELD $Station->{Genre}]#', 'FFFF88', 'FF9966' ) + '&nbsp;' );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#FFFFFF">#[FIELD $Station->{Genre}]#&nbsp;</font>
+                </noscript>
+              </td>
+              <td width="1%" align="right"><img src="#[SCALAR $ENV{URL_IMAGES}]#/station/station_right.gif" width="16" height="17"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="1">
+            <tr>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="25" height="1"></td>
+              <td class="txt">
+#[IF $Station->{ServerStatus}]#
+#[IF $Station->{StreamStatus}]#
+<font color="FFFFAA">Currently Playing:</font>
+#[PRINT fitString( $Station->{Songtitle}, 35, '..' )]#
+#[IF $Station->{MixID}]#<font color="#6666AA"> (<a href="/cgi-bin/mixes.cgi?action=playlist&mix_id=#[FIELD $Station->{MixID}]#">tracklist</a>)</font>#[END IF]#
+<br><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="1" height="6"><br>
+#[LOOP Streams]#
+#[IF $Stream->{Playlist}]#
+<a href="#[FIELD $Stream->{Playlist}]#">#[FIELD $Stream->{Title}]#</a>
+#[ELSE]#
+#[FIELD $Stream->{Title}]#
+
+#[END IF]#
+#[IF $Stream->{ShowStats} && $Stream->{Status}]#
+<!--
+#[FIELD $Stream->{Status}]#
+
+//-->
+#[END IF]#
+#[END LOOP]#
+#[IF $Station->{ShowStats} && $Station->{Status}]#
+<!--
+#[FIELD $Station->{Status}]#
+
+//-->
+#[END IF]#
+#[ELSE]#
+<font color="#999999">The station is currently offline.</font>
+#[END IF]#
+#[ELSE]#
+<font color="#FF6666">The Server is offline.</font>
+#[END IF]#
+              </td>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="25" height="1"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+#[END LOOP]#
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="1" height="20"></td>
+      </tr>
+    </table>
+
+    <font color="#7799CC">To hear our streams you need a player that supports <a href="http://www.iis.fraunhofer.de/amm/techinf/layer3/index.html" target="_blank">MP3</a>, <a href="http://www.xiph.org/ogg/vorbis/" target="_blank">Ogg Vorbis</a> or <a href="http://windowsmedia.com/download" target="_blank">Windows Media</a> streaming format. The most popular players are listed below.</font>
+    <br><br>
+
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td colspan="3"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/mac_top.gif"></td>
+            </tr>
+            <tr>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/mac_left.gif"></td>
+              <td><a href="http://www.apple.com/itunes" target="_blank"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/mac_logo.gif" border="0" ALT="Download Apple iTunes"></a></td>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/mac_right.gif"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/mac_bot.gif"></td>
+            </tr>
+          </table>
+
+        </td>
+        <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="20" height="1"></td>
+        <td>
+
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td colspan="3"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/win_top.gif"></td>
+            </tr>
+            <tr>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/win_left.gif"></td>
+              <td><a href="http://winamp.com" target="_blank"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/win_logo.gif" BORDER="0" ALT="Download Winamp"></a></td>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/win_right.gif"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/win_bot.gif"></td>
+            </tr>
+          </table>
+
+        </td>
+        <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width="20" height="1"></td>
+        <td>
+
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td colspan="3"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/linux_top.gif"></td>
+            </tr>
+            <tr>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/linux_left.gif"></td>
+              <td><a href="http://www.xmms.org" target="_blank"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/linux_logo.gif" border="0" alt="Download the X MultiMedia System"></a></td>
+              <td><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/linux_right.gif"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="#[SCALAR $ENV{URL_IMAGES}]#/player/linux_bot.gif"></td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+
+
+    <br>
+    </td>
+    <td align=right width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/body_right.gif"><img height=1 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=55></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/body_left.gif"><img src="#[SCALAR $ENV{URL_IMAGES}]#/title_left.gif"></td>
+    <td align=middle background="#[SCALAR $ENV{URL_IMAGES}]#/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="center"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/body_right.gif"><img src="#[SCALAR $ENV{URL_IMAGES}]#/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/footer_left.gif"><img height=8 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=64></td>
+    <td align=middle background="#[SCALAR $ENV{URL_IMAGES}]#/footer_bg.gif"><img height=1 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=1></td>
+    <td align=right width="1%" background="#[SCALAR $ENV{URL_IMAGES}]#/footer_right.gif"><img height=8 src="#[SCALAR $ENV{URL_IMAGES}]#/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+<!--
+    </td>
+  </tr>
+</table>
+-->
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+td { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+td.s { font-size: 8pt }
+td.n { font-size: 9pt }
+td.b { font-size: 1pt }
+td.smg { color:#EEEEEE; font-family: Arial Narrow, mono; font-size: 8pt }
+td.sm { font-family: sans-serif, mono; font-size: 8px }
+td.tan { font-family: Arial, sans-serif, mono; font-size: 11px }
+td.px8 { font-family: Verdana, sans-serif, mono; font-size: 2.5mm }
+td.smn { color:#900000 }
+td.nm { font-size: 10pt; }
+td.big { font-size: 18px; }
+td.jstime1 { font-family: Verdana, mono; font-size: 10px; color:#AAEEFF }
+td.jstime2 { font-family: Verdana, mono; font-size: 10px; color:#70D0FF }
+td.jstime3 { font-family: Verdana, mono; font-size: 10px; color:#C0C0C0 }
+td.gb1 { font-size: 8pt; color:#EEEEEE }
+td.gb2 { font-size: 8pt; color:#CCCCCC }
+td.sc { font-size: 8pt; color:#AAAAAA }
+td.se { font-size: 8pt; color:#FF0000 }
+td.us { font-size: 8pt; color:#EEEEEE; }
+td.usj { font-size: 8pt; color:#EEEEEE; text-align: justify }
+td.ul { font-size: 9pt; background-color: #303030; color: #eeeeee }
+td.uls { font-size: 8pt; background-color: #303030; color: #eeeeee }
+input, select { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; font-weight: normal;  }
+textarea { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;  }
+textarea.n { font-family: Verdana, Arial, sans-serif, mono; font-size: 3mm  }
+a:link, a:visited {  color: #BBBBFF; text-decoration: none;}
+a.b:link, a.b:visited {  color: #AAAAEE; text-decoration: none;}
+a.c:link, a.c:visited {  color: #40FFCC; text-decoration: none;}
+a.d:link, a.d:visited {  color: #99CCFF; text-decoration: none;}
+a:active, a:hover, a.b:active, a.b:hover, a.c:active, a.c:hover, a.d:active, a.d:hover {  color: #FFFFFF; text-decoration: none;}
+div.pe { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #FF0000 }
+div.pm { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #00FF00 }
+h2 { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 20px; font-weight: bold }

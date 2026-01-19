@@ -1,0 +1,13 @@
+Text=5|115|technoparade paris
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.technopol.net/techno.php
+Precache=0
+Refresh=10000
+Image=S_TP2000H.jpg
+Image=S_TP2000F.jpg
+Image=S_TP1998A1.jpg
+Image=S_bastille_parade.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0

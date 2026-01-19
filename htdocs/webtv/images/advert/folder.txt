@@ -1,0 +1,11 @@
+Text=40|95|Stefano Noferini
+Text=40|108|Destination(CD)
+Refresh=1000
+Image=cosmophilia.jpg
+Font=Arial,Impact,mono|0|9
+Precache=0
+Color=77AA66
+Anchor=http://www.cosmophilia.com/
+Shuffle=0
+Repeat=-1
+Enabled=0

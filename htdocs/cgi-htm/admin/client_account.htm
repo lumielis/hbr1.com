@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>Client Account</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=userman&part=account&client=<CLIENT_ID>';
+url_images = '<URL_IMAGES>';
+//-->
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font></IF>
+
+<p class="txt">Account for Client <b><CLIENT_ID></b> Name: <b><CLIENT_FIRST_NAME> <CLIENT_LAST_NAME></b></p>
+
+<table width=700 border=1 cellspacing=0 cellpadding=2>
+  <tr>
+<script language="JavaScript">
+<!--
+drawOrder( 'time', 'Date' );
+drawOrder( 'time', 'Time' );
+drawOrder( 'amount', 'Prize' );
+drawOrder( 'charge', 'Charge' );
+drawOrder( 'sender', 'Principal' );
+drawOrder( 'info', 'Info' );
+//-->
+</script>
+  </tr>
+<COMMISSIONS>
+  <tr>
+    <td valign=top class="txt"><COMMISSION_DATE></td>
+    <td valign=top class="txt"><COMMISSION_TIME></td>
+    <td valign=top class="txt"><COMMISSION_AMOUNT></td>
+    <td valign=top class="txt">= <u><COMMISSION_CHARGE></u></td>
+    <td valign=top class="txt"><COMMISSION_SENDER></td>
+    <td valign=top class="txt"><i><COMMISSION_INFO></i></td>
+  </tr>
+</COMMISSIONS>
+</table>
+
+<table border=0 width=700>
+<tr>
+  <td align=center class="txt">&nbsp;</td>
+</tr>
+<tr>
+  <td align=center>
+  <table border=0 width=560>
+    <tr>
+      <td align="left" width="150" class="txt"><IF_ENTRY_PREV><a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&count=<ENTRY_COUNT>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>"><img src="<URL_IMAGES>/zurueck.gif" border="0">Previous entries</a></IF>&nbsp;</td>
+      <td align="center" width="260" class="txt">Entries <b><ENTRY_FROM></b>-<b><ENTRY_REAL></b> of <b><ENTRY_MAX></b> items total</td>
+      <td align="right" width="150" class="txt">&nbsp;<IF_ENTRY_NEXT><a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_TO>&count=<ENTRY_COUNT>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>">Next entries&nbsp;<img src="<URL_IMAGES>/weiter.gif" border="0"></a></IF></td>
+    </tr>
+  </table>
+  </td>
+</tr>
+<tr>
+  <td align=center><hr noshade size=1></td>
+</tr>
+<tr>
+  <td class="txt" align=center>
+    Entries on page:
+    <a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=5">5</a>
+    <a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=10">10</a>
+    <a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=25">25</a>
+    <a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=50">50</a>
+    <a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=100">100</a>
+    <a href="<URL_SYSTEM>/admin.cgi?action=userman&part=account&client=<CLIENT_ID>&from=<ENTRY_PREV>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=<ENTRY_MAX>">All</a>
+  </td>
+</tr>
+</table>
+
+<FORM_ADMIN step=1 part=account method=get>
+<input type="hidden" name="client" value="<CLIENT_ID>">
+<input type="hidden" name="order" value="<FORMV_ORDER>">
+<input type="hidden" name="ordir" value="<FORMV_ORDIR>">
+<input type="hidden" name="from" value="<FORMV_FROM>">
+<input type="hidden" name="count" value="<FORMV_COUNT>">
+<u class="txt">Do a new Transfer</u>
+<table>
+<tr>
+  <td class="txt">Amount:</td>
+  <td><INPUT_COMMISSION_AMOUNT id="default1"></td>
+</tr>
+<tr>
+  <td class="txt">Info:</td>
+  <td><INPUT_COMMISSION_INFO id="default2" rows="5" cols="30"></td>
+</tr>
+<tr>
+  <td class="txt">Principal:</td>
+  <td><INPUT_COMMISSION_SENDER id="default1"></td>
+</tr>
+<tr>
+  <td>&nbsp;</td>
+  <td><SUBMIT value="Add" class="txt"></td>
+</tr>
+</table>
+</form>
+
+<br>
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+  <td>
+    <FORM_ADMIN step=0 part=account method=get>
+    <input type="hidden" name="client" value="<CLIENT_ID>">
+    <input type="hidden" name="order" value="<FORMV_ORDER>">
+    <input type="hidden" name="ordir" value="<FORMV_ORDIR>">
+    <input type="hidden" name="from" value="<FORMV_FROM>">
+    <input type="hidden" name="count" value="<FORMV_COUNT>">
+    <table border=0 cellspacing=0 cellpadding=5>
+    <tr>
+      <td><SUBMIT value="Reload" class="txt"></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+  <td>
+    <FORM_ADMIN step=0 part=0 method=get>
+    <table border=0 cellspacing=0 cellpadding=5>
+    <tr>
+      <td><SUBMIT value="Overview" class="txt"></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+  <td>
+    <FORM_ADMIN step=0 part=profile method=get>
+    <input type="hidden" name="client" value="<CLIENT_ID>">
+    <table border=0 cellspacing=0 cellpadding=5>
+    <tr>
+      <td><SUBMIT value="Profile" class="txt"></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+  <td>&nbsp;&nbsp;&nbsp;</td>
+  <td>
+    <FORM_ADMIN part=remove>
+    <input type="hidden" name="client" value="<CLIENT_ID>">
+    <table border=0 cellspacing=0 cellpadding=5 bgcolor=#FF0000>
+    <tr>
+      <td class="txt"><b><font color=#FFFFFF class="txt">ATTENTION</font></b></td>
+      <td><SUBMIT value="Remove Client" class="txt" onClick="return confirm('Really remove this client?');"></td>
+      <td class="txt"><b><font color=#FFFFFF class="txt">ATTENTION</font></b></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+</tr>
+</table>
+
+</body>
+</html>

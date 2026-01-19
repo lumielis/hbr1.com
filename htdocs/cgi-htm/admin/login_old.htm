@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>Login</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+</head>
+
+<body>
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br>&nbsp;</IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br>&nbsp;</IF>
+
+<FORM_ADMIN>
+<input type="hidden" name="second_action" value="access">
+<HASH=%main::form>
+<IF_NOT_KEY=action,part,step,id_101,id_102,second_action,access>
+  <input type="hidden" name="<KEY>" value="<VALUE>">
+</IF>
+</HASH>
+
+<span class="txt">
+<b><u>Please identify you</u></b>
+</span>
+<br>&nbsp;
+
+<table border=0 cellspacing=0 cellpadding=4>
+  <tr>
+    <td class="txt">Id</td>
+    <td><INPUT_LOGIN_USER id="default1"></td>
+  </tr>
+  <tr>
+    <td class="txt">Pin</td>
+    <td><INPUT_LOGIN_PASS id="default1"></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><SUBMIT value="Login" class="txt"></td>
+  </tr>
+</table>
+</form>
+
+</body>
+</head>
+</html>

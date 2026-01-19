@@ -1,0 +1,345 @@
+<html>
+<head>
+<meta http-equiv="content-type"
+	content="text/html; charset=#[PRINT $ENV{'CHARSET'}]#">
+<link rel="stylesheet" type="text/css" href="/style/client.css?1">
+<script language="JavaScript">
+<!--
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+PageID = 'station';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+//-->
+</script>
+
+<title>HBR1 Stations</title>
+
+<style type="text/css">
+<!--
+.genre {
+	font-size: 10px;
+	font-family: Arial, Adobe Helvetica;
+}
+.station {
+	font-size: 11px;
+	font-family: Verdana, Arial, Sans Serif, Adobe Helvetica;
+}
+.sl1 {
+	font-weight: normal;
+}
+#current {
+	font-weight: bold;
+	color: #FFFF88;
+}
+-->
+</style>
+
+<script language="JavaScript" src="/cgi-htm/jscript/crypt.js"></script>
+<script language="JavaScript" src="/cgi-htm/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+email_key = "DFSE3-KX427-A2RRG-BL5XM-CB336";
+
+function decryptEmail( crypt, query ) {
+	location.href = 'mailto:' + xor_decrypt_hex( crypt, email_key ) + query;
+	return false;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td class="head" align="center"><font color="#9999ff"><b>STATION SPACE</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+
+    <br>
+<table cellSpacing="0" cellPadding="0" border="0" align="center">
+  <tr>
+    <td align="center"><img src="/images/spacer.gif" width="1" height="3"></td>
+  </tr>
+	<tr>
+		<td align="center">
+			<table border="0" cellspacing="0" cellpadding="0">
+			<form action="http://www.supportunicef.org/site/pp.aspx?c=9fLEJSOALpE&b=258155" method="get" target="unicef">
+				<tr>
+					<td>
+<input type="image" src="/images/station/donate.jpg?2" border="0" name="submit" alt="Make a Donation" vspace="5">
+					</td>
+				</tr>
+			</form>
+			</table>
+		</td>
+	</tr>
+	<tr>
+    <td align="center"><font color="#7799CC">Help to keep up the free Life in World</font></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="/images/spacer.gif" width="1" height="10"></td>
+  </tr>
+</table>
+
+#[IF $StationsOFF]#
+#[INCLUDE client/inc/stations.off.htm]#
+#[ELSE]#
+#[LOOP Stations]#
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="/images/spacer.gif" width="1" height="10"></td>
+      </tr>
+    </table>
+    <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
+            <tr>
+              <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17"></td>
+              <td class="station">
+                <b>
+                <script language="JavaScript">
+                <!--
+                document.write( '&nbsp;' + TextLight( '#[PRINT $Station->{Title}]#', '33AA00', 'DDFF99' ) );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#DDFF99">&nbsp;#[PRINT $Station->{Title}]#</font>
+                </noscript>
+                </b>
+              </td>
+              <td class="genre" align="right">
+                <script language="JavaScript">
+                <!--
+                document.write( TextFade( '#[PRINT $Station->{Genre}]#', 'FFFF88', 'FF9966' ) + '&nbsp;' );
+                //-->
+                </script>
+                <noscript>
+                  <font color="#FFFFFF">#[PRINT $Station->{Genre}]#&nbsp;</font>
+                </noscript>
+              </td>
+              <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table border="0" cellspacing="0" cellpadding="1">
+            <tr>
+              <td><img src="/images/spacer.gif" width="25" height="1"></td>
+              <td class="txt">
+<table border="0" cellspacing="0" cellpadding="0">
+<tr><td>
+#[IF $Station->{'Track_Data'}]#
+#[SET $Station->{'Track_Caption'} =~ s/_/ /go;]#
+#[IF $Station->{'Track_Live'}]#
+<font color="FFFFAA">Running: </font>
+<font color="#999999">[Live] </font>
+#[ELSIF $Station->{'Track_Error'}]#
+<font color="ff9955">Last Played: </font>
+#[ELSE]#
+<font color="FFFFAA">Running: </font>
+<font color="#999999">[-#[PRINT $Station->{'Track_Duration'}]#] </font>
+#[END IF]#
+#[PRINT fitString( $Station->{'Track_Caption'}, 45, ' ...' )]#
+#[IF $Station->{'MixID'}]#
+<font color="#6666AA"> (<a href="/cgi-bin/mixes.cgi?action=playlist&mix_id=#[PRINT $Station->{'MixID'}]#"
+>tracklist</a>)</font>
+#[END IF]#
+#[END IF]#
+</td></tr>
+<tr><td><img src="/images/spacer.gif" width="1" height="6"></td></tr>
+<tr><td>
+#[LOOP Streams]#
+#[IF $Stream->{'Playlist'}]#
+<a
+	class="#[PRINT $Stream->{'CSS_Class'}]#"
+	href="#[PRINT $Stream->{'Playlist'}]#"
+>#[PRINT $Stream->{'Title'}]#</a>#[ELSE]#
+#[PRINT $Stream->{'Title'}]##[END IF]#
+#[END LOOP]#
+</td></tr>
+</table>
+            </td>
+              <td><img src="/images/spacer.gif" width="25" height="1"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+#[END LOOP STATIONS]#
+    <table border="0" cellspacing="0" cellpadding="0" width="95%">
+      <tr>
+        <td align="center"><img src="/images/spacer.gif" width="1" height="20"></td>
+      </tr>
+    </table>
+<!--	
+	<div>
+    <font color="#777799">If you can support the stations with high bandwidth at low rates, please contact <a href="mailto:Pille" onclick="return decryptEmail('94afbfb1984d87c89d9ea392819ab4c4785ba5bba296','?subject=bandwidth%20support')">Pille</a>.</font>
+    </div>
+    <br>
+//-->
+#[END IF]#
+	<div>
+    <font color="#7799CC">To listen in our streams you need a player that supports
+    	the <a href="http://www.vorbis.com/" target="_blank">Ogg Vorbis</a>,
+    	or the <a href="http://www.iis.fraunhofer.de/EN/bf/amm/projects/mpeg/index.jsp" target="_blank">AAC+</a> streaming format.
+    	The most popular players are listed below.<br>
+    	Windows Media Player needs <a href="http://www.illiminable.com/ogg/downloads.html" target="_blank">additional files</a> to get Ogg Vorbis working.
+    </font>
+	</div>
+	<br>
+
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td colspan="3"><img src="/images/player/mac_top.gif"></td>
+            </tr>
+            <tr>
+              <td><img src="/images/player/mac_left.gif"></td>
+              <td><a href="http://www.apple.com/itunes/" target="_blank"><img src="/images/player/mac_logo.gif?2" border="0" ALT="Download Apple iTunes"></a></td>
+              <td><img src="/images/player/mac_right.gif"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="/images/player/mac_bot.gif"></td>
+            </tr>
+          </table>
+
+        </td>
+        <td><img src="/images/spacer.gif" width="20" height="1"></td>
+        <td>
+
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td colspan="3"><img src="/images/player/win_top.gif"></td>
+            </tr>
+            <tr>
+              <td><img src="/images/player/win_left.gif"></td>
+              <td><a href="http://winamp.com" target="_blank"><img src="/images/player/win_logo.gif" BORDER="0" ALT="Download Winamp"></a></td>
+              <td><img src="/images/player/win_right.gif"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="/images/player/win_bot.gif"></td>
+            </tr>
+          </table>
+
+        </td>
+        <td><img src="/images/spacer.gif" width="20" height="1"></td>
+        <td>
+
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td colspan="3"><img src="/images/player/linux_top.gif"></td>
+            </tr>
+            <tr>
+              <td><img src="/images/player/linux_left.gif"></td>
+              <td><a href="http://www.xmms.org" target="_blank"><img src="/images/player/linux_logo.gif" border="0" alt="Download the X MultiMedia System"></a></td>
+              <td><img src="/images/player/linux_right.gif"></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="/images/player/linux_bot.gif"></td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=middle background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="center" class="footer"><i><a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> - Music on Futurenet</i></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/footer_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/footer_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/footer_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+<!--
+    </td>
+  </tr>
+</table>
+-->
+
+</body>
+</html>

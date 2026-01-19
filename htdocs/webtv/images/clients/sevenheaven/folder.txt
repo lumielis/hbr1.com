@@ -1,0 +1,17 @@
+Text=5|115|sevensheaven
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.sevensheaven.nl/art.htm
+Refresh=10000
+Precache=0
+Image=S_art_01.jpg
+Image=S_art_06.jpg
+Image=S_illustration_14.jpg
+Image=S_art_20.jpg
+Image=S_illustration_03.jpg
+Image=S_art_22.jpg
+Image=S_illustration_07.jpg
+Image=S_art_03.jpg
+Shuffle=0
+Enabled=1
+Repeat=0
+Color=0

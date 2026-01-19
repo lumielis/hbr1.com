@@ -1,0 +1,145 @@
+body {
+	scrollbar-base-color: #170040;
+	scrollbar-track-color: #000000;
+	scrollbar-face-color: #100030;
+	scrollbar-highlight-color: #000050;
+	scrollbar-3dlight-color: #000000;
+	scrollbar-darkshadow-color: #000000;
+	scrollbar-shadow-color: #002060;
+	scrollbar-arrow-color: #002060;
+	background-color: #000000;
+	color: #ffffff;
+}
+body, td, th {
+	font-family: Tahoma, Arial, Helvetica, Sans-Serif, Mono;
+	font-size: 11px;
+	line-height: 13px;
+}
+.head {
+	font-size: 11px
+}
+.big {
+	font-size: 12px
+}
+.small, .copyright {
+	font-family: Arial, mono; font-size: 10px;
+}
+.blue {
+	BORDER-LEFT: #000088 1px solid;
+	BORDER-TOP: #000088 1px solid;
+	BORDER-RIGHT: #0000CC 1px solid;
+	BORDER-BOTTOM: #0000CC 1px solid;
+	FONT: 8pt verdana, mono;
+	MARGIN-LEFT: 2px;
+	COLOR: #00FFFF;
+	BACKGROUND-COLOR: #000060;
+	scrollbar-base-color: #000000;
+	scrollbar-track-color: #000066;
+	scrollbar-face-color: #000088;
+	scrollbar-highlight-color: #0000CC;
+	scrollbar-3dlight-color: #0000CC;
+	scrollbar-darkshadow-color: #000088;
+	scrollbar-shadow-color: #000088;
+	scrollbar-arrow-color: #6666FF;
+}
+.blue2 {
+	BORDER-LEFT: #0000CC 1px solid;
+	BORDER-TOP: #0000CC 1px solid;
+	BORDER-RIGHT: #000088 1px solid;
+	BORDER-BOTTOM: #000088 1px solid;
+	FONT: 8pt verdana, mono;
+	COLOR: #FFFFFF;
+	BACKGROUND-COLOR: #000060;
+}
+.footer {
+	color: #4466cc;
+}
+a:link, a:visited {
+	text-decoration: none;
+	color: #5588FF;
+}
+a:hover, a:active {
+	text-decoration: underline;
+	color: #FF0055;
+}
+a.sl1:link, a.sl1:visited {
+	1text-decoration: none;
+	1color: #99aaFF;
+	1font-weight: bold;
+}
+a.sl1:hover, a.sl1:active {
+	1text-decoration: underline;
+	1color: #FF6699;
+}
+.darkBlue {
+	color: #333380;
+}
+#ErrorLog {
+	/*
+	background-color: #201040;
+	border: 2px solid #902050;
+	*/
+	color: #ffcccc;
+	line-height: 12px;
+}
+table#ErrorLog {
+	width: 450px;
+}
+table#ErrorLog td {
+	padding: 5px;
+	color: #ff0000;
+}
+#ErrorLog ul {
+	padding-top: 0px;
+	padding-bottom: 10px;
+	padding-left: 25px;
+	padding-right: 15px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	margin-right: 0px;
+	/* list-style-type: circle; */
+}
+#ErrorLogItem {
+	color: #ff0000;
+}
+#ErrorLogHeader {
+	background-color: #803030;
+	color: #ffaaaa;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#MessageLog {
+	background-color: #104050;
+	border: 1px solid #206070;
+	color: #cceeff;
+	line-height: 12px;
+}
+table#MessageLog {
+	width: 450px;
+}
+table#MessageLog td {
+	padding: 5px;
+	color: #aaeeff;
+}
+#MessageLog ul {
+	padding-top: 0px;
+	padding-bottom: 10px;
+	padding-left: 25px;
+	padding-right: 15px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	margin-right: 0px;
+	list-style-type: circle;
+}
+#MessageLogItem {
+	color: #cceeff;
+}
+#MessageLogHeader {
+	background-color: #307080;
+	color: #aaeeff;
+	padding-left: 5px;
+	padding-right: 5px;
+}

@@ -1,0 +1,214 @@
+<html>
+
+<head>
+<title>The Guestbook of HBR1.com</title>
+
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/crypt.js"></script>
+<script language="JavaScript">
+<!--
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+function initPage() {
+  if( parent && parent.frames && parent.frames['bottom'] ) {
+    parent.frames['bottom'].document.activePage = 'guestbook';
+    if( parent.frames['bottom'].updatePage )
+      parent.frames['bottom'].updatePage();
+  }
+}
+window.onload = initPage;
+
+//-->
+</script>
+
+<style type="text/css">
+<!--
+body {
+  scrollbar-base-color: #170040;
+  scrollbar-track-color: #000000;
+  scrollbar-face-color: #100030;
+  scrollbar-highlight-color: #000050;
+  scrollbar-3d-light-color: #000000;
+  scrollbar-dark-shadow-color: #000000;
+  scrollbar-shadow-color: #002060;
+  scrollbar-arrow-color: #002060;
+}
+.text {
+  font-family: Verdana, Arial, Sans-Serif, mono;
+  font-size: 11px;
+}
+.head {
+  font-family: Arial, Sans-Serif, mono;
+  font-size: 14px;
+  color: #4477AA;
+}
+.small {
+  font-family: Verdana, Arial, Sans-Serif, mono;
+  font-size: 10px;
+}
+.xsmall {
+  font-family: Verdana, Arial, Sans-Serif, mono;
+  font-size: 8px;
+}
+.blue {
+  BORDER-LEFT: #000088 1px solid;
+  BORDER-TOP: #000088 1px solid;
+  BORDER-RIGHT: #0000CC 1px solid;
+  BORDER-BOTTOM: #0000CC 1px solid;
+  FONT: 8pt verdana, mono;
+  MARGIN-LEFT: 2px;
+  COLOR: #00FFFF;
+  BACKGROUND-COLOR: #000060;
+  scrollbar-base-color: #000000;
+  scrollbar-track-color: #000066;
+  scrollbar-face-color: #000088;
+  scrollbar-highlight-color: #0000CC;
+  scrollbar-3d-light-color: #0000CC;
+  scrollbar-dark-shadow-color: #000088;
+  scrollbar-shadow-color: #000088;
+  scrollbar-arrow-color: #6666FF;
+}
+.blue2 {
+  BORDER-LEFT: #0000CC 1px solid;
+  BORDER-TOP: #0000CC 1px solid;
+  BORDER-RIGHT: #000088 1px solid;
+  BORDER-BOTTOM: #000088 1px solid;
+  FONT: 8pt verdana, mono;
+  COLOR: #FFFFFF;
+  BACKGROUND-COLOR: #000060;
+}
+a {
+  text-decoration: none;
+}
+a:link {
+  color: #5588FF;
+}
+a:visited {
+  color: #5588FF;
+}
+a:hover {
+  color: #FF0055;
+}
+.splitter {
+  background-color: #333BAA;
+}
+//-->
+</style>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td class="text" align="center"><font color="#9999ff"><b>GUESTBOOK</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+
+<script language="JavaScript">
+<!--
+
+<SET_EVAL=&ssms::crypt::xor::set_key('DFSE3-KX427-A2RRG-BL5XM-CB336');>
+
+function decrypt_email( anchor, crypt, query ) {
+	location.href = 'mailto:' + xor_decrypt_hex( crypt, '<EVAL=$ssms::crypt::xor::KEY>' ) + query;
+	return false;
+}
+
+//-->
+</script>
+
+<br>
+<h2 class="head">Welcome to our Guestbook</h2>
+<p class="text"><font color="#4477AA">Compliments and Criticism. Pleasures and Pain. The Guestbook is open for your comments.</font></p>
+<p class="text"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=submit"><b>Submit Your Comment</b></a></p>
+
+<IF_PAGE_ERROR><p class="text"><font color="#FF0000"><PAGE_MESSAGE></font></p></IF>
+<IF_PAGE_MESSAGE><p class="text"><font color="#00FF66"><PAGE_MESSAGE></font></p></IF>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr><td class="splitter"><img src="/images/spacer.gif" width="1" height="1"></td></tr>
+</table>
+<LOOP_GUESTBOOK clausel="status=1" order="timestamp" ordir="desc">
+  <p class="text" align="left">
+  <a href="mailto:<GUESTBOOK_SUBMITTER>" onclick="return decrypt_email(this,'<GUESTBOOK_EMAIL_ENCRYPTED>','?subject=your%20comment%20on%20the%20guestbook%20of%20hbr1')"><GUESTBOOK_SUBMITTER></a> wrote at <GUESTBOOK_DATE>, <GUESTBOOK_TIME> (gmt) follow comment:<br>
+  <blockquote>
+    <p class="text" align="left"><ANT_HYPERLINKS><GUESTBOOK_CONTENT></p>
+  </blockquote>
+  </p>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr><td class="splitter"><img src="/images/spacer.gif" width="1" height="1"></td></tr>
+</table>
+</LOOP_GUESTBOOK>
+
+<IF_GUESTBOOK_ITEM_LIMIT>
+<p class="small">
+<IF_GUESTBOOK_PREV_ITEMS>
+<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&view_from=<GUESTBOOK_PREV_ITEMS>&view_count=<GUESTBOOK_SHOW_ITEMS>">&lt;&lt; Newer Entries</a>
+<font color="#333BAA">|</font>
+<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>">Reset</a>
+<ELSE>
+<font color="#666666">&lt;&lt; Newer Entries</font>
+<font color="#333BAA">|</font>
+<font color="#666666">Reset</font>
+</IF>
+<font color="#333BAA">|</font>
+<IF_GUESTBOOK_NEXT_ITEMS>
+<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&view_from=<GUESTBOOK_NEXT_ITEMS>&view_count=<GUESTBOOK_SHOW_ITEMS>">Older Entries &gt;&gt;</a>
+<ELSE>
+<font color="#555555">Older Entries &gt;&gt;</font>
+</IF>
+</p>
+</IF>
+
+<font class="xsmall" color="#666666">-THE END-<br>&nbsp;</font>
+
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=middle background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="center" class="small"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/footer_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/footer_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/footer_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>Photo Galleries</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>';
+url_images = '<URL_IMAGES>';
+//-->
+</script>
+
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<p class="txt"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&step=new"><b>New Gallery</b></a></p>
+
+<FORM_MIXES step="1">
+<table border="1">
+  <tr>
+    <td class="txt" colspan="7" bgcolor="#3366EE"><font color="#FFFFFF"><b>GALLERIES</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt"><font color="#666666">Del</td>
+    <td class="txt"><font color="#666666">Name</td>
+    <td class="txt"><font color="#666666">DJ</td>
+    <td class="txt"><font color="#666666">Category</td>
+    <td class="txt"><font color="#666666">Date</td>
+    <td class="txt"><font color="#666666">ETA</td>
+    <td class="txt">&nbsp;</td>
+  </tr>
+<PHOTO_GALLERIES>
+<input type="hidden" name="mix_<COUNTER-1>_id" value="<MIX_ID>">
+<tr>
+  <td class="txt"><input type="checkbox" name="mix_<COUNTER-1>_rem" value="1" class="txt"></td>
+  <td class="txt"><MIX_NAME></td>
+  <td class="txt"><MIX_DJ></td>
+  <td class="txt"><MEDIA_CATEGORY_NAME></td>
+  <td class="txt"><MIX_DATE></td>
+  <td class="txt"><MIX_LENGTH_FORMATED></td>
+  <td class="txt"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&mix_id=<MIX_ID>">EDIT</a></td>
+</tr>
+</PHOTO_GALLERIES>
+</table>
+<br>
+<SUBMIT value="Delete" class="txt">
+</form>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+
+</html>

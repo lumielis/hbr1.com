@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta http-equiv="content-type"
+	content="text/html; charset=#[SCALAR $ENV{CHARSET}]#">
+<link rel="stylesheet" href="/style/default.css">
+<link rel="stylesheet" href="/style/admin.css">
+<style type="text/css">
+<!--
+textarea.ticker {
+	font-family: Verdana;
+	font-size: 10px;
+	padding: 4px;
+	border: 1px solid #6A6A80;
+	background-color: #FFFFFF;
+	width: 590px;
+	height: 50px;
+	scrollbar-track-color: #FFFFFF;
+	scrollbar-arrow-color: #FFFFFF;
+	scrollbar-base-color: #FFFFFF;
+	scrollbar-darkshadow-color: #FFFFFF;
+	scrollbar-face-color: #FFFFFF;
+	scrollbar-highlight-color: #FFFFFF;
+	scrollbar-3dlight-color: #FFFFFF;
+	scrollbar-shadow-color: #FFFFFF";
+}
+//-->
+</style>
+<title>Newsticker Overview</title>
+</head>
+<body>
+
+#[IF @ErrorLog]#
+<div class="Text" id="ErrorLog"><div id="ErrorLogHeader">
+#[IF $PageError]##[SCALAR $PageError]##[ELSE]#Error#[END IF]#
+</div><ul>#[SCALAR "\n"]#
+#[LOOP ARRAY \@ErrorLog]#
+<li class="Text" id="ErrorLogItem">#[SCALAR $Record]#</li>#[SCALAR "\n"]#
+#[END LOOP]#
+</ul></div><br>
+#[ELSIF $PageError]#
+<div class="Text" id="ErrorLogHeader">#[SCALAR $PageError]#</div><br>
+#[END IF]#
+
+#[IF @MessageLog]#
+<div class="Text" id="MessageLog"><div id="MessageLogHeader">
+#[IF $PageMessage]##[SCALAR $PageMessage]##[ELSE]#Information#[END IF]#
+</div><ul>#[SCALAR "\n"]#
+#[LOOP ARRAY \@MessageLog]#
+<li class="Text" id="MessageLogItem">#[SCALAR $Record]#</li>#[SCALAR "\n"]#
+#[END LOOP]#
+</ul></div><br>
+#[ELSIF $PageMessage]#
+<div class="Text" id="MessageLogHeader">#[SCALAR $PageMessage]#</div><br>
+#[END IF]#
+
+<form action="#[PRINT $ENV{'SCRIPT'}]#" method="post">
+<input type="hidden" name="Part" value="#[PRINT $Form{'Part'}]#">
+<input type="hidden" name="Action" value="edit">
+<input type="hidden" name="NT_Id" value="#[PRINT $Form{'NT_Id'}]#">
+
+<textarea wrap="SOFT" ROWS="3" name="NT_Message" class="Ticker"
+	style="padding: 4px; border: 1px solid #6A6A80; background-color: #FFFFFF; width: 590px; height:50px; scrollbar-arrow-color:#FFFFFF; scrollbar-base-color: #FFFFFF;scrollbar-darkshadow-color: #FFFFFF;scrollbar-face-color: #FFFFFF;scrollbar-highlight-color: #FFFFFF;scrollbar-shadow-color: #FFFFFF"; scrollbar-track-color: #FFFFFF"
+>#[PRINT $Form{'NT_Message'}]#</textarea>
+<select name="NT_Status" class="Text" id="Input">
+<option value="0">Disabled</option>
+<option value="1" #[IF $Form{'NT_Status'}]#selected#[END IF]#>Active</option>
+</select>
+<br>
+#[IF $Form{'NT_Id'}]#
+<input type="submit" class="Text" id="Button" name="doSave" value="Save">
+#[END IF]#
+ <input type="submit" class="Text" id="Button" name="doAdd" value="Add">
+</form>
+
+<table border=1 cellspacing=0 cellpadding=4 class="Border">
+	<tr>
+		<th colspan="7" class="Text" id="Header">NEWSTICKER MESSAGES</th>
+	</tr>
+	<tr>
+		<td class="Text" id="Info" align="center">&nbsp;</text>
+		<td class="Text" id="Info" align="center">Status</text>
+		<td class="Text" id="Info" align="center">Time</text>
+		<td class="Text" id="Info" align="center">Message</text>
+		<td class="Text" id="Info" align="center">Action</text>
+	</tr>
+#[SET $RecordPos = 0]#
+#[LOOP NEWS_TICKER]#
+#[SET $RecordPos ++]#
+#[IF ( $RecordPos & 1 ) == 1]#
+	<tr id="TableRowOdd">
+#[ELSE]#
+	<tr id="TableRowEven">
+#[END IF]#
+		<td class="Text">#[PRINT $RecordPos]#</td>
+		<td class="Text">
+#[IF $NewsTicker->{'Status'} == 1]#
+<b>Active</b>
+#[ELSE]#
+<i>Off</i>
+#[END IF]#
+		</td>
+		<td class="Text">
+			#[PRINT formatTime( "%c", $NewsTicker->{'Time'} )]#
+		</td>
+		<td class="Text">#[PRINT $NewsTicker->{'Message'}]#</td>
+		<td class="Text">
+
+<table border=0 cellspacing=0 cellpadding=0 class="NoBorder">
+<tr>
+<form action="#[PRINT $ENV{'SCRIPT'}]#" method="get">
+<td align="right">
+<input type="hidden" name="Part" value="#[PRINT $Form{'Part'}]#">
+<input type="hidden" name="Action" value="edit">
+<input type="hidden" name="NT_Id" value="#[PRINT $NewsTicker->{'Id'}]#">
+<input type="submit" class="Text" id="Button" value="Edit">
+</td>
+</form>
+</tr>
+<tr>
+<form action="#[PRINT $ENV{'SCRIPT'}]#" method="post">
+<td align="right">
+<input type="hidden" name="Part" value="#[PRINT $Form{'Part'}]#">
+<input type="hidden" name="Action" value="delete">
+<input type="hidden" name="NT_Id" value="#[PRINT $NewsTicker->{'Id'}]#">
+<input type="submit" class="Text" id="Button" name="doDelete" value="Delete" onclick="return confirm('Delete entry?')">
+</td>
+</form>
+</tr>
+</table>
+		</td>
+	</tr>
+#[END LOOP]#
+</table>
+
+</form>
+
+</body>
+</html>

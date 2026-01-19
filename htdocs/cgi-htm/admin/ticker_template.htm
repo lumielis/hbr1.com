@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta http-equiv="refresh" content="<TICKER_DELAY>; URL=<TICKER_NEXT>">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="content-language" content="en">
+<base target="main">
+<style type="text/css">
+<!--
+body {
+	background-color: #<TICKER_BG_COLOR>;
+}
+#title {
+	color: #<TICKER_TITLE_COLOR>;
+	font-family: <TICKER_TITLE_FONT_FAMILY>;
+	font-size: <TICKER_TITLE_FONT_SIZE>;
+	font-weight: bold;
+}
+#content {
+	color: #<TICKER_CONTENT_COLOR>;
+	font-family: <TICKER_CONTENT_FONT_FAMILY>;
+	font-size: <TICKER_CONTENT_FONT_SIZE>;
+}
+//-->
+</style>
+</head>
+<body bgcolor="#<TICKER_BG_COLOR>" text="#FFFFFF" alink="#<TICKER_ANCHOR_COLOR>" link="#<TICKER_ANCHOR_COLOR>" vlink="#<TICKER_ANCHOR_COLOR>" topmargin="3" leftmargin="3" marginheight="3" marginwidth="3" <IF_TICKER_SHOW_IMAGE>background="<URL_WEBTV>/ticker/images/<IF_TICKER_IMAGE><TICKER_IMAGE><ELSE>bg.jpg</IF>"</IF>>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" height="100%">
+  <IF_TICKER_OBJECT_TYPE eq f>
+  <tr>
+    <td>
+		<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="160" height="120" id="flash_movie" align="middle">
+			<param name="movie" value="/webtv/ticker/flash/<TICKER_FLASH_MOVIE>" />
+			<param name="quality" value="high" />
+			<param name="bgcolor" value="#<TICKER_BG_COLOR>" />
+			<param name="play" value="true" />
+			<param name="loop" value="true" />
+			<param name="wmode" value="window" />
+			<param name="scale" value="noborder" />
+			<param name="menu" value="false" />
+			<param name="devicefont" value="false" />
+			<param name="salign" value="" />
+			<param name="allowScriptAccess" value="always" />
+			<!--[if !IE]>-->
+			<object type="application/x-shockwave-flash" data="/webtv/ticker/flash/<TICKER_FLASH_MOVIE>" width="160" height="120">
+				<param name="movie" value="/webtv/ticker/flash/<TICKER_FLASH_MOVIE>" />
+				<param name="quality" value="high" />
+				<param name="bgcolor" value="#<TICKER_BG_COLOR>" />
+				<param name="play" value="true" />
+				<param name="loop" value="true" />
+				<param name="wmode" value="window" />
+				<param name="scale" value="noborder" />
+				<param name="menu" value="false" />
+				<param name="devicefont" value="false" />
+				<param name="salign" value="" />
+				<param name="allowScriptAccess" value="always" />
+			<!--<![endif]-->
+				<a href="http://www.adobe.com/go/getflash">
+					<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
+				</a>
+			<!--[if !IE]>-->
+			</object>
+			<!--<![endif]-->
+		</object>
+
+		<!--
+			<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+			 codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+			 WIDTH="160" HEIGHT="120" id="flash_movie" ALIGN="">
+			 	<PARAM NAME=movie VALUE="<URL_WEBTV>/ticker/flash/<TICKER_FLASH_MOVIE>">
+			 	<PARAM NAME=quality VALUE=high>
+			 	<PARAM NAME=bgcolor VALUE=#<TICKER_BG_COLOR>
+			 >
+			 <EMBED src="<URL_WEBTV>/ticker/flash/<TICKER_FLASH_MOVIE>" quality=high bgcolor=#<TICKER_BG_COLOR>  WIDTH="160" HEIGHT="120" NAME="flash_movie" ALIGN=""
+			 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+			</OBJECT>
+		-->
+    </td>
+  </tr>
+  <ELSE>
+  <IF_TICKER_BORDER_VERTICAL><tr><td colspan="3"><img src="<URL_IMAGES>/spacer.gif" width="1" height="<TICKER_BORDER_VERTICAL>"></td></tr></IF>
+  <tr>
+    <td width="0%"><IF_TICKER_BORDER_HORIZONTAL><img src="<URL_IMAGES>/spacer.gif" width="<TICKER_BORDER_HORIZONTAL>" height="1"></IF></td>
+    <td align="center" valign="top"><IF_TICKER_SHOW_TITLE><span id="title"><ANT_TO_HTML><TICKER_TITLE></span><br></IF><span id="content"><ANT_TO_HTML><TICKER_CONTENT></span></td>
+    <td width="0%"><IF_TICKER_BORDER_HORIZONTAL><img src="<URL_IMAGES>/spacer.gif" width="<TICKER_BORDER_HORIZONTAL>" height="1"></IF></td>
+  </tr>
+  <IF_TICKER_BORDER_VERTICAL><tr><td colspan="3"><img src="<URL_IMAGES>/spacer.gif" width="1" height="<TICKER_BORDER_VERTICAL>"></td></tr></IF>
+  </IF>
+</table>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<html>
+<head>
+<link rel="stylesheet" href="<URL_DISPLAY>/style/admin.css">
+<script language="JavaScript">
+<!--
+function onLoad() {
+	<IF_PAGE_ERROR>alert("!!! ALERT !!!\n\n<PAGE_MESSAGE>\n\n!!! ALERT !!!");</IF>
+	<IF_PAGE_MESSAGE>alert("<PAGE_MESSAGE>");</IF>
+}
+window.onload = onLoad;
+//-->
+</script>
+</head>
+<body>
+
+<h1 class="title"><ENV_APP_NAME> v<ENV_APP_VERSION></h1>
+
+<h3 class="title">Currently logged in as user: <FORMV_LOGIN_USER_NAME>(<FORMV_LOGIN_USER_USER_ID>), group: <FORMV_LOGIN_GROUP_NAME>(<FORMV_LOGIN_GROUP_GROUP_ID>)</h3>
+
+<IF_MESSAGE_LOG>
+<p><ul class="message_log">
+<LOOP_MESSAGE_LOG>
+	<li class="message_log_<MESSAGE_LOG=type_name>"><MESSAGE_LOG=msg></li>
+</LOOP_MESSAGE_LOG>
+</ul></p>
+</IF>
+
+<FORM_LOGIN method="post" step="1">
+<input type="hidden" name="do_login" value="1">
+<table border="1" cellspacing="1" cellpadding="4">
+	<tr>
+		<th class="text" id="header" colspan="2">LOGIN DATA</td>
+	</tr>
+	<tr>
+		<td class="text" id="info">Username</td>
+		<td class="text"><INPUT_LOGIN_USERNAME class="text"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info">Password</td>
+		<td class="text"><PASSWORD_LOGIN_PASSWORD class="text"></td>
+	</tr>
+	<tr>
+		<td class="text">&nbsp;</td>
+		<td class="text"><SUBMIT value="Login" class="text"></td>
+	</tr>
+</table>
+</form>
+
+<FORM_LOGIN method="post" step="1">
+<input type="hidden" name="do_logout" value="1">
+<SUBMIT value="Logout" class="text">
+</form>
+
+</body>
+</html>

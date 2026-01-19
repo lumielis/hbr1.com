@@ -1,0 +1,269 @@
+<HTML><HEAD><META HTTP-EQUIV=\"Pragma\" CONTENT=\"no-cache\">
+
+<TITLE>U-Upload Lite Demo</TITLE>
+
+</HEAD>
+<BODY bgcolor="#FFFFFF">
+<table width="100%" border="0">
+  <tr>
+    <td><a href="http://www.utechsoft.com"><img src="utlogo.gif" width="150" height="50" border="0" alt="Unlimi-Tech Website"></a></td>
+    <td><a href="http://www.unlimited-tech.net/uftp"><img src="uftplogo.gif" width="165" height="38" align="right" border="0" alt="Unlimited FTP Website"></a></td>
+  </tr>
+</table>
+<center>
+<script language="javascript" src="uuploadlite.js"></script>
+</center>
+
+
+      <div align="center">
+<table width="80%" border="0">
+    <tr>
+      <td> 
+        <p><b><font color="336633" size="+2">U-Upload Lite Demo </font></b></p>
+        <p>U-Upload Lite has over 15 customizable parameters. Using U-Upload Lite's 
+          parameters, you can create fully customized, simple to use, file upload 
+          site for your users. To customize U-Upload Lite, you must edit "uuploadlite.js" 
+          with an HTML/text editor. You can then use the following tables as a 
+          guide to customizing each of U-Upload Lite's parameters. </p>
+        <p>Then add the following line to your HTML file:</p>
+        <p><font face="Courier New, Courier, mono">&lt;script language=&quot;javascript&quot; 
+          src=&quot;uuploadlite.js&quot;&gt;&lt;/script&gt;</font></p>
+        <p>You must also make sure that you either put uuploadlite.js in the same 
+          directory as your page, or the src parameter reflects the location of 
+          the script file.</p>
+        <p>If you require further assistance with setup, or are interested in 
+          related products and customization services, e-mail us at <a href="mailto:info@unlimited-tech.net">info@unlimited-tech.net</a>, 
+          or visit our <a href="http://www.unlimited-tech.net/uupload">website</a>. 
+          For information about pricing, or to order U-Upload Lite, <a href="http://www.unlimited-tech.net/uupload/order.html">click 
+          here</a>. </p>
+        <p>Please also review the <a href="readme.txt" target="_blank">Readme</a> and <a href="license.txt" target="_blank">License</a> 
+          files.</p>
+        </td>
+    </tr>
+  </table>
+  <p>
+    <script>var i = 0;var c=c1;var c1 = "#FFFFFF";var c2 = "DDEEDD";</script>
+  </p>
+  <table width="80%" border="1" bordercolor="#000000">
+    <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script> 
+      <td bgcolor="#336633"><font color="#FFFFFF">Connection related settings</font></td>
+    </tr>
+    <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script> 
+      <td> 
+        <table width="100%" border="0" cellpadding="10" cellspacing="2">
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="21%">server</td>
+          <td width="79%"> 
+            <p>The host name or IP address of the FTP server.</p>
+            <p>Default value: &quot;&quot;<br>
+              Valid values: &quot;&lt;valid hostname or IP address&gt;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="21%">port</td>
+          <td width="79%"> 
+            <p>The port number of the FTP server. Usually the default FTP port 
+              is 21.</p>
+            <p>Default value: &quot;21&quot;<br>
+              Valid values: &quot;&lt;valid port number&gt;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="21%">pass</td>
+          <td width="79%"> 
+            <p>The password for the FTP server account.</p>
+            <p>Default value: &quot;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="21%">user</td>
+          <td width="79%"> 
+              <p>The username for the FTP account.</p>
+            <p>Default value: &quot;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="26%">passive</td>
+            <td width="74%"> 
+              <p>If set to &quot;true&quot;, all data connections will be outgoing. 
+                U-Upload works through firewalls when this value is set to &quot;true&quot;. 
+                If you are using an FTP proxy, set this value to &quot;false&quot;.</p>
+            <p>Default value: &quot;true&quot;<br>
+              Valid values: &quot;true&quot;, &quot;false&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <p>&nbsp;</p>
+  <table width="80%" border="1" bordercolor="#000000">
+    <tr>
+      <td bgcolor="#336633" bordercolor="#000000"> 
+        <div align="center"> </div>
+        <p><font color="#FFFFFF">Functionality related settings</font> 
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div align="center"></div>
+        <table width="100%" border="0" cellpadding="10" cellspacing="2">
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="26%">localdir</td>
+          <td width="74%"> 
+            <p>U-Upload will automatically browse this local directory when U-Upload 
+              &quot;Browse...&quot; button is pressed. Example would be &quot;c:\windows&quot; 
+              or &quot;/etc&quot;.</p>
+            <p>Default value: &quot;&quot;<br>
+              Valid values: &quot;&lt;valid local directory&gt;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="26%">remotedir</td>
+          <td width="74%"> 
+            <p>U-Upload will automatically switch to this directory on the FTP 
+              server after a successful login. Example would be &quot;/initialdir&quot;.</p>
+            <p>Default value: &quot;&quot;<br>
+              Valid values: &quot;&lt;valid remote directory&gt;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="26%">showdialogs </td>
+          <td width="74%"> 
+            <p>Toggles the status, and progress dialogs on and off. </p>
+            <p>Default value: &quot;true&quot;<br>
+              Valid values: &quot;true&quot;, &quot;false&quot; </p>
+          </td>
+          </tr>          
+        </table>
+      </td>
+    </tr>
+  </table>
+  <p>&nbsp;</p>
+  <table width="80%" border="1" bordercolor="#000000">
+    <tr>
+      <td bgcolor="#336633"><font color="#FFFFFF">Color and Interface Layout related 
+        settings</font></td>
+    </tr>
+    <tr>
+      <td> 
+        <table width="100%" border="0" cellpadding="10" cellspacing="2">
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="19%">language</td>
+          <td width="81%"> 
+            <p>U-Upload allows you to customize the language of the text on the 
+              interface. To do this, edit the contents of &quot;lang_en.txt&quot; 
+              which is included in the download archive. Save the file with an 
+              appropriate language code. Example for French might be &quot;lang_fr.txt&quot;. 
+              This parameter should then be set to &quot;fr&quot;.</p>
+            <p>Default value: &quot;en&quot;<br>
+              Valid values: &quot;&lt;language code&gt;&quot; - There must also 
+              be a file defined lang_&lt;language code&gt;.txt in the same directory 
+              as uuploadpro.jar, and uuploadpro.cab.</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="19%">bgcolor</td>
+          <td width="81%"> 
+            <p>Allows you to change the background of the applet using standard 
+              RGB (Red, Green, Blue) values separated by a comma. For example 
+              white = 255,255,255</p>
+            <p>Default value: &quot;255,255,255&quot;<br>
+              Valid values: &quot;&lt;valid RGB values between 0 and 255&gt;&quot;</p>
+          </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="19%">textwidth </td>
+            <td width="81%">
+              <p>The width of the text field in columns.</p>
+              <p>Default value: &quot;15&quot;<br>
+                Valid values: &quot;&lt;integer value (in columns)&gt;&quot;</p>
+            </td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="19%">width</td>
+          <td width="81%">Default value: &quot;600&quot;<br>
+            Valid values: &quot;&lt;integer value (in pixels)&gt;&quot;</td>
+          </tr>
+          <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+          <td width="19%">height</td>
+          <td width="81%">Default value: &quot;480&quot;<br>
+            Valid values: &quot;&lt;integer value (in pixels)&gt;&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  
+  <p>&nbsp;</p><table width="80%" border="1" bordercolor="#000000">
+    <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+      <td bgcolor="#336633"><font color="#FFFFFF">Customizable Error Pages</font></td>
+    </tr>
+    <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+    <td> 
+      <table width="100%" border="0" cellpadding="10" cellspacing="2">
+        <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="21%"> errNavWin <br>
+            </td>
+            <td width="79%"> 
+              <p>This error page will be called when the user is running Windows, 
+                and their Netscape version is not sufficient to run U-Upload.</p>
+              <p>Default value: &quot;&quot;<br>
+                Valid values: &quot;&lt;valid URL&gt;&quot;</p>
+              </td>
+        </tr>
+        <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="21%">errIEWin</td>
+            <td width="79%"> 
+              <p>This error page will be called when the user is running Windows, 
+                and their Internet Explorer version is not sufficient to run U-Upload.</p>
+              <p>Default value: &quot;&quot;<br>
+                Valid values: &quot;&lt;valid URL&gt;&quot;</p>
+              </td>
+        </tr>
+        <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="21%">errIEWinVM</td>
+            <td width="79%"> 
+              <p>This error page will be called when the user is running Windows 
+                with Internet Explorer and the Microsoft VM for Java is not sufficient 
+                to run U-Upload.</p>
+              <p>Default value: &quot;&quot;<br>
+                Valid values: &quot;&lt;valid URL&gt;&quot;</p>
+              </td>
+        </tr>
+        <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="21%">errNavUnix</td>
+            <td width="79%"> 
+              <p>This error page will be called when the user is running UNIX, 
+                and their Netscape version is not sufficient to run U-Upload.</p>
+              <p>Default value: &quot;&quot;<br>
+                Valid values: &quot;&lt;valid URL&gt;&quot;</p>
+              </td>
+        </tr>
+        <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="26%">errIEMac</td>
+            <td width="74%"> 
+              <p>This error page will be called when the user is running Mac OS, 
+                and their Internet Explorer version is not sufficient to run U-Upload.</p>
+              <p>Default value: &quot;&quot;<br>
+                Valid values: &quot;&lt;valid URL&gt;&quot;</p>
+              </td>
+        </tr>
+        <script>if (i%2==1){c=c1;}else{c=c2;}document.write("<tr bgcolor="+c+">");i++;</script>
+            <td width="21%">errNavMac</td>
+            <td width="79%"> 
+              <p>This error page will be called when the user is running Mac OS, 
+                and their Netscape version is not sufficient to run U-Upload.</p>
+              <p>Default value: &quot;&quot;<br>
+                Valid values: &quot;&lt;valid URL&gt;&quot;</p>
+              </td>
+        </tr>
+      </table>
+    </td>
+    </tr>
+  </table>
+</div>
+</BODY>
+</HTML>

@@ -1,0 +1,155 @@
+<html>
+
+<head>
+<title>Client Profile</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br>&nbsp;</IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br>&nbsp;</IF>
+
+<table border=1 width=600 cellspacing=0 cellpadding=5>
+  <tr><td class="txt">
+    Client: <b><CLIENT_ID></b> - member since <CLIENT_SIGNUP_DATE> <CLIENT_SIGNUP_TIME>
+    <br><br>Position: <CLIENT_CATEGORY_NAME>
+    <br>Fingerprint: <CLIENT_FINGERPRINT>
+    <br><br>Address:
+    <blockquote>
+    <CLIENT_TITLE> <CLIENT_FIRST_NAME> <CLIENT_LAST_NAME>
+    <br><CLIENT_STREET>
+    <br><CLIENT_ZIP> <CLIENT_CITY>
+    <br><CLIENT_COUNTRY_FULL>
+    </blockquote>
+    EMail: <a href="mailto:<CLIENT_FIRST_NAME> <CLIENT_LAST_NAME> &lt;<CLIENT_EMAIL>&gt;"><CLIENT_EMAIL></a>
+    <br>Phone: <CLIENT_PHONE>
+    <br>Birthday: <CLIENT_BIRTHDAY>
+    <br><br>Charge: <b><CLIENT_CHARGE> EURO</b>
+  </td></tr>
+  </tr>
+</table>
+<br>
+<FORM_ADMIN step=1 method=get>
+<input type="hidden" name="client" value="<CLIENT_ID>">
+<table border=0 cellspacing=0 cellpadding=2>
+  <tr>
+    <td class="<IF_ERROR=client_id>error<ELSE>txt</IF>" align="right">Id:</td>
+    <td><INPUT_CLIENT_ID id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_pin>error<ELSE>txt</IF>" align="right">Pin:</td>
+    <td><INPUT_CLIENT_PIN id="default1"></td>
+  </tr>
+  <tr>
+    <td class="txt" align="right">Title:</td>
+    <td><INPUT_CLIENT_TITLE id="default2"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_first_name>error<ELSE>txt</IF>" align="right">Firstname:</td>
+    <td><INPUT_CLIENT_FIRST_NAME id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_last_name>error<ELSE>txt</IF>" align="right">Lastname:</td>
+    <td><INPUT_CLIENT_LAST_NAME id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_street>error<ELSE>txt</IF>" align="right">Street:</td>
+    <td><INPUT_CLIENT_STREET id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_zip>error<ELSE>txt</IF>" align="right">Zip Code:</td>
+    <td><INPUT_CLIENT_ZIP id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_city>error<ELSE>txt</IF>" align="right">City:</td>
+    <td><INPUT_CLIENT_CITY id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_country>error<ELSE>txt</IF>" align="right">Country:</td>
+    <td><INPUT_CLIENT_COUNTRY id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_phone>error<ELSE>txt</IF>" align="right">Phone:</td>
+    <td><INPUT_CLIENT_PHONE id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_email>error<ELSE>txt</IF>" align="right">EMail:</td>
+    <td><INPUT_CLIENT_EMAIL id="default1"></td>
+  </tr>
+  <tr>
+    <td class="txt" align="right">Charge:</td>
+    <td><INPUT_CLIENT_CHARGE id="default1"></td>
+  </tr>
+  <tr>
+    <td class="<IF_ERROR=client_birthday>error<ELSE>txt</IF>" align="right">Birthday:</td>
+    <td><INPUT_CLIENT_BIRTHDAY id="default1"></td>
+  </tr>
+  <tr>
+    <td class="txt" align="right">Status:</td>
+    <td><INPUT_CLIENT_STATUS id="default1"></td>
+  </tr>
+  <tr>
+    <td class="txt" align="right">Position:</td>
+    <td><INPUT_CLIENT_CATEGORY id="default1"></td>
+  </tr>
+  <tr>
+    <td class="txt">&nbsp;</td>
+    <td><SUBMIT value="Save" class="txt"></td>
+  </tr>
+</table>
+</form>
+
+<hr width=600 align=left size=1>
+<br>
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+  <td>
+    <FORM_ADMIN step=0 part=profile method=get>
+    <input type="hidden" name="client" value="<CLIENT_ID>">
+    <table border=0 cellspacing=0 cellpadding=5>
+    <tr>
+      <td><SUBMIT value="Reload" class="txt"></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+  <td>
+    <FORM_ADMIN step=0 part=0 method=get>
+    <table border=0 cellspacing=0 cellpadding=5>
+    <tr>
+      <td><SUBMIT value="Overview" class="txt"></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+  <td>
+    <FORM_ADMIN step=0 part=account method=get>
+    <input type="hidden" name="client" value="<CLIENT_ID>">
+    <input type="hidden" name="order" value="time">
+    <input type="hidden" name="ordir" value="desc">
+    <table border=0 cellspacing=0 cellpadding=5>
+    <tr>
+      <td><SUBMIT value="Account" class="txt"></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+  <td>&nbsp;&nbsp;&nbsp;</td>
+  <td>
+    <FORM_ADMIN step=1 part=remove method=get>
+    <input type="hidden" name="client" value="<CLIENT_ID>">
+    <table border=0 cellspacing=0 cellpadding=5 bgcolor=#FF0000>
+    <tr>
+      <td class="txt"><b><font color=#FFFFFF class="txt">ATTENTION</font></b></td>
+      <td><SUBMIT value="Remove Client" class="txt" onClick="return confirm('Really remove this client?');"></td>
+      <td class="txt"><b><font color=#FFFFFF class="txt">ATTENTION</font></b></td>
+    </tr>
+    </table>
+    </form>
+  </td>
+</tr>
+</table>
+
+</body>
+</html>

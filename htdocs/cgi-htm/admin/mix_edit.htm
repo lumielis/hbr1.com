@@ -1,0 +1,123 @@
+<html>
+<head>
+<title>Mixes</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<FORM_MIX_EDIT step="1" method="post">
+<input type="hidden" name="mix_id" value="<FORMV_MIX_ID>">
+<table border="1" width="100%">
+  <tr>
+    <td class="txt" colspan="5" bgcolor="#3366EE"><font color="#FFFFFF"><b>MIX INFO</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt">Name</td>
+    <td class="txt">DJ</td>
+    <td class="txt">Category</td>
+    <td class="txt">Date</td>
+    <td class="txt">ETA</td>
+  </tr>
+  <tr>
+    <td class="txt"><INPUT_MIX_NAME class="txt" size="30"></td>
+    <td class="txt"><INPUT_MIX_DJ class="txt" size="30"></td>
+    <td class="txt"><SELECT_MIX_CATEGORY class="txt"></td>
+    <td class="txt"><INPUT_MIX_DATE class="txt" size="15" maxlength="10"></td>
+    <td class="txt"><INPUT_MIX_LENGTH class="txt" size="10" maxlength="8"></td>
+  </tr>
+</table>
+<br>
+<table border="1" width="100%">
+  <tr>
+    <td class="txt" colspan="7" bgcolor="#3366EE"><font color="#FFFFFF"><b>RELEASES</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt">Del</td>
+    <td class="txt">Pos</td>
+    <td class="txt">Name</td>
+    <td class="txt">Type</td>
+    <td class="txt">Label</td>
+    <td class="txt">Order Url</td>
+  </tr>
+<LOOP_RELEASES>
+  <input type="hidden" name="release_<COUNTER-1>_id" value="<RELEASE_ID>">
+  <tr>
+    <td class="txt"><input type="checkbox" name="release_<COUNTER-1>_rem" value="1"></td>
+    <td class="txt"><SELECT_RELEASE_POS class="txt"></td>
+    <td class="txt"><INPUT_RELEASE_NAME class="txt" size="30" maxlength="255"></td>
+    <td class="txt"><SELECT_RELEASE_TYPE class="txt"></td>
+    <td class="txt"><SELECT_RELEASE_LABEL class="txt"></td>
+    <td class="txt"><INPUT_RELEASE_URL_ORDER class="txt" size="40"></td>
+  </tr>
+</LOOP_RELEASES>
+</table>
+
+<br>
+<SUBMIT value="Save" class="txt">
+</form>
+
+<hr size="1">
+
+<FORM_NEW_RELEASE step="2">
+<input type="hidden" name="mix_id" value="<FORMV_MIX_ID>">
+<NEW_RELEASE>
+
+<table border="1" width="100%">
+  <input type="hidden" name="release_<COUNTER-1>_id" value="new">
+  <tr>
+    <td class="txt" colspan="4" bgcolor="#3366EE"><font color="#FFFFFF"><b>ADD NEW RELEASE</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt">Name</td>
+    <td class="txt">Type</td>
+    <td class="txt">Label</td>
+    <td class="txt">Order Url</td>
+  </tr>
+  <tr>
+    <td class="txt"><INPUT_RELEASE_NAME class="txt" size="30" maxlength="255"></td>
+    <td class="txt"><SELECT_RELEASE_TYPE class="txt"></td>
+    <td class="txt"><SELECT_RELEASE_LABEL class="txt"></td>
+    <td class="txt"><INPUT_RELEASE_URL_ORDER class="txt" size="40"></td>
+  </tr>
+</table>
+<SUBMIT value="Add Release" class="txt">
+
+</form>
+
+<hr size="1">
+
+<FORM_NEW_LABEL step="3">
+<input type="hidden" name="mix_id" value="<FORMV_MIX_ID>">
+<table border="1" width="100%">
+  <tr>
+    <td class="txt" colspan="3" bgcolor="#3366EE"><font color="#FFFFFF"><b>ADD NEW LABEL</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt">Name</td>
+    <td class="txt">Home</td>
+    <td class="txt">E-Mail</td>
+  </tr>
+  <tr>
+    <td class="txt"><INPUT_LABEL_NAME class="txt" size="30"></td>
+    <td class="txt"><INPUT_LABEL_HOME class="txt" size="30"></td>
+    <td class="txt"><INPUT_LABEL_EMAIL class="txt" size="30"></td>
+  </tr>
+</table>
+<SUBMIT value="Add Label" class="txt">
+</form>
+    
+    </td>
+  </tr>
+</table>
+
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<html>
+
+<head>
+
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+
+<style type="text/css">
+<!--
+td { font-family: Verdana, Arial; font-size: 8pt }
+input{ font-family: Verdana, Arial; font-size: 10px }
+input#nl{ border-style: solid; border-width: 1px }
+--> 
+</style>
+
+<script language="JavaScript" src="../jscript/util.js"></script>
+<script language="JavaScript" src="../jscript/color.js"></script>
+<script language="JavaScript" src="../jscript/css.js"></script>
+<script language="JavaScript" src="../jscript/vector.js"></script>
+
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" class="sb1" marginwidth="0" marginheight="0" leftmargin="0" topmargin="0">
+
+<form name="JSM_Input" onSubmit="return SendMessage( this );">
+
+<table cellspacing=0 cellpadding=0 border=0 height=100%>
+<tr>
+<td valign=bottom>
+
+<table cellspacing=0 cellpadding=0 border=0 background="../images/inpbg.gif">
+  <tr>
+    <td>
+      <img src="../images/inpl.gif"></td>
+    <td valign=top>
+      <img src="../images/inptl.gif"></td>
+    <td>
+      <script language="JavaScript">
+      <!--
+      if( document.layers )
+        document.write( '<input type="text" name="msg" autocomplete="off" size=30 maxlength=255 class="inp1"></td>' );
+      else
+        document.write( '<input type="text" name="msg" autocomplete="off" size=50 maxlength=255 class="inp1"></td>' );
+      //-->
+      </script>
+      <noscript>
+        <input type="text" name="msg" autocomplete="off" size=50 maxlength=255 class="inp1"></td>
+      </noscript>
+    <td>
+      &nbsp;</td>
+    <td>
+      <input type="submit" value="OK" class="inp2"></td>
+    <td valign=top>
+      <img src="../images/inptr.gif"></td>
+    <td>
+      <img src="../images/inpr.gif"></td>
+  </tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+</form>
+
+<script language="JavaScript">
+<!--
+var MsgBuffer = new Vector();
+var MsgPos = 0;
+var MsgCur = "";
+
+function SaveMessage( msg ) {
+  while( MsgBuffer.length > 30 ) MsgBuffer.pop();
+  MsgBuffer.unshift( msg );
+  MsgPos = -1;
+}
+
+document.forms.JSM_Input.msg.onkeydown = InputOnKeyDown;
+//document.forms.JSM_Input.msg.onkeyup = InputOnKeyUp;
+
+function SendMessage( owner ) {
+  if( ! owner || ! parent || ! parent.SendMessage ) return false;
+  if( owner.msg ) {
+    if( owner.msg.value && parent.SendMessage( owner.msg.value ) ) {
+      SaveMessage( owner.msg.value );
+      owner.msg.value = "";
+      MsgCur = "";
+    }
+    owner.msg.focus();
+    return false;
+  }
+  else if( owner.value && parent.SendMessage( owner.value ) ) {
+    SaveMessage( owner.value );
+    owner.value = "";
+    MsgCur = "";
+    owner.focus();
+  }
+}
+
+SendMessage( document.forms[0] );
+
+function InputOnKeyDown( Event ) {
+  var ch = Event ? Event.which : ( window.event && window.event.keyCode ) ? window.event.keyCode : 0;
+  switch( ch ) {
+    case 13: // enter
+      SendMessage( document.forms.JSM_Input.msg );
+      break;
+    case 38: // arrow up
+      if( MsgPos == -1 ) MsgCur = document.forms.JSM_Input.msg.value;
+      if( MsgBuffer.length && MsgPos < MsgBuffer.length - 1 ) {
+        MsgPos ++;
+        document.forms.JSM_Input.msg.value = MsgBuffer.get( MsgPos );
+      }
+      break;
+    case 40: // arrow down
+      if( MsgBuffer.length && MsgPos > 0 ) {
+        MsgPos --;
+        document.forms.JSM_Input.msg.value = MsgBuffer.get( MsgPos );
+      }
+      else if( MsgPos == 0 ) {
+        MsgPos = -1;
+        document.forms.JSM_Input.msg.value = MsgCur;
+      }
+      break;
+  }
+}
+
+function requestFocus() {
+  if( document.forms.JSM_Input && document.forms.JSM_Input.msg ) {
+    document.forms.JSM_Input.msg.focus();
+  }
+}
+
+function JavaDownload( url ) {
+  return document.applets[0].startDownload( url ) + "";
+}
+
+if( parent ) {
+  parent.FocusInput = requestFocus;
+  //if( document.applets[0] && document.applets[0].startDownload )
+  //  parent.JavaDownload = JavaDownload;
+}
+
+//-->
+</script>
+
+</body>
+
+</html>

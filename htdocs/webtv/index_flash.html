@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>HBR1 WebTV</title>
+</head>
+
+<body bgcolor="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="10"><img src="../images/caml.jpg" width="10" height="120"></td>
+
+<script language="JavaScript">
+<!--
+ShockMode = 0;
+ver = parseInt( navigator.appVersion.substring( 0, 1 ) );
+if( ver > 2 )  {
+	n = navigator;
+	p = n.plugins;
+	u = n.userAgent;
+	if( p ){
+    for( i = 0; i < p.length; i ++ ) {
+    	if( ( p[i].description.match( /Flash (\d+)/ ) ) ) {
+  		  ShockMode = RegExp.$1;
+  		  break;
+  		}
+   	}
+	}
+	if( ! ShockMode && u && u.match( /MSIE/ ) && u.match( /Win/ ) && ! u.match( /Opera/ ) ) {
+  	document.write( '<script language=VBScript\> \n');
+  	document.write( 'on error resume next \n');
+  	for( i = 6; i >= 3; i -- ) {
+  	  document.write( 'if ShockMode = 0 then if IsObject( CreateObject( "ShockwaveFlash.ShockwaveFlash.' + i + '" ) ) then ShockMode = ' + i + '\n' );
+  	}
+  	document.write( '</scr' + 'ipt>' );
+	}
+	//if( u.match( /Opera/ ) ) ShockMode = 0;
+}
+
+document.write( '<td width="160">' );
+if( ShockMode >= 5 ) {
+  document.write( '<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="160" HEIGHT="120" id="corvette" ALIGN="">' );
+  document.write( '<PARAM NAME=movie VALUE="webtv.swf"> <PARAM NAME=menu VALUE=false> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE=#000000>' );
+  document.write( '<EMBED src="webtv.swf" menu=false quality=high bgcolor=#000000  WIDTH="160" HEIGHT="120" NAME="WebTV" ALIGN="" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>' );
+  document.write( '</OBJECT>' );
+}
+else {
+  document.write( '<img src="bg.jpg" alt="Download the Macromedia Flash Player to make it crazy." border="0">' );
+}
+document.write( '</td>' );
+// -->
+</script>
+<noscript>
+<td width="160"><img src="bg.jpg" alt="Enable JavaScript to make it crazy." border="0"></td>
+</noscript>
+
+    <td valign="top" width="24"><img src="../images/camr.jpg" width="24" height="120"></td>
+  </tr>
+</table>
+
+</body>
+</html>

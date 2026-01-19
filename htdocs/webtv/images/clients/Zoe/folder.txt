@@ -1,0 +1,14 @@
+Text=5|115|Keough Zoe
+Font=Arial,Impact,mono|0|9
+Anchor=http://images.burningman.com/index.cgi?q_keyword=&q_year=2001&q_category=&q_photog=zkeo&go.x=14&go.y=20
+Precache=0
+Refresh=10000
+Image=S_BlackMadonnaSpinningAngelsPerformance.jpg
+Image=S_ElectricLightParade.jpg
+Image=S_TeslaCoilandHangingCage.jpg
+Image=S_TempleofTearsmausoleumengulfedinflames.jpg
+Image=S_EmeraldCitymomen.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0

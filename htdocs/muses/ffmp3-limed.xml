@@ -1,0 +1,7 @@
+﻿<ffmp3-skin folder="ffmp3-limed">
+  <bg image="bg.png?v=1" x="0" y="0" />
+  <play image="play.png" x="22" y="22" clickimage="playclick.png" />
+  <stop image="stop.png" x="358" y="22" clickimage="stopclick.png" />
+  <volume mode="holder" x="104" y="48" width="239" height="23" holderImage="holder.png" />
+  <status imagePlay="statusplay.png" imageStop="statusstop.png" x="361" y="80" />
+</ffmp3-skin>

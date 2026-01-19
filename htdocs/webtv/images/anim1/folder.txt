@@ -1,0 +1,11 @@
+Refresh=100
+Image=S_1156.jpg
+Image=S_1155.jpg
+Image=S_1154.jpg
+Image=S_1153.jpg
+Precache=1
+ImageEnd=S_1162.jpg
+ImageStart=S_1116.jpg
+Shuffle=0
+Repeat=2
+Enabled=1

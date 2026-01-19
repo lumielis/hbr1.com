@@ -1,0 +1,347 @@
+<html>
+<head>
+<title>Party Base</title>
+<style type="text/css"> <!--
+body { scrollbar-base-color:#170040; scrollbar-track-color:#000000; scrollbar-face-color:#100030; scrollbar-highlight-color:#000050; scrollbar-3d-light-color:#000000; scrollbar-dark-shadow-color:#000000; scrollbar-shadow-color:#002060; scrollbar-arrow-color:#002060 }
+.txt { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 10px }
+.small { font-size: 10px; font-family: Arial, mono }
+.head { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 11px }
+.big { font-size: 12px }
+.blue { BORDER-LEFT: #000088 1px solid; BORDER-TOP: #000088 1px solid; BORDER-RIGHT: #0000CC 1px solid; BORDER-BOTTOM: #0000CC 1px solid; FONT: 8pt verdana, mono; MARGIN-LEFT: 2px; COLOR: #00FFFF; BACKGROUND-COLOR: #000060; scrollbar-base-color:#000000; scrollbar-track-color:#000066; scrollbar-face-color:#000088; scrollbar-highlight-color:#0000CC; scrollbar-3d-light-color:#0000CC; scrollbar-dark-shadow-color:#000088; scrollbar-shadow-color:#000088; scrollbar-arrow-color:#6666FF; }
+.blue2 { BORDER-LEFT: #0000CC 1px solid; BORDER-TOP: #0000CC 1px solid; BORDER-RIGHT: #000088 1px solid; BORDER-BOTTOM: #000088 1px solid; FONT: 8pt verdana, mono; COLOR: #FFFFFF; BACKGROUND-COLOR: #000060 }
+#title { letter-spacing: 1px }
+#info { color: #cccc66 }
+a:link {color: #5588FF; text-decoration: none;}
+a:visited {color: #5588FF; text-decoration: none;}
+a:hover {color: #AAAA22; text-decoration: none;}
+--> </style>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellSpacing=0 cellPadding=0 border=0 width="583">
+  <tr> 
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td class=head align=middle><font color=#9999ff><b>PARTY DETAILS</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align=center background="/images/body_bg.jpg" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=comment&party_id=<PARTY_ID>&time_from=<FORMV_TIME_FROM>&from=<FORMV_FROM>&count=<FORMV_COUNT>"><font color="#AAAA22">COMMENTS</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&time_from=<FORMV_TIME_FROM>&from=<FORMV_FROM>&count=<FORMV_COUNT>"><font color="#77AA00">CALENDAR</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&party_id=<FORMV_PARTY_ID>"><font color="#AAAA22">EDIT_PARTY</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align="left" background="/images/body_bg.jpg" height="1%">
+      <br>
+      <table border="0" cellspacing="0" cellpadding="2" width="100%">
+        <IF_PARTY_SOURCE_ID>
+        <tr>
+          <td class="txt"><img src="/images/color/blue1.gif" width="100%" height="1"></td>
+        </tr>
+        <tr>
+          <td class="txt" align="center"><font color="#999999">this party comes from <a href="<PARTY_SOURCE_URL>" target="_blank"><PARTY_SOURCE_NAME></a></font></td>
+        </tr>
+        <tr>
+          <td class="txt"><img src="/images/color/blue1.gif" width="100%" height="1"></td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+        </tr>
+        </IF>
+        <!--
+        <tr>
+          <td class="head" align="center"><font color="#99ff00"><b><PARTY_TITLE></b></font></td>
+        </tr>
+        -->
+        <tr>
+          <td class="txt">
+            <table border="0" cellspacing="0" cellpadding="2" width="100%">
+              <tr>
+                <td class="txt" bgcolor="#100040"><PARTY_CITY> / <PARTY_COUNTRY></td>
+                <td class="txt" bgcolor="#100040" align="right"><PARTY_TYPE></td>
+              </tr>
+              <tr>
+                <td class="head" colspan="2" bgcolor="#000000" align="center"><font color="#99ff00"><b><PARTY_TITLE></b></font></td>
+              </tr>
+            </table>
+            <br>
+            <center>
+            <table border="0" cellspacing="1" cellpadding="2">
+              <tr>
+                <td class="txt" colspan="2" align="center" id="info">Start</td>
+                <td class="txt" width="10">&nbsp;</td>
+                <td class="txt" colspan="2" align="center" id="info">Finish</td>
+              </tr>
+              <tr>
+                <td class="txt"><PARTY_START_TIMESTAMP_DATE></td>
+                <td class="txt">- <PARTY_START_TIMESTAMP_TIME></td>
+                <td class="txt">&nbsp;</td>
+                <td class="txt"><PARTY_END_TIMESTAMP_DATE></td>
+                <td class="txt">- <PARTY_END_TIMESTAMP_TIME></td>
+              </tr>
+            </table>
+            </center>
+            <br>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <IF_PARTY_FLYER>
+              <tr>
+                <td class="txt" valign="top" id="info">Flyer</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><a href="<URL_SYSTEM>/vimg.cgi?/images/party/flyer/<PARTY_FLYER>"><img src="/images/party/flyer/<PARTY_FLYER>" width="250" border="0"></a></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_LIVE>
+              <tr>
+                <td class="txt" valign="top" id="info">Live Performance</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_LIVE></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_DJS>
+              <tr>
+                <td class="txt" valign="top" id="info">DJs</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_DJS></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_CHILLOUT>
+              <tr>
+                <td class="txt" valign="top" id="info">Chillout</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_CHILLOUT></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_DECO>
+              <tr>
+                <td class="txt" valign="top" id="info">Deco</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_DECO></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_MEMO>
+              <tr>
+                <td class="txt" valign="top" id="info">Infos</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_MEMO></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_LOCATION>
+              <tr>
+                <td class="txt" valign="top" id="info">Location</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_LOCATION></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_ORGANIZER>
+              <tr>
+                <td class="txt" valign="top" id="info">Organizer</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_ORGANIZER></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_URL>
+              <IF_PARTY_URL eq http://>
+              <ELSE>
+              <tr>
+                <td class="txt" valign="top" id="info">Home</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><ANT_HYPERLINKS><PARTY_URL></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              </IF>
+              <IF_PARTY_EMAIL>
+              <tr>
+                <td class="txt" valign="top" id="info">E-Mail</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><a href="mailto:<PARTY_EMAIL>"><PARTY_EMAIL></a></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <IF_PARTY_HOTLINE>
+              <tr>
+                <td class="txt" valign="top" id="info">Hotline</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><PARTY_HOTLINE></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              </IF>
+              <tr>
+                <td class="txt" valign="top" id="info">Thanks to</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><PARTY_SUBMITTER></td>
+              </tr>
+              <tr>
+                <td class="txt" colspan="3">&nbsp;</td>
+              </tr>
+              <tr>
+                <td class="txt" valign="top" id="info">Update</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><PARTY_EDIT_TIMESTAMP_DATE>, <PARTY_EDIT_TIMESTAMP_TIME></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <IF_PARTY_SOURCE_ID>
+        <tr>
+          <td class="txt">&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="txt"><img src="/images/color/blue1.gif" width="100%" height="1"></td>
+        </tr>
+        <tr>
+          <td class="txt" align="center"><font color="#999999">this party comes from <a href="<PARTY_SOURCE_URL>" target="_blank"><PARTY_SOURCE_NAME></a></font></td>
+        </tr>
+        <tr>
+          <td class="txt"><img src="/images/color/blue1.gif" width="100%" height="1"></td>
+        </tr>
+        </IF>
+      </table>
+      <br>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+    <td align=center background="/images/body_bg.jpg" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=comment&party_id=<PARTY_ID>&time_from=<FORMV_TIME_FROM>&from=<FORMV_FROM>&count=<FORMV_COUNT>"><font color="#AAAA22">COMMENTS</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&time_from=<FORMV_TIME_FROM>&from=<FORMV_FROM>&count=<FORMV_COUNT>"><font color="#77AA00">CALENDAR</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+          <td align=middle background="/images/submenu_bg.gif">
+            <table cellSpacing=0 cellPadding=0 border=0>
+              <tr> 
+                <td align=left><img src="/images/submenu_left.gif"></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td class=txt><b><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&party_id=<FORMV_PARTY_ID>"><font color="#AAAA22">EDIT_PARTY</font></a></b></td>
+                <td><img height=1 src="/images/spacer.gif" width=2></td>
+                <td align=left><img src="/images/submenu_right.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align="left" width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align="middle" background="/images/title_bg.gif" height="1%"> 
+      <table cellSpacing="0" cellPadding="0" border="0">
+        <tr> 
+          <td align="middle" class="txt"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align="left" width="1%" background="/images/footer_left.gif"><img src="/images/spacer.gif" width="64" height="8"></td>
+    <td align="middle" background="/images/footer_bg.gif"><img src="/images/spacer.gif" width="1" height="1"></td>
+    <td align="right" width="1%" background="/images/footer_right.gif"><img src="/images/spacer.gif" width="64" height="8"></td>
+  </tr>
+</table>
+
+</body>
+</html>
+  

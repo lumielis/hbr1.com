@@ -1,0 +1,115 @@
+<html>
+<head>
+<link rel="stylesheet" href="<URL_DISPLAY>/style/admin.css">
+<script language="JavaScript">
+<!--
+function onLoad() {
+	<IF_PAGE_ERROR>alert("!!! ALERT !!!\n\n<PAGE_MESSAGE>\n\n!!! ALERT !!!");</IF>
+	<IF_PAGE_MESSAGE>alert("<PAGE_MESSAGE>");</IF>
+}
+window.onload = onLoad;
+//-->
+</script>
+</head>
+<body>
+
+<h1 class="title"><ENV_APP_NAME> v<ENV_APP_VERSION></h1>
+
+<IF_MESSAGE_LOG>
+<p><ul class="message_log">
+<LOOP_MESSAGE_LOG>
+	<li class="message_log_<MESSAGE_LOG=type_name>"><MESSAGE_LOG=msg></li>
+</LOOP_MESSAGE_LOG>
+</ul></p>
+</IF>
+
+<FORM_ADMIN method="post" step="1">
+<HIDDEN_ACCESS_USER_ID>
+<input type="hidden" name="access_user_old_user_id" value="<ACCESS_USER_OLD_USER_ID>">
+<input type="hidden" name="access_user_old_name" value="<ACCESS_USER_OLD_NAME>">
+
+<table border="1" cellspacing="1" cellpadding="4">
+	<tr>
+		<th colspan="2" class="text" id="header">ACCESS INFO</th>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_user_user_id><font id="error">*</font></IF>Id<span id="text_top">*</span></td>
+		<td class="text"><INPUT_ACCESS_USER_USER_ID class="text" size="12" maxlength="10"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_user_name><font id="error">*</font></IF>Name<span id="text_top">*</span></td>
+		<td class="text"><INPUT_ACCESS_USER_NAME class="text" size="32" maxlength="30"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_user_info><font id="error">*</font></IF>Info</td>
+		<td class="text"><INPUT_ACCESS_USER_INFO class="text" size="32" maxlength="128"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_user_group_id><font id="error">*</font></IF>Group<span id="text_top">*</span></td>
+		<td class="text"><SELECT_ACCESS_USER_GROUP_ID class="text"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=access_user_passwd><font id="error">*</font></IF>Password</td>
+		<td>
+			<table border="1" cellspacing="1" cellpadding="4">
+				<tr>
+					<td class="text" id="info">New</td>
+					<td><PASSWORD_ACCESS_USER_NEW_PASSWD_1 class="text"></td>
+				</tr>
+				<tr>
+					<td class="text" id="info">Confirm</td>
+					<td><PASSWORD_ACCESS_USER_NEW_PASSWD_2 class="text"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2" class="text" id="header">PERSONAL INFO</th>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_surname><font id="error">*</font></IF>Surname</td>
+		<td class="text"><INPUT_USER_INFO_SURNAME class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_name><font id="error">*</font></IF>Name</td>
+		<td class="text"><INPUT_USER_INFO_NAME class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_street><font id="error">*</font></IF>Street</td>
+		<td class="text"><INPUT_USER_INFO_STREET class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_zip><font id="error">*</font></IF>Zip</td>
+		<td class="text"><INPUT_USER_INFO_ZIP class="text" size="12" maxlength="10"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_city><font id="error">*</font></IF>City</td>
+		<td class="text"><INPUT_USER_INFO_CITY class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_birthday><font id="error">*</font></IF>Birthday<br><font class="small_text" color="#999999">format(mm/tt/yyyy)</font></td>
+		<td class="text"><INPUT_USER_INFO_BIRTHDAY class="text" size="13" maxlength="10"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_phone><font id="error">*</font></IF>Phone</td>
+		<td class="text"><INPUT_USER_INFO_PHONE class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_handy><font id="error">*</font></IF>Handy</td>
+		<td class="text"><INPUT_USER_INFO_HANDY class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text" id="info"><IF_ERROR=user_info_email><font id="error">*</font></IF>E-Mail</td>
+		<td class="text"><INPUT_USER_INFO_EMAIL class="text" size="32" maxlength="50"></td>
+	</tr>
+	<tr>
+		<td class="text">&nbsp;</td>
+		<td class="text"><SUBMIT value="Update" class="text"></td>
+	</tr>
+</table>
+
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,502 @@
+<html>
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>HBR1 - Payed Service</title>
+<style type="text/css">
+body, td, th, input, select, textarea {
+	scrollbar-base-color:#170040;
+	scrollbar-track-color:#000000;
+	scrollbar-face-color:#100030;
+	scrollbar-highlight-color:#000050;
+	scrollbar-3d-light-color:#000000;
+	scrollbar-dark-shadow-color:#000000;
+	scrollbar-shadow-color:#002060;
+	scrollbar-arrow-color:#002060;
+	font-size: 11px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, Mono;
+}
+body, td, th {
+	font-size: 10px;
+}
+.head {
+	font-size: 11px;
+}
+.big {
+	font-size: 12px;
+}
+.blue {
+	BORDER-LEFT: #000088 1px solid;
+	BORDER-TOP: #000088 1px solid;
+	BORDER-RIGHT: #0000CC 1px solid;
+	BORDER-BOTTOM: #0000CC 1px solid;
+	FONT: 8pt verdana, mono;
+	MARGIN-LEFT: 2px;
+	COLOR: #00FFFF;
+	BACKGROUND-COLOR: #000060;
+	scrollbar-base-color:#000000;
+	scrollbar-track-color:#000066;
+	scrollbar-face-color:#000088;
+	scrollbar-highlight-color:#0000CC;
+	scrollbar-3d-light-color:#0000CC;
+	scrollbar-dark-shadow-color:#000088;
+	scrollbar-shadow-color:#000088;
+	scrollbar-arrow-color:#6666FF;
+}
+.blue2 {
+	BORDER-LEFT: #0000CC 1px solid;
+	BORDER-TOP: #0000CC 1px solid;
+	BORDER-RIGHT: #000088 1px solid;
+	BORDER-BOTTOM: #000088 1px solid;
+	FONT: 8pt verdana, mono;
+	COLOR: #FFFFFF;
+	BACKGROUND-COLOR: #000060;
+}
+a:link {
+	color: #5588FF;
+	text-decoration: none;
+}
+a:visited {
+	color: #5588FF;
+	text-decoration: none;
+}
+a:hover {
+	color: #FF0055;
+	text-decoration: none;
+}
+.price {
+	color: #99FF00;
+	font-weight: bold;
+}
+.input {
+	BORDER-LEFT: #000088 1px solid;
+	BORDER-TOP: #000088 1px solid;
+	BORDER-RIGHT: #0000CC 1px solid;
+	BORDER-BOTTOM: #0000CC 1px solid;
+	MARGIN-LEFT: 2px;
+	COLOR: #00FFFF;
+	BACKGROUND-COLOR: #000060;
+	scrollbar-base-color: #000000;
+	scrollbar-track-color: #000066;
+	scrollbar-face-color: #000088;
+	scrollbar-highlight-color: #0000CC;
+	scrollbar-3d-light-color: #0000CC;
+	scrollbar-dark-shadow-color: #000088;
+	scrollbar-shadow-color: #000088;
+	scrollbar-arrow-color: #6666FF;
+}
+input.button {
+	BORDER-LEFT: #0000CC 1px solid;
+	BORDER-TOP: #0000CC 1px solid;
+	BORDER-RIGHT: #000088 1px solid;
+	BORDER-BOTTOM: #000088 1px solid;
+	COLOR: #FFFFFF;
+	BACKGROUND-COLOR: #000060;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.border1, .border1 td {
+	border: 1px solid #003399;
+	border-collapse: collapse;
+}
+.tdnoborder td {
+	border: none;
+}
+.tdborderbot td {
+	border-bottom: 1px solid #003399;
+}
+.h1 {
+	background-color: #003399;
+}
+</style>
+
+<script language="JavaScript" src="../cgi-htm/jscript/crypt.js"></script>
+
+<script language="JavaScript">
+<!--
+
+PageID = 'premium';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+var crypt_key = 'DFSE3-KX427-A2RRG-BL5XM-CB336';
+
+function decrypt_email( crypt, query ) {
+	location.href = 'mailto:' + xor_decrypt_hex( crypt, crypt_key ) + query;
+	return false;
+}
+
+function decrypt_location( crypt, query ) {
+	location.href = xor_decrypt_hex( crypt, crypt_key ) + query;
+	return false;
+}
+
+function submitForm( form ) {
+	var i, plan = "";
+	for( i = 0; i < form.plan.length; i ++ ) {
+		if( form.plan[i].checked ) {
+			plan = form.plan[i].value;
+		}
+	}
+	if( plan == "12M" ) {
+		form.item_name.value = "HBR1 - Premium Service - 12 Month";
+		form.item_number.value = "HBR1PS12M";
+		form.src.value = form.recurring.checked ? "1" : "0";
+		form.a3.value = "50.28";
+		form.p3.value = "12";
+		form.t3.value = "M";
+	}
+	else if( plan == "6M" ) {
+		form.item_name.value = "HBR1 - Premium Service - 6 Month";
+		form.item_number.value = "HBR1PS6M";
+		form.src.value = form.recurring.checked ? "1" : "0";
+		form.a3.value = "32.34";
+		form.p3.value = "6";
+		form.t3.value = "M";
+	}
+	else if( plan == "1M" ) {
+		form.item_name.value = "HBR1 - Premium Service";
+		form.item_number.value = "HBR1PS1M";
+		form.src.value = form.recurring.checked ? "1" : "0";
+		form.a3.value = "6.79";
+		form.p3.value = "1";
+		form.t3.value = "M";
+	}
+	else if( plan == "3DP" ) {
+		form.item_name.value = "HBR1 - Premium Service - 3 Day Pass";
+		form.item_number.value = "HBR1PS3DP";
+		form.src.value = "0";
+		form.a3.value = "1.99";
+		form.p3.value = "3";
+		form.t3.value = "D";
+	}
+	else {
+		alert( "Unknown plan selected" );
+		return false;
+	}
+	return true;
+}
+
+function updateForm( form ) {
+	var i, plan = "";
+	for( i = 0; i < form.plan.length; i ++ ) {
+		if( form.plan[i].checked ) {
+			plan = form.plan[i].value;
+		}
+	}
+	if( document.Plan == plan ) return;
+	if( plan == "3DP" ) {
+		document.Recurring = form.recurring.checked;
+		form.recurring.checked = false;
+		form.recurring.disabled = true;
+	}
+	else if( document.Plan == "3DP" ) {
+		if( document.Recurring == null )
+			document.Recurring = true;
+		form.recurring.checked = document.Recurring;
+		form.recurring.disabled = false;
+	}
+	else {
+		document.Recurring = form.recurring.checked;
+	}
+	document.Plan = plan;
+}
+
+//-->
+</script>
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#FF0055" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellSpacing=0 cellPadding=0 border=0 width="588" align="center">
+  <tr> 
+    <td align=left width="64" background="../images/header_left.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+    <td align=middle background="../images/header_bg.gif"><img height=1 src="../images/spacer.gif" width=1></td>
+    <td align=right width="64" background="../images/header_right.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="64" background="../images/title_bg.gif"><img src="../images/title_left.gif"></td>
+    <td align=center background="../images/title_bg.gif" height="1%"> 
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr> 
+          <td class=head align=middle><font color="#FFFFCC"><b>HBR1 Payed Service</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="64" background="../images/body_right.gif"><img src="../images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=55></td>
+<form name="subscription" method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" onSubmit="return submitForm(this)">
+<input type="hidden" name="cmd" value="_xclick-subscriptions">
+<input type="hidden" name="business" value="streaming@hbr1.com">
+<input type="hidden" name="item_name" value="HBR1 - Premium Service - 12 Month">
+<input type="hidden" name="item_number" value="HBR1PS12M">
+<input type="hidden" name="no_shipping" value="1">
+<input type="hidden" name="no_note" value="1">
+<input type="hidden" name="currency_code" value="EUR">
+<input type="hidden" name="bn" value="PP-SubscriptionsBF">
+<input type="hidden" name="a3" value="59.40">
+<input type="hidden" name="p3" value="12">
+<input type="hidden" name="t3" value="M">
+<input type="hidden" name="src" value="1">
+<input type="hidden" name="sra" value="1">
+<input type="hidden" name="usr_manage" value="0">
+<input type="hidden" name="page_style" value="HBR1">
+    <td align="center" background="../images/body_bg.jpg" valign="top"> 
+	<br>
+	<table width="400" border="0" cellpadding="5" cellspacing="0">
+		<tr>
+			<td>
+				Um den steigenden Anforderungen gerecht werden zu können, haben wir
+				uns entschieden einen bezahlten Service einzurichten. Dieser
+				Service beeinhaltet eine bessere Qualität aller vorhandenen
+				Streams. Folgende Qualitäten können durch diesen Service
+				abgerufen werden:<br>
+				<br>
+				<table border="0" cellspacing="0" cellpadding="4">
+					<tr>
+						<td><b>MP3:</b></td>
+						<td align="right"><b> 128Kbit,</b></td>
+						<td align="right"><b>&nbsp;192Kbit</b></td>
+					</tr>
+					<tr>
+						<td><b>Ogg Vorbis:</b></td>
+						<td align="right"> </td>
+						<td align="right"><b>&nbsp;128Kbit</b></td>
+					</tr>
+				</table>
+				<br>
+				Du kannst HBR1 durch Nutzung dieses Services unterstützen.
+			</td>
+		</tr>
+	</table>
+	<br>
+      <table width="400" border="0" cellpadding="2" cellspacing="0" class="h1">
+		<tr>
+			<th class="h1">Select an Order</th>
+        <tr>
+	</table>
+	<br>
+      <table width="400" border="0" cellpadding="5" cellspacing="0" class="border2 tdnoborder tdborderbot">
+<!--
+		<tr>
+          <td>
+            <input type="radio" name="plan" value="12M" id="12M" checked onClick="updateForm(form)">          </td>
+          <td><label for="12M"><img src="/premium/images/m12.gif"></label></td>
+          <td><label for="12M">billed &euro; 50,28 every <b>12 months</b> (you save &euro; 31.20)*</label></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="plan" value="6M" id="6M" onClick="updateForm(form)">          </td>
+          <td><label for="6M"><img src="/premium/images/m6.gif"></td>
+          <td><label for="6M">billed &euro; 32.34 every <b>6 months</b> (you save &euro; 8.40)*</label></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="plan" value="1M" id="1M" onClick="updateForm(form)">          </td>
+          <td><label for="1M"><img src="/premium/images/m1.gif"></label></td>
+          <td><label for="1M">billed &euro; 6.79 every month*</label></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="plan" value="3DP" id="3DP" onClick="updateForm(form)">          </td>
+          <td><label for="3DP"><img src="/premium/images/dp.gif"></label></td>
+          <td><label for="3DP">3 Day Pass</label></td>
+        </tr>
+-->
+		<tr>
+          <td>
+            <input type="radio" name="plan" value="12M" id="12M" checked onClick="updateForm(form)">          </td>
+          <td><label for="12M"><span class="price">&euro; </span><span class="price big">4.19</span><br>a month</label></td>
+          <td><label for="12M">billed &euro; 50,28 every <b>12 months</b> (you save &euro; 31.20)*</label></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="plan" value="6M" id="6M" onClick="updateForm(form)">          </td>
+          <td><label for="6M"><span class="price">&euro; </span><span class="price big">5.39</span><br>a month</label></td>
+          <td><label for="6M">billed &euro; 32.34 every <b>6 months</b> (you save &euro; 8.40)*</label></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="plan" value="1M" id="1M" onClick="updateForm(form)">          </td>
+          <td><label for="1M"><span class="price">&euro; </span><span class="price big">6.79</span><br>a month</label></td>
+          <td><label for="1M">billed &euro; 6.79 every month*</label></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="plan" value="3DP" id="3DP" onClick="updateForm(form)">          </td>
+          <td><label for="3DP"><span class="price">&euro; </span><span class="price big">1.99</span></label></td>
+          <td><label for="3DP">3 Day Pass</label></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td><input id="recurring" type="checkbox" value="1" name="recurring" checked>
+          	*) Renew automatically until i cancel</td>
+        </tr>
+      </table>
+      <br>
+      <table width="400" border="0" cellpadding="2" cellspacing="0" class="h1">
+		<tr>
+			<th class="h1">Payment Method</th>
+        <tr>
+	</table>
+	<br>
+      <table width="400" border="0" cellpadding="3" cellspacing="0" class="border2 tdnoborder">
+        <tr>
+          <td><input type="radio" name="payby" value="PP" id="PP" onClick="updateForm(form)">
+          	<label for="PP"><strong>PayPal</strong> - payment provider includes credit card and bank account</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="payby" value="OP" id="OP" onClick="updateForm(form)">
+          	<label for="OP"><strong>Offline Payment</strong> - using bank transfer or check</label></td>
+        </tr>
+    </table>
+	<br>
+      <table width="400" border="0" cellpadding="2" cellspacing="0" class="h1">
+		<tr>
+			<th class="h1">Your Access Data</th>
+        <tr>
+	</table>
+	<div style="margin-top: 8px;"></div>
+      <table width="400" border="0" cellpadding="3" cellspacing="0" class="border2 tdnoborder">
+        <tr>
+          <td><strong>Your First Name</strong> </td>
+          <td><input name="fname" type="text" class="input" size="15">
+          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Last</b> 
+          	<input name="fname" type="text" class="input" size="15"></td>
+        </tr>
+        <tr>
+          <td><strong>E-Mail Address</strong> </td>
+          <td><input name="email" type="text" class="input" size="25"></td>
+        </tr>
+        <tr>
+          <td><strong>Loginname </strong></td>
+          <td><input name="username" type="text" class="input" size="15"></td>
+        </tr>
+        <tr>
+          <td><strong>Your Password </strong></td>
+          <td><input name="pwd" type="password" class="input" size="15">
+          	&nbsp;&nbsp;<b>Re-type</b>
+          	<input name="pwd2" type="password" class="input" size="15"></td>
+        </tr>
+      </table>
+      <br>
+      <table width="400" border="0" cellpadding="2" cellspacing="0" class="h1">
+		<tr>
+			<th class="h1">Terms of Service</th>
+        <tr>
+	</table>
+	<br>
+	<table width="400" border="0" cellpadding="4" cellspacing="0" class="border2 tdnoborder">
+		<tr>
+			<td align="center">
+				<textarea name="tos" cols="60" rows="7" class="input">
+1. PAYMENT
+
+You agree to pay to HBR1 the charges for the service plan you select using a valid payment method, together with complete, accurate and up-to-date information required on the membership order form. All payments must be in Euros (EUR) and are accepted subject to collection. HBR1 reserves the right to reject any payment or order. Your Service subscription starts the day we receive your payment, except for check payments that can be delayed for clearance up to 10 days after receipt. If you choose the automatic renewal option you authorize HBR1 to periodically bill the PayPal account you provide, until you non-renew or cancel the Service or the Service is terminated. Charges are billed in advance at the start of the applicable period of Service, in accordance with the prices, plans and terms in effect at time of billing as posted on the HBR1 Web site, www.hbr1.com. 
+HBR1 will assess an additional 1.5% per month late charge (or the highest amount allowed by law, whichever is lower) if your payment is more than 30 days past due. You will also be liable for any fees, including attorney and collection fees, that HBR1 may incur in its efforts to collect any balances due from you. Checks returned unpaid for any reason are subject to a EUR 20.00 fee. You understand that you will be billed for and agree to pay any outstanding balance if you cancel or non-renew the Service or the Service is terminated. You agree to notify HBR1 of any billing problems or discrepancies within 60 days after they first appear on your account statement. If you do not bring them to HBR1's attention within 60 days, you agree that you waive your right to dispute such billing problems or discrepancies.
+ 
+  
+2. CANCEL SERVICE
+
+You may cancel or non-renew the Service by accessing your billing options at the HBR1 Web site. For PayPal automatic renewals you may also non-renew by stopping HBR1's recurring charge at PayPal.com. On any non-renewal, HBR1 must receive notice at least 1 day before your current Service subscription expires to prevent you from being billed for the next automatic renewal. If you cancel the service altogether, you may receive a partial refund only as follows: (a) If more than 31 days remain until your Service subscription expires, cancellation is effective the day following the day HBR1 receives notice. Your refund will be the pro-rata portion of the amounts you were billed for the days remaining to expiration, less a 30-day cancellation penalty, and you will not be billed again. (b) If 31 days or less remain until your Service subscription expires, cancellation is effective on the day your subscription expires. You will not receive any refund for the days remaining to expiration, but you may continue to access the service during those days, and you will not be billed again. Days begin at 12:00:00 am UTC time and end at 11:59:59 pm UTC time. 
+You understand and agree that cancellation of your service subscription is your sole right and remedy with respect to any dispute with HBR1. This includes, but is not limited to, any dispute involving: (a) any term of this Agreement, or HBR1's application or enforcement of this Agreement; (b) any policies or practices of HBR1, or HBR1's application or enforcement of these policies or practices; (c) any Content provided through the Service, or any change in the Content provided; (d) your ability to access or use the Service or any Content; or (e) the fees, applicable taxes, payment methods, or any change to the fees, applicable taxes, or payment methods.
+ 
+  
+3. MODIFY OR TERMINATE SERVICE
+
+HBR1 may modify the terms of this Agreement or the Service, including but not limited to the pricing thereof or the Content provided, upon notice to you. If you decide not to accept the modifications you may elect to cancel the Service. HBR1 may terminate this Agreement and any Service at any time upon notice to you, or without notice if you violate any term of this Agreement or fail to make payment when due. In the event that HBR1 terminates this Agreement or the Service, you will be entitled to a pro-rata refund of amounts you have already paid for any time periods following the effective date of termination. Your obligation to pay accrued charges and fees shall survive any termination of this Agreement. 
+  
+
+4. PERSONAL INFORMATION
+
+An online account with HBR1 is required to purchase and use the Service. Personal information you provide when creating or updating such an account includes your name, email address, passwords, location, billing and payment information. HBR1 uses your personal information to verify your access rights to, provide you with, and bill you for, the Service plan you select. 
+To safeguard personal information HBR1 maintains technical and procedural controls, including but not limited to SSL connections, encryption, restricted access servers, and confidentiality requirements for employees and contractors. Unless disclosure is mandated by law or legal process, HBR1 will intentionally disclose your personal information to a third party only if you specifically consent to provide such information to a third party. 
+
+You understand that DI also collects and analyzes usage information for the Service and Content, on an anonymous and aggregated basis. DI may use or disclose anonymous aggregated usage information to further improve the Service and Content, to determine what Service plans or types of Content are most popular, for Content license reporting and royalty payments, and for any other purpose not inconsistent with the applicable privacy laws.
+ 
+  
+5. EMAIL NOTIFICATION
+
+In addition to, or in lieu of, any posting on HBR1's Web site, HBR1 may notify you by email of modifications to this Agreement, the Service, available Content, or your account. As a Service subscriber, you agree that HBR1 may send such email to the address you provide. Because such email is necessary for your use or continued use of the Service, you will receive such email even if you have not signed up for, or have opted out of receiving, other email from HBR1. 
+  
+
+6. OWNERSHIP
+
+Title, ownership rights and intellectual property rights in and to the Service shall remain with DI and its subsidiaries, affiliates and suppliers. Title, ownership rights and intellectual property rights in and to the Content shall remain with the applicable Content owner(s). The Service and Content are protected by the copyright laws of Germany and other countries, and by international copyright treaties. 
+  
+
+7. USAGE RESTRICTIONS
+
+You may only use the Service and Content for private, non-commercial purposes in compliance with applicable laws in the jurisdictions in which you use the Service and Content, including, but not limited to, restrictions concerning copyright and other intellectual property rights. Under no circumstances may you: (a) modify the Content in any way, or create derivative works of the Service or Content; (b) rent, lease, or distribute the Service or Content to third parties; or (c) broadcast or perform the Service or Content outside of your normal circle of family and friends. 
+You may not share your account information and passwords, or permit others to use your account to access the Service or Content by any means. The Service does not allow simultaneous access by the same account from more than one computer (or other device). You are responsible for all activities that occur with your account and you agree to notify HBR1 immediately of any unauthorized account use. HBR1 will not be responsibile for any loss that you may incur as a result of unauthorized use of your account and passwords. 
+
+You may not, by means of any device, software, or other method, attempt to circumvent technological measures controlling access to, or the rights in, the Service or Content. The Service and Content are intended for use only with properly licensed devices and software. It is entirely your responsibility to determine what copyright, patent or other licenses are required, and to obtain any such licenses, in order to access the Service and Content. 
+
+You understand that upon any cancellation, expiration or termination of this Agreement (whether by you or HBR1), your license to the Service and Content also terminates, and you shall immediately discontinue all further use of the Service.
+ 
+  
+8. DISCLAIMER
+
+THE SERVICE AND THE CONTENT ARE PROVIDED TO YOU ON AN "AS-IS" BASIS WITHOUT WARRANTY OF ANY KIND, WHETHER ORAL OR WRITTEN, EXPRESS OR IMPLIED. TO THE MAXIMUM EXTENT ALLOWED BY LAW, HBR1 AND ITS SUBSIDIARIES, AFFILIATES AND SUPPLIERS SPECIFICALLY DISCLAIM ANY IMPLIED WARRANTIES OR CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. USE OF THE SERVICE OR CONTENT IS ENTIRELY AT YOUR OWN RISK. Some jurisdictions do not allow the exclusion of implied warranties or conditions, so the aforementioned exclusion may not apply to you. 
+  
+
+9. LIMIT OF LIABILITY
+
+TO THE MAXIMUM EXTENT ALLOWED BY LAW, IN NO EVENT SHALL HBR1 OR ITS SUBSIDIARIES, AFFILIATES OR SUPPLIERS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, PUNITIVE, OR OTHER DAMAGES WHATSOEVER ARISING OUT OF THIS AGREEMENT, OR THE USE OF OR INABILITY TO USE OR THE RESULTS OF USING THE SERVICE OR THE CONTENT, EVEN IF HBR1 HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. YOUR SOLE AND EXCLUSIVE REMEDY FOR ANY DISPUTE WITH HBR1 RELATED TO THIS AGREEMENT OR THE SERVICE OR CONTENT SHALL BE CANCELLATION OF THE SERVICE. IN THE EVENT A COURT AWARDS DIRECT DAMAGES IN SPITE OF THE FOREGOING, YOU AGREE THAT SUCH DAMAGES SHALL NOT EXCEED THE AMOUNT YOU PAID FOR THE SERVICE. Some jurisdictions do not allow the limitation of liability for incidental or consequential damages, so the aforementioned limitation may not apply to you. 
+  
+
+10. GOVERNING LAW 
+This Agreement shall be governed by the laws of the State of New York and US federal law, without regard to choice of law provisions, and you consent to the jurisdiction of the state and federal courts located in the State of New York. This Agreement will not be governed by the United Nations Convention of Contracts for the International Sale of Goods, the application of which is hereby expressly excluded. 
+  
+
+11. SEVERABILITY
+
+If any provision of this Agreement is held to be invalid or unenforceable, such decision will not affect the validity or enforceability of such provision under other circumstances, or of the remaining provisions of this Agreement under all circumstances. Failure to enforce any provision of this Agreement, on any one occasion, will not affect the right to enforce other provisions, or the same provision on another occasion. 
+  
+
+12. ENTIRE AGREEMENT
+
+This Agreement, including any referenced documents, constitutes the complete and exclusive agreement between you and HBR1, and supersedes all prior oral or written agreements, representations or understandings between you and HBR1. You may not modify this Agreement in any way or assign it to any other individual or entity without HBR1's prior written consent. HBR1's provision of Service to you is expressly made conditional on your acceptance of the terms set forth herein. 
+				</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">
+				<input type="checkbox" name="agree" id="agree" value="1">
+				<label for="agree">I agree</label>
+			</td>
+		</tr>
+	</table>
+      <p>
+        <input type="submit" class="button" value="Submit your Request">
+      </p>
+</form>
+      <p><br>
+      </p>
+    </td>
+    <td align=right width="55" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=55></td>
+  </tr>
+  <tr> 
+    <td align=left width="64" background="../images/title_bg.gif"><img src="../images/title_left.gif"></td>
+    <td align=center background="../images/title_bg.gif" height="1%"> 
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr> 
+          <td align="middle"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2006</i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="64" background="../images/body_right.gif"><img src="../images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align=left width="64" background="../images/footer_left.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+    <td align=middle background="../images/footer_bg.gif"><img height=1 src="../images/spacer.gif" width=1></td>
+    <td align=right width="64" background="../images/footer_right.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+</body>
+</html>

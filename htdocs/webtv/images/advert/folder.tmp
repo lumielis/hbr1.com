@@ -1,0 +1,15 @@
+Refresh=1000
+Precache=0
+Enabled=0
+Repeat=-1
+Shuffle=0
+Image=cosmophilia.jpg
+Font=Arial,Impact,mono|0|9
+Color=77AA66
+Text=40|95|<PSYSHOP_NEWS_ARTIST>
+Text=40|108|<PSYSHOP_NEWS_TITLE>
+Anchor=<PSYSHOP_NEWS_URL>
+
+
+
+

@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>Mix List</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<table border="1" cellspacing="0" cellpadding="3">
+  <tr>
+    <td class="txt" bgcolor="#3366EE"><font color="#FFFFFF"><b>CATEGORY</b></font></td>
+<LOOP_MIX_CATEGORIES>
+    <IF_MIX_CATEGORY_ACTIVE>
+    <td class="txt"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&cat_id=<MIX_CATEGORY_ID>"><b><font color="#009900"><MIX_CATEGORY_NAME></font></b></a></td>
+    <ELSE>
+    <td class="txt"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&cat_id=<MIX_CATEGORY_ID>"><b><MIX_CATEGORY_NAME></b></a></td>
+    </IF>
+</LOOP_MIX_CATEGORIES>
+  </tr>
+</table>
+
+<p class="txt"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&step=new&mix_category=<FORMV_CAT_ID>"><b>ADD NEW MIX</b></a></p>
+
+<table border="1" cellspacing="0" cellpadding="3">
+<FORM_MIXES step="1" method="post">
+<input type="hidden" name="cat_id" value="<FORMV_CAT_ID>">
+  <tr>
+    <td class="txt" colspan="7" bgcolor="#3366EE"><font color="#FFFFFF"><b>MIXES</b></font></td>
+  </tr>
+  <tr>
+    <td class="txt"><font color="#666666">Del</td>
+    <td class="txt"><font color="#666666">Name</td>
+    <td class="txt"><font color="#666666">DJ</td>
+    <td class="txt"><font color="#666666">Category</td>
+    <td class="txt"><font color="#666666">Date</td>
+    <td class="txt"><font color="#666666">ETA</td>
+    <td class="txt">&nbsp;</td>
+  </tr>
+<LOOP_MIXES>
+<input type="hidden" name="mix_<COUNTER-1>_id" value="<MIX_ID>">
+<tr>
+  <td class="txt"><input type="checkbox" name="mix_<COUNTER-1>_rem" value="1" class="txt"></td>
+  <td class="txt"><MIX_NAME></td>
+  <td class="txt"><MIX_DJ></td>
+  <td class="txt"><MEDIA_CATEGORY_NAME></td>
+  <td class="txt"><MIX_DATE></td>
+  <td class="txt"><MIX_LENGTH_FORMATED></td>
+  <td class="txt"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&mix_id=<MIX_ID>">EDIT</a></td>
+</tr>
+</LOOP_MIXES>
+</table>
+<br>
+<SUBMIT value="Delete" class="txt">
+</form>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+
+</html>

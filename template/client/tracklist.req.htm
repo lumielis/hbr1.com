@@ -1,0 +1,220 @@
+<html>
+<head>
+<meta http-equiv="content-type"
+	content="text/html; charset=<* print $ENV{'CHARSET'} *>">
+<title>HBR1 Inventory Request</title>
+<link rel="stylesheet" type="text/css" href="/style/client.css?1">
+<script language="JavaScript">
+<!--
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+PageID = 'inventory';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+//-->
+</script>
+
+<script language="JavaScript" src="/cgi-htm/jscript/crypt.js"></script>
+<script language="JavaScript" src="/cgi-htm/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+email_key = "DFSE3-KX427-A2RRG-BL5XM-CB336";
+
+function decryptEmail( crypt, query ) {
+	location.href = 'mailto:' + xor_decrypt_hex( crypt, email_key ) + query;
+	return false;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA"
+	vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+<tr>
+	<td align=left width="1%" background="/images/header_left.gif">
+		<img height=8 src="/images/spacer.gif" width=64></td>
+	<td align=middle background="/images/header_bg.gif">
+		<img height=1 src="/images/spacer.gif" width=1></td>
+	<td align=right width="1%" background="/images/header_right.gif">
+		<img height=8 src="/images/spacer.gif" width=64></td>
+</tr>
+<tr>
+	<td align=left width="1%" background="/images/body_left.gif">
+		<img src="/images/title_left.gif"></td>
+	<td align="center" class="head" background="/images/title_bg.gif" height="1%">
+		<font color="#9999ff"><b>REQUEST RESULT</b></font></td>
+	<td align=right width="1%" background="/images/body_right.gif">
+		<img src="/images/title_right.gif"></td>
+</tr>
+<!-- SUBMENU --> 
+<tr>
+	<td align=left width="1%" background="/images/body_left.gif">
+		<img height=1 src="/images/spacer.gif" width=64></td>
+	<td align=center background="/images/body_bg.jpg" height="1%">
+		<table cellSpacing=0 cellPadding=0 border=0 background="/images/submenu_bg.gif">
+			<td align=left><img src="/images/submenu_left.gif"></td>
+			<td><img height=1 src="/images/spacer.gif" width=2></td>
+			<td><b><a href="<*= $P->{'backlink'} *>">
+				<font color="#AAAA22">GO_BACK</font></a></b></td>
+			<td><img height=1 src="/images/spacer.gif" width=2></td>
+			<td align=left><img src="/images/submenu_right.gif"></td>
+		</tr>
+		</table>
+	</td>
+	<td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+</tr>
+<!-- /SUBMENU -->
+<tr>
+	<td align=left width="1%" background="/images/body_left.gif">
+		<img height=1 src="/images/spacer.gif" width=55></td>
+	<td align="center" background="/images/body_bg.jpg" valign="top">
+
+<!-- CONTENT -->
+
+<div style="margin-top: 25px; margin-bottom: 25px;">
+
+<* if $P->{'cmd'} eq 'request' *>
+
+<font color="#999999">Your wish for playing</font>
+
+<p>
+<b><* if $song->{'artist'} *><*= $song->{'artist'} *> - <* end if *><*= $song->{'title'} *></b>
+</p>
+
+<p>
+<img width="100" height="30"
+	src="<*= $ENV{'SCRIPT'} . '?run=' . $P->{'run'} . '&show=secimg&time=' . time *>">
+</p>
+
+<font color="#6666ff">To verify your input please enter the code schown above</font>
+
+<p>
+<form action="<*= $ENV{'SCRIPT'} *>" method="post">
+<input type="hidden" name="run" value="<*= $P->{'run'} *>">
+<input type="hidden" name="cmd" value="reqver">
+<input type="hidden" name="station" value="<*= $P->{'station'} *>">
+<input type="hidden" name="songid" value="<*= $P->{'songid'} *>">
+<input type="hidden" name="backlink" value="<*= $P->{'backlink'} *>">
+<input type="hidden" name="backlink2" value="<*= $ENV{'SCRIPT'} . '?' . $ENV{'QUERY_STRING'} *>">
+<input type="text" name="code" size="6" maxlength="5" class="blue" autocomplete="off">
+<input type="submit" value="OK" class="blue2">
+</form>
+</p>
+
+<* elsif $_POST{'cmd'} eq 'reqver' *>
+
+<b><* if $song->{'artist'} *><*= $song->{'artist'} *> - <* end if *><*= $song->{'title'} *></b>
+
+<div style="margin-top: 25px; margin-bottom: 25px;">
+<* if $status eq 'OK' *>
+<b>Your request has sucessfully been delivered and should play soon.</b>
+</div>
+<* else *>
+<b><font color="#cc0000">Your request failed because of the following reason</font></b>
+</div>
+<p><*= $status *></p>
+<* end if *>
+
+<* end if *>
+
+</div>
+
+<!-- /CONTENT -->
+
+	</td>
+	<td align=right width="1%" background="/images/body_right.gif">
+		<img height=1 src="/images/spacer.gif" width=55></td>
+</tr>
+<!-- SUBMENU -->
+<tr>
+	<td align=left width="1%" background="/images/body_left.gif">
+		<img height=1 src="/images/spacer.gif" width=64></td>
+	<td align=center background="/images/body_bg.jpg" height="1%">
+		<table cellSpacing=0 cellPadding=0 border=0 background="/images/submenu_bot_bg.gif">
+			<td align=left><img src="/images/submenu_bot_left.gif"></td>
+			<td><img height=1 src="/images/spacer.gif" width=2></td>
+			<td><b><a href="<*= $P->{'backlink'} *>">
+				<font color="#AAAA22">GO_BACK</font></a></b></td>
+			<td><img height=1 src="/images/spacer.gif" width=2></td>
+			<td align=left><img src="/images/submenu_bot_right.gif"></td>
+		</tr>
+		</table>
+	</td>
+	<td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=64></td>
+</tr>
+<!-- /SUBMENU -->
+<tr>
+	<td align="left" width="1%" background="/images/body_left.gif">
+		<img src="/images/title_left.gif"></td>
+	<td align="center" class="footer" background="/images/title_bg.gif" height="1%">
+		<i>
+			<a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a>
+			-
+			Music on Futurenet
+		</i>
+	</td>
+	<td align="right" width="1%" background="/images/body_right.gif">
+		<img src="/images/title_right.gif"></td>
+</tr>
+<tr>
+	<td align="left" width="1%" background="/images/footer_left.gif">
+		<img src="/images/spacer.gif" width="64" height="8"></td>
+	<td align="center" background="/images/footer_bg.gif">
+		<img src="/images/spacer.gif" width="1" height="1"></td>
+	<td align="right" width="1%" background="/images/footer_right.gif">
+		<img src="/images/spacer.gif" width="64" height="8"></td>
+</tr>
+</table>
+
+</body>
+</html>

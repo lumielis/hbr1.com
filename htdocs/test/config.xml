@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget defaultmode="widget" network="public" version="2.1">
+  <feature name="http://xmlns.opera.com/wcb" required="false">
+    <param name="widgetcontrolbuttons" value="false"/>
+  </feature>
+  <security>
+    <access>
+      <protocol>http</protocol>
+      <protocol>https</protocol>
+    </access>
+    <content plugins="yes"/>
+  </security>
+  <widgetname>HBR1 I.D.M. Tranceponder</widgetname>
+  <description>HBR1 Tranceponder internet radio player.</description>
+  <id>
+    <host>hbr1.com</host>
+    <name>HBR1 I.D.M. Tranceponder</name>
+    <revised>2011-02-27</revised>
+  </id>
+  <icon height="128" width="128">/icons/icon_128.png</icon>
+  <icon height="64" width="64">/icons/icon_64.png</icon>
+  <icon height="32" width="32">/icons/icon_32.png</icon>
+  <icon height="16" width="16">/icons/icon_16.png</icon>
+  <width>400</width>
+  <height>400</height>
+  <icon>favicon.ico</icon>
+  <author>
+    <name>Andy Scott</name>
+    <link>http://widgets.opera.com/author/andyere/</link>
+    <organization>Opera Software ASA</organization>
+    <email>andyere@gmail.com</email>
+  </author>
+</widget>

@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta http-equiv="content-type"
+	content="text/html; charset=#[PRINT $ENV{'CHARSET'}]#">
+<link rel="stylesheet" href="/style/default.css">
+<link rel="stylesheet" href="/style/admin.css">
+<style type="text/css">
+<!--
+//-->
+</style>
+<title>Tracklist Creator</title>
+</head>
+<body>
+	
+<div class="header">
+<b>Tracklist Creator</b>
+<hr noshade size="1">
+</div>
+
+<!-- BEGIN PAGE_ERROR -->
+#[IF @ErrorLog || $PageError]#
+<table id="ErrorLog">
+	<tr>
+	<td rowspan="2" valign="top" class="Text" width="1%">
+		<img src="/admin/images/icons/icon_alert.gif" alt="Alert"></td>
+	<td class="Text">
+<b>#[IF $PageError]##[PRINT $PageError]##[ELSE]#Some error occured#[END IF]#</b>
+	</td></tr>
+#[IF @ErrorLog]#
+	<tr><td class="Text">
+		<ul>#[PRINT "\n"]#
+#[LOOP ARRAY \@ErrorLog]#
+<li class="Text" id="ErrorLogItem">#[PRINT $Record]#</li>#[PRINT "\n"]#
+#[END LOOP]#
+		</ul>
+	</td></tr>
+#[END IF]#
+</table>
+<br>
+#[END IF]#
+<!-- END PAGE_ERROR -->
+
+<!-- BEGIN PAGE_INFO -->
+#[IF @MessageLog || $PageMessage]#
+<table id="MessageLog">
+	<tr>
+	<td rowspan="2" valign="top" class="Text" width="1%">
+		<img src="/admin/images/icons/icon_info.gif" alt="Info"></td>
+	<td class="Text">
+<b>#[IF $PageMessage]##[PRINT $PageMessage]##[ELSE]#Information#[END IF]#</b>
+	</td></tr>
+#[IF @MessageLog]#
+	<tr><td class="Text">
+		<ul>#[PRINT "\n"]#
+#[LOOP ARRAY \@MessageLog]#
+<li class="Text" id="MessageLogItem">#[PRINT $Record]#</li>#[PRINT "\n"]#
+#[END LOOP]#
+		</ul>
+	</td></tr>
+#[END IF]#
+</table>
+<br>
+#[END IF]#
+<!-- END PAGE_INFO -->
+
+<form action="#[PRINT $ENV{'SCRIPT'}]#" method="post">
+<input type="hidden" name="run" value="#[PRINT $Form{'run'}]#">
+
+DJ<br>
+<input type="text" name="dj" value="#[PRINT escape( $Form{'dj'} )]#">
+
+<br><br>
+
+Title<br>
+<input type="text" name="title" value="#[PRINT escape( $Form{'title'} )]#">
+
+<br><br>
+
+Length<br>
+<input type="text" name="length" value="#[PRINT escape( $Form{'length'} )]#">
+
+<br><br>
+
+Date<br>
+<input type="text" name="date" value="#[PRINT escape( $Form{'date'} )]#">
+
+<br><br>
+
+Category<br>
+<select name="category" class="input">
+#[LOOP MIXCATEGORY]#
+<option value="#[PRINT $Category->{'id'}]#"
+	#[IF $Category->{'id'} eq $Form{'category'}]#selected#[END IF]#>
+	#[PRINT $Category->{'name'}]#</option>
+#[END LOOP MIXCATEGORY]#
+</select>
+
+<br><br>
+
+Playlist<br>
+<textarea class="input" name="playlist" cols="50" rows="10"
+	>#[PRINT escape( $Form{'playlist'} )]#</textarea>
+	
+<br><br>
+
+Evaluation<br>
+<input type="text" name="evalexp" value="#[PRINT escape( $Form{'evalexp'} )]#"
+	size="50">
+
+<br>
+
+<br>
+<input type="submit" class="button" name="eval" value="Evaluate">
+
+&nbsp;=>&nbsp;
+<input type="submit" class="button" name="create" value="Create">
+
+<br><br>
+<input type="submit" class="button" name="dummy" value="Dummy">
+
+</form>
+
+</body>
+</html>

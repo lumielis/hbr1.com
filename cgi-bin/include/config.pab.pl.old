@@ -1,0 +1,231 @@
+$Setup{'PathBase'} = q(/home/pille/WWWRoot/www.hbr1.com/);
+$Setup{'PathTemplate'} = q(/home/pille/WWWRoot/www.hbr1.com/template/);
+$Setup{'PathCache'} = q(/home/pille/WWWRoot/www.hbr1.com/cache/);
+$Setup{'PathLog'} = q(/home/pille/WWWRoot/www.hbr1.com/log/);
+$Setup{'PathPlaylist'} = q(/home/pille/WWWRoot/www.hbr1.com/playlist/);
+$Setup{'PathCGI'} = q(/home/pille/WWWRoot/www.hbr1.com/cgi-bin/);
+$Setup{'PathHtml'} = q(/home/pille/WWWRoot/www.hbr1.com/htdocs/html/);
+
+$Setup{'CookiePath'} = '';
+$Setup{'CookieDomain'} = '';
+
+$Domainname = 'www.hbr1.com';
+
+$Setup{'DBI'} = {
+	'Driver'		=> 'Mysql',
+	'Socket'		=> '/var/lib/mysql/mysql.sock',
+	'DbName'		=> 'hbr1',
+	'DbUser'		=> 'hbr1',
+	'DbPass'		=> 'internet',
+	'AutoReconnect' => 1,
+};
+
+$Setup{'System'} = {
+	LogOut			=> $ENV{PATH_LOG} . './hbr1.log',
+	LogLevel		=> $ENV{PAB_RUNTIMEMODE},
+	UseTimer		=> 1,
+};
+
+$Setup{'Mail'} = {
+	Type			=> qq(sendmail),
+	SendMail		=> qq(/usr/sbin/sendmail),
+	Dispatcher		=> qq(sendmail),
+};
+
+$Setup{'ChatShowEntries'} = 66;
+$Setup{'ChatOnlineTime'} = 600;
+
+$Setup{'Station'} = [
+	{
+		Id => 'Trance',
+		Title => 'I.D.M. Tranceponder',
+		Genre => 'Psychedelic, Progressive Trance, Full-On',
+		Type => 'shoutcast',
+		SC_Stat => 'http://radio.hbr1.com:19700/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+		LoadStats => 1,
+		ShowStats => 0,
+		Stream => [
+			{
+				Title => '<font color="FFFFAA">Tune In: </font>',
+			},
+			{
+				Type => 'icecast2',
+				Title => 'Ogg-Full',
+				CSS_Class => 'sl1',
+				IC2_Host => 'radio.hbr1.com',
+				IC2_Port => 19800,
+				IC2_Mount => '/trance.ogg',
+				IC2_Stat => 'http://admin:RadioHbr1Eurotip@radio.hbr1.com:19800/admin/stats.xml',
+				Playlist => '',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Type => 'shoutcast',
+				Title => 'MP3-Full',
+				CSS_Class => 'sl1',
+				SC_Host => 'radio.hbr1.com',
+				SC_Port => 19700,
+				SC_Stat => 'http://radio.hbr1.com:19700/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+				Playlist => '/playlist/trance.m3u',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Type => 'icecast2',
+				Title => 'Ogg-Small',
+				CSS_Class => 'sl1',
+				IC2_Host => 'radio.hbr1.com',
+				IC2_Port => 19800,
+				IC2_Mount => '/trancelow.ogg',
+				IC2_Stat => 'http://admin:RadioHbr1Eurotip@radio.hbr1.com:19800/admin/stats.xml',
+				Playlist => '',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Title => 'WM-Player (MP3)',
+				CSS_Class => 'sl1',
+				Playlist => '/playlist/trance.asx',
+			},
+		]
+	},
+	{
+		Id => 'Tronic',
+		Title => 'Tronic Lounge',
+		Genre => 'Progressive, Electro, House',
+		Type => 'shoutcast',
+		SC_Stat => 'http://radio.hbr1.com:19710/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+		LoadStats => 1,
+		ShowStats => 0,
+		Stream => [
+			{
+				Title => '<font color="FFFFAA">Tune In: </font>',
+			},
+			{
+				Type => 'icecast2',
+				Title => 'Ogg-Full',
+				CSS_Class => 'sl1',
+				IC2_Host => 'radio.hbr1.com',
+				IC2_Port => 19800,
+				IC2_Mount => '/tronic.ogg',
+				IC2_Stat => 'http://admin:RadioHbr1Eurotip@radio.hbr1.com:19800/admin/stats.xml',
+				Playlist => '',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Type => 'shoutcast',
+				Title => 'MP3-Full',
+				CSS_Class => 'sl1',
+				SC_Host => 'radio.hbr1.com',
+				SC_Port => 19710,
+				SC_Stat => 'http://radio.hbr1.com:19710/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+				Playlist => '/playlist/tronic.m3u',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Type => 'icecast2',
+				Title => 'Ogg-Small',
+				CSS_Class => 'sl1',
+				IC2_Host => 'radio.hbr1.com',
+				IC2_Port => 19800,
+				IC2_Mount => '/troniclow.ogg',
+				IC2_Stat => 'http://admin:RadioHbr1Eurotip@radio.hbr1.com:19800/admin/stats.xml',
+				Playlist => '',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Title => 'WM-Player (MP3)',
+				CSS_Class => 'sl1',
+				Playlist => '/playlist/tronic.asx',
+			},
+		]
+	},
+	{
+		Id => 'Ambient',
+		Title => 'Dream Factory',
+		Genre => 'Ambient, Chillout, Downbeat, Trance',
+		Type => 'shoutcast',
+		SC_Stat => 'http://radio.hbr1.com:19720/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+		LoadStats => 1,
+		ShowStats => 0,
+		Stream => [
+			{
+				Title => '<font color="FFFFAA">Tune In: </font>',
+			},
+			{
+				Type => 'icecast2',
+				Title => 'Ogg-Full',
+				CSS_Class => 'sl1',
+				IC2_Host => 'radio.hbr1.com',
+				IC2_Port => 19800,
+				IC2_Mount => '/ambient.ogg',
+				IC2_Stat => 'http://admin:RadioHbr1Eurotip@radio.hbr1.com:19800/admin/stats.xml',
+				Playlist => '',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Type => 'shoutcast',
+				Title => 'MP3-Full',
+				CSS_Class => 'sl1',
+				SC_Host => 'radio.hbr1.com',
+				SC_Port => 19720,
+				SC_Stat => 'http://radio.hbr1.com:19720/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+				Playlist => '/playlist/ambient.m3u',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Type => 'icecast2',
+				Title => 'Ogg-Small',
+				CSS_Class => 'sl1',
+				IC2_Host => 'radio.hbr1.com',
+				IC2_Port => 19800,
+				IC2_Mount => '/ambientlow.ogg',
+				IC2_Stat => 'http://admin:RadioHbr1Eurotip@radio.hbr1.com:19800/admin/stats.xml',
+				Playlist => '',
+				LoadStats => 1,
+				ShowStats => 1,
+			},
+			{
+				Title => ', ',
+			},
+			{
+				Title => 'WM-Player (MP3)',
+				CSS_Class => 'sl1',
+				Playlist => '/playlist/ambient.asx',
+			},
+		]
+	},
+];
+
+
+1;

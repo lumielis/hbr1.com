@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>Lotto DE - Draws</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>';
+url_images = '<URL_IMAGES>';
+//-->
+</script>
+
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<table border="1" width="100%" cellspacing="0" cellpadding="2">
+<tr>
+  <td class="txt">
+    <a href="javascript:orderBy( 'time' );"><b>Time</b></a>
+    <script language="JavaScript"> <!--
+    displayOrder( 'time', '<img src="<URL_IMAGES>/order_asc.gif">', '<img src="<URL_IMAGES>/order_desc.gif">', '' );
+    //--> </script>
+  </td>
+  <td class="txt">
+    <a href="javascript:orderBy( 'subject' );"><b>Subject</b></a>
+    <script language="JavaScript"> <!--
+    displayOrder( 'subject', '<img src="<URL_IMAGES>/order_asc.gif">', '<img src="<URL_IMAGES>/order_desc.gif">', '' );
+    //--> </script>
+  </td>
+  <td class="txt">
+    <a href="javascript:orderBy( 'message' );"><b>Message</b></a>
+    <script language="JavaScript"> <!--
+    displayOrder( 'message', '<img src="<URL_IMAGES>/order_asc.gif">', '<img src="<URL_IMAGES>/order_desc.gif">', '' );
+    //--> </script>
+  </td>
+</tr>
+<NEWS_MESSAGES>
+<tr>
+  <td class="txt"><NEWS_MESSAGE_DATE><br><NEWS_MESSAGE_TIME></td>
+  <td class="txt"><ANT_CUT_STR size=20><NEWS_MESSAGE_SUBJECT></td>
+  <td class="txt"><NEWS_MESSAGE_MESSAGE></td>
+</tr>
+</NEWS_MESSAGES>
+</table>
+
+<table border=0 width=100%>
+<tr>
+  <td class="txt"><br></td>
+</tr>
+<tr>
+  <td align=center>
+  <table border=0 width=560>
+    <tr>
+      <td align="left" width="150" class="txt"><IF_ENTRY_PREV><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&from=<ENTRY_PREV>&count=<ENTRY_COUNT>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>"><img src="<URL_IMAGES>/zurueck.gif" border="0">Previous Clients</a></IF>&nbsp;</td>
+      <td align="center" width="260" class="txt">Entries <b><ENTRY_FROM></b>-<b><ENTRY_REAL></b> of total <b><ENTRY_MAX></b> messages</td>
+      <td align="right" width="150" class="txt">&nbsp;<IF_ENTRY_NEXT><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&part=<FORMV_PART>&from=<ENTRY_TO>&count=<ENTRY_COUNT>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>">Next Clients&nbsp;<img src="<URL_IMAGES>/weiter.gif" border="0"></a></IF></td>
+    </tr>
+  </table>
+  </td>
+</tr>
+<tr>
+  <td align=center><hr noshade size=1></td>
+</tr>
+<tr>
+  <td class="txt" align=center>
+    Actions per page:
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=5">5</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=10">10</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=25">25</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=50">50</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=100">100</a>
+    <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>&order=<FORMV_ORDER>&ordir=<FORMV_ORDIR>&count=<ENTRY_MAX>">All</a>
+  </td>
+</tr>
+</table>
+
+<table border="0" cellspacing="4" cellpadding="4">
+  <tr>
+    <td class="txt">
+      <FORM_NEWS step=0 method=get part=>
+      <SUBMIT value="Write news" class="txt">
+      </form>
+    </td>
+    <td class="txt">
+      <FORM_NEWS step=0 method=get part=clients>
+      <input type="hidden" name="order" value="email">
+      <input type="hidden" name="ordir" value="asc">
+      <SUBMIT value="Clients in list" class="txt">
+      </form>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

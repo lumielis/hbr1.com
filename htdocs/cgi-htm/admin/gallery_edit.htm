@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>Photo Galleries</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<script language="JavaScript" src="<URL_DISPLAY>/jscript/orderby.js"></script>
+
+<script language="JavaScript">
+<!--
+url_file = '<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=<FORMV_PART>';
+url_images = '<URL_IMAGES>';
+//-->
+</script>
+
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<FORM_GALLERY step="1">
+<input type="hidden" name="photo_gallery_id" value="<FORMV_PHOTO_GALLERY_ID>">
+<INPUT_PHOTO_GALLERY_NAME>
+<INPUT_PHOTO_GALLERY_CLIENT>
+<SUBMIT value="Save" class="txt">
+</form>
+
+<GALLERY_PICTURES>
+<GALLERY_PICTURE_FILE>
+</GALLERY_PICTURES>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+
+</html>

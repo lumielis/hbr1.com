@@ -1,0 +1,117 @@
+body {
+	SCROLLBAR-FACE-COLOR: #dee3e7; 
+	SCROLLBAR-HIGHLIGHT-COLOR: #ffffff; 
+	SCROLLBAR-SHADOW-COLOR: #dee3e7; 
+	SCROLLBAR-3DLIGHT-COLOR: #d1d7dc; 
+	SCROLLBAR-ARROW-COLOR: #006699; 
+	SCROLLBAR-TRACK-COLOR: #efefef; 
+	SCROLLBAR-DARKSHADOW-COLOR: #98aab1; 
+}
+1body {
+	scrollbar-face-color: #cfd7dd;
+	scrollbar-highlight-color: #FFFFFF;
+	scrollbar-shadow-color: #91A2AE;
+	scrollbar-3dlight-color: #D1D7DC;
+	scrollbar-arrow-color: #006699;
+	scrollbar-track-color: #EFEFEF;
+	scrollbar-darkshadow-color: #98AAB1;
+}
+a:link, a:visited {
+	color: #3333ff;
+}
+a:active, a:hover {
+	color: #ff3333;
+}
+#TableInfo, tr#Info, td#Info {
+	background-color: #e5e5ef;
+	color: #666666;
+}
+#TableDisabled, tr#Disabled, td#Disabled, th#Disabled {
+	background-color: #e8e8e8;
+	color: #999999;
+}
+#TableHeader, tr#H1, th#H1, td#H1, th#Header, td#Header{
+	background-color: #b5b5d5;
+	color: #ffffff;
+}
+#TableHeader2, tr#H2, th#H2, td#H2, th#Header2, td#Header2 {
+	background-color: #ffffaa;
+	color: #666666;
+}
+#TableRowNav, tr#Nav, td#Nav, th#Nav {
+	1background-color: #e7f0e7;
+	background-color: #eeeef2;
+}
+#TableRowOdd, tr#Odd, td#Odd, tr#Odd {
+	background-color: #ffffff;
+}
+#TableRowEven, tr#Even, td#Even, th#Even {
+	background-color: #f2f2fa;
+}
+#Table, td#Input, table#Input {
+	background-color: #eeeeff;
+	color: #001831;
+}
+input#Input, textarea#Input, select#Input, input.Input {
+	color: #000000;
+	background-color: #ffffff;
+	scrollbar-face-color: #cfd7dd;
+	scrollbar-highlight-color: #FFFFFF;
+	scrollbar-shadow-color: #91A2AE;
+	scrollbar-3dlight-color: #D1D7DC;
+	scrollbar-arrow-color: #006699;
+	scrollbar-track-color: #EFEFEF;
+	scrollbar-darkshadow-color: #98AAB1;
+}
+input#Button {
+	color: #000000;
+	background-color: #eeeeff;
+}
+
+table.Border {
+	1border-collapse: collapse;
+    border: 1px solid #cccccc;
+}
+table.Border td, table.Border th {
+	border: 1px solid #cccccc;
+}
+table.NoBorder {
+	border-style: none;
+	border-width: 0px;
+}
+table.NoBorder td, table.NoBorder th {
+	border-style: none;
+	border-width: 0px;
+}
+table.BWhite {
+	1border-collapse: collapse;
+    border: 1px solid #ffffff;
+}
+table.BWhite td, table.BWhite th {
+	border: 1px solid #ffffff;
+}
+
+.TableBorder {
+	border-left: 1px solid #C0C0C0;
+	border-right: 1px solid #C0C0C0;
+	border-top: 1px solid #C0C0C0;
+	border-bottom: 1px solid #C0C0C0;
+}
+.Table1 {
+	background: #D1DDE9;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #808080;
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #808080;
+}
+.Table2{
+	background: #E8EEF4;
+	border-left: 1px solid #808080;
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #808080;
+	border-bottom: 1px solid #FFFFFF;
+}
+
+#FormError {
+	color: crimson;
+}

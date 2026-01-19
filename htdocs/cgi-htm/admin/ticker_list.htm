@@ -1,0 +1,113 @@
+<html>
+<head>
+<title>TV Ticker</title>
+<link rel="stylesheet" type="text/css" href="<URL_DISPLAY>/styles/web.css">
+<link rel="stylesheet" type="text/css" href="/style/default.css">
+<link rel="stylesheet" type="text/css" href="/style/admin.css">
+</head>
+
+<body bgcolor="#FFFFFF" link="#180873" vlink="#180873" alink="#180873" onUnload="if(parent.addToHistory)parent.addToHistory(document.URL,document.title);">
+
+<IF_PAGE_ERROR><font color=#ff000 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+<IF_PAGE_MESSAGE><font color=#008800 class="txt"><b><PAGE_MESSAGE></b></font><br></IF>
+
+<p class="Text">
+  <a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit">New Entry</a>
+</p>
+
+<FORM_TICKER step="1" name="ticker" method="post">
+<table border="1" cellspacing="0" cellpadding="4" class="Border">
+  <tr>
+    <td class="Text" colspan="7" id="Header"><b>TV TICKER</b></td>
+  </tr>
+  <tr>
+    <td class="Text" id="Info" align="center">#</td>
+    <td class="Text" id="Info" align="center">Position</td>
+    <td class="Text" id="Info" align="center">Title</td>
+    <td class="Text" id="Info" align="center">Display</td>
+    <td class="Text" id="Info" align="center">Action</td>
+    <td class="Text" id="Info" align="center">Status</td>
+  </tr>
+<LOOP_TICKER order="position">
+  <input type="hidden" name="ticker_id_<COUNTER>" value="<TICKER_ID>">
+<IF_EVEN>
+  <tr id="Odd">
+<ELSE>
+  <tr id="Even">
+</IF>
+    <td class="Text"><COUNTER></td>
+    <td class="Text">
+    	<SELECT_TICKER_POSITION class="Text" onChange="updateTickerOrder(this)">
+    	<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=dec_pos&ticker_id=<TICKER_ID>"><img src="/cgi-img/arrow_u_7x10.gif" alt="Move up" border="0"></a>
+    	<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=inc_pos&ticker_id=<TICKER_ID>"><img src="/cgi-img/arrow_d_7x10.gif" alt="Move down" border="0"></a>
+    </td>
+    <td class="Text"><TICKER_TITLE></td>
+    <td class="Text" align="right"><TICKER_DELAY></td>
+    <td class="Text">
+<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&ticker_id=<TICKER_ID>">EDIT</a>
+|
+<a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=kill&ticker_id=<TICKER_ID>" onclick="return confirm('Deleting entry \'<TICKER_TITLE>\'?')"><font color="#990000">DELETE</font></a>
+	</td>
+    <td class="Text"><SELECT_TICKER_STATUS class="Text"></td>
+  </tr>
+</LOOP_TICKER>
+	<tr>
+		<td colspan="7">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%" class="NoBorder">
+				<tr>
+					<td align="left"><SUBMIT value="Save form" class="Text" id="Input"></td>
+					<td align="right"><input type="Reset" value="Reset data" class="Text" id="Input" onClick="resetTicker()"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</form>
+
+<script language="JavaScript">
+<!--
+
+TickerCount = 1;
+Ticker = new Array();
+TickerPos = new Array();
+TP_Hold = new Array();
+while( document.forms['ticker'].elements[ 'ticker_id_' + TickerCount ] ) {
+	Ticker[TickerCount-1] = document.forms['ticker'].elements[ 'ticker_position_' + TickerCount ];
+	TickerPos[TickerCount-1] = document.forms['ticker'].elements[ 'ticker_position_' + TickerCount ].value;
+	TP_Hold[TickerCount-1] = TickerPos[TickerCount-1];
+	TickerCount ++;
+
+}
+TickerCount --;
+
+function resetTicker() {
+	for( index = 0; index < TickerCount; index ++ ) {
+		TickerPos[index] = TP_Hold[index];
+	}
+}
+
+function updateTickerOrder( element ) {
+	for( index = 0; index < TickerCount; index ++ ) {
+		if( Ticker[index].name == element.name ) {
+			tpi = index;
+			break;
+		}
+	}
+	for( index = 0; index < TickerCount; index ++ ) {
+		if( Ticker[index].value == element.value ) {
+			if( Ticker[index].name != element.name ) {
+				Ticker[index].value = TickerPos[tpi];
+				TickerPos[index] = TickerPos[tpi];
+				TickerPos[tpi] = element.value;
+				break;
+			}
+		}
+	}
+}
+
+//-->
+</script>
+
+</body>
+
+</html>

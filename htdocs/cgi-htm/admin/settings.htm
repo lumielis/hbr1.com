@@ -1,0 +1,89 @@
+<html>
+
+<head>
+<title>Das Gästebuch des FC Aschheim</title>
+
+<style type="text/css">
+<!--
+
+.text {
+  font-family: Arial, mono;
+  font-size: 12px;
+}
+
+.head {
+  font-family: Arial, mono;
+  font-size: 14px;
+  color: #4477AA;
+}
+
+#infoField {
+  background-color: #F0FFFF;
+  color: #8888FF;
+  font-weight: bold;
+}
+
+//-->
+</style>
+
+<script language="JavaScript">
+<!--
+function setVal( form, element, value ) {
+  if( ! document.forms ) return;
+  if( ! form ) form = document.forms[0];
+  if( document.forms[form] ) form = document.forms[form];
+  if( ! form.elements[element] ) return;
+  form.elements[element].value = value;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#FFF9E0" marginwidth="15" marginheight="16" topmargin="16" leftmargin="15">
+
+<IF_PAGE_ERROR><p class="text"><font color="#FF0000"><PAGE_MESSAGE></font></p></IF>
+<IF_PAGE_MESSAGE><p class="text"><font color="#009900"><PAGE_MESSAGE></font></p></IF>
+
+<table border="1" cellspacing="1" cellpadding="4">
+<FORM_SETTINGS step="1" name="settings" method="post">
+  <tr>
+    <td class="text" id="infoField">Name</td>
+    <td class="text" id="infoField">Wert</td>
+    <td class="text" id="infoField">Default</td>
+    <td class="text" id="infoField">Aktuell</td>
+  </tr>
+<LOOP_SETTINGS>
+  <tr>
+  <input type="hidden" name="id_<COUNTER>" value="<SETTINGS_ID>">
+  <IF_SETTINGS_TYPE eq category>
+    <td colspan="4" align="center"><img src="<URL_IMAGES>/spacer.gif" width="1" height="5"></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFF0" colspan="4" class="text" align="center"><b><SETTINGS_NAME></b></td>
+  <ELSE>
+    <td class="text"><IF_ERROR_SETTING><font color="#FF0000"></IF><SETTINGS_NAME></td>
+    <td><IF_SETTINGS_CHOICE><INPUT_SETTING class="text"><ELSE><INPUT_SETTING class="text" size="30"></IF></td>
+    <td class="text">&nbsp;<a href="javascript:setVal('settings','value_<COUNTER>','<DEFAULT_SETTING>')" id="defaultValue"><DEFAULT_SETTING></a>&nbsp;</td>
+    <td class="text">&nbsp;<a href="javascript:setVal('settings','value_<COUNTER>','<CURRENT_SETTING>')" id="currentValue"><CURRENT_SETTING></a>&nbsp;</td>
+  </IF>
+  </tr>
+</LOOP_SETTINGS>
+  <tr>
+    <td colspan="4" align="center"><img src="<URL_IMAGES>/spacer.gif" width="1" height="5"></td>
+  </tr>
+  <tr>
+    <td colspan="4">
+      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+          <td><SUBMIT value="Speichern" class="text"></td>
+          <td align="right"><input type="reset" value="Reset" class="txt"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</form>
+</table>
+
+</body>
+</html>

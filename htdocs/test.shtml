@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>DJ Space</title>
+<style type="text/css"> <!--
+body { scrollbar-base-color:#170040; scrollbar-track-color:#000000; scrollbar-face-color:#100030; scrollbar-highlight-color:#000050; scrollbar-3d-light-color:#000000; scrollbar-dark-shadow-color:#000000; scrollbar-shadow-color:#002060; scrollbar-arrow-color:#002060 }
+td, th { font-family: Verdana, Arial, Helvetica, sans-serif, Mono; font-size: 10px }
+.head { font-size: 11px }
+.big { font-size: 12px }
+.blue { BORDER-LEFT: #000088 1px solid; BORDER-TOP: #000088 1px solid; BORDER-RIGHT: #0000CC 1px solid; BORDER-BOTTOM: #0000CC 1px solid; FONT: 8pt verdana, mono; MARGIN-LEFT: 2px; COLOR: #00FFFF; BACKGROUND-COLOR: #000060; scrollbar-base-color:#000000; scrollbar-track-color:#000066; scrollbar-face-color:#000088; scrollbar-highlight-color:#0000CC; scrollbar-3d-light-color:#0000CC; scrollbar-dark-shadow-color:#000088; scrollbar-shadow-color:#000088; scrollbar-arrow-color:#6666FF; }
+.blue2 { BORDER-LEFT: #0000CC 1px solid; BORDER-TOP: #0000CC 1px solid; BORDER-RIGHT: #000088 1px solid; BORDER-BOTTOM: #000088 1px solid; FONT: 8pt verdana, mono; COLOR: #FFFFFF; BACKGROUND-COLOR: #000060 }
+a:link {color: #5588FF; text-decoration: none;}
+a:visited {color: #5588FF; text-decoration: none;}
+a:hover {color: #FF0055; text-decoration: none;}
+.rattleImage { position:relative }
+--> </style>
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#FF0055" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellSpacing=0 cellPadding=0 border="0" width="100%">
+  <tr> 
+    <td align=left width="1%" background="images/header_left.gif"><img height=8 src="images/spacer.gif" width=64></td>
+    <td align=middle background="images/header_bg.gif"><img height=1 src="images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="images/header_right.gif"><img height=8 src="images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="images/body_left.gif"><img src="images/title_left.gif"></td>
+    <td align=center background="images/title_bg.gif" height="1%"> 
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr> 
+          <td class=head align=middle><font color="#FFFFCC"><b>DJ SPACE</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="images/body_right.gif"><img src="images/title_right.gif"></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="images/body_left.gif"><img height=1 src="images/spacer.gif" width=64></td>
+    <td align="center" background="images/body_bg.jpg" valign="top"> 
+    <!--#echo var="SERVER_NAME"-->
+    </td>
+    <td align=right width="1%" background="images/body_right.gif"><img height=1 src="images/spacer.gif" width=64></td>
+  </tr>
+  <tr> 
+    <td align=left width="1%" background="images/footer_left.gif"><img height=8 src="images/spacer.gif" width=64></td>
+    <td align=middle background="images/footer_bg.gif"><img height=1 src="images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="images/footer_right.gif"><img height=8 src="images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+</body>
+</html>

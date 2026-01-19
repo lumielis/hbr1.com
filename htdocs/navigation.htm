@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>HBR1 - Music on Futurenet</title>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<script language="JavaScript">
+<!--
+
+ImageDef = new Array(
+	1, "guestbook", 2, "events", 3, "party", 4, "station", 5, "upload",
+	6, "extra", 7, "djs", 8, "artists", 15, "tracklist", 14, "chat",
+	10, "gallery", 11, "playlist", 16, "links", 12, "contact", 13, "shop"
+);
+
+ImageBuf = new Array();
+for( i = 1; i <= 16; i ++ ) {
+	ImageBuf[i] = new Image();
+	ImageBuf[i].src = "images/navigation/mb" + i + "p.gif";
+}
+ImgSave = 0;
+activePage = null;
+
+function changeImage( num ) { 
+	if( ImgSave > 0 ) {
+		document.images["mb" + ImgSave].src = "images/navigation/mb" + ImgSave + "n.gif";
+	}
+	if( num > 0 ) {
+		document.images["mb" + num].src = ImageBuf[num].src;
+		ImgSave = num;
+	}
+}
+
+function initPage() {
+	if( parent.frames && parent.frames['main'] ) {
+		if( parent.frames['main'].PageID ) {
+			activePage = parent.frames['main'].PageID;
+		}
+	}
+	updatePage();
+}
+
+function updatePage( name ) {
+	if( name )
+		activePage = name;
+	for( i = 0; i < ImageDef.length; i += 2 ) {
+		if( ImageDef[ i + 1 ] == activePage ) {
+			changeImage( ImageDef[i] );
+			break;
+		}
+	}
+}
+
+//-->
+</script>
+ 
+</head>
+ 
+<body bgcolor="#000000" text="#FF0000" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="initPage()">
+
+<map name="Map"><area shape="circle" coords="54,20,8" href="news.html" target="main" onClick="changeImage(0);"></map> 
+<map name="Map1"><area shape="rect" coords="19,10,55,21" href="perl/apax.cgi?run=guestbook" target="main" onClick="changeImage(1);"></map> 
+<map name="Map2"><area shape="rect" coords="16,10,65,22" href="events.html" target="main" onClick="changeImage(2);"></map> 
+<map name="Map3"><area shape="rect" coords="10,9,70,22" href="run/main.xp?action=party" target="main" onClick="changeImage(3);"></map> 
+<map name="Map4"><area shape="rect" coords="19,9,80,21" href="perl/apax.cgi?Part=Listen" target="main" onClick="changeImage(4);"></map> 
+<map name="Map5"><area shape="rect" coords="19,8,82,21" href="upload/" target="main" onClick="changeImage(5);"></map> 
+<map name="Map6"><area shape="rect" coords="13,8,68,21" href="extra/" target="main" onClick="changeImage(6);"></map>
+<map name="Map7"><area shape="rect" coords="27,8,53,20" href="djs.htm" target="main" onClick="changeImage(7);"></map>
+<map name="Map8"><area shape="rect" coords="12,8,61,20" href="artists.html" target="main" onClick="changeImage(8);"></map>
+<map name="Map9"><area shape="rect" coords="7,7,63,21" href="chat/" target="main" onClick="changeImage(14);"></map>
+<map name="Map10"><area shape="rect" coords="21,6,61,20" href="run/main.xp?action=gallery" target="main" onClick="changeImage(10);"></map>
+<map name="Map11"><area shape="rect" coords="9,7,83,21" href="perl/apax.cgi?Part=Playlist" target="main" onClick="changeImage(11);"></map>
+<map name="Map12"><area shape="rect" coords="7,8,54,20" href="contact.htm" target="main" onClick="changeImage(12);"></map>
+<map name="Map13"><area shape="rect" coords="11,7,56,20" href="shop/" target="main" onClick="changeImage(13);">
+</map>
+<map name="Map15"><area shape="rect" coords="11,7,80,20" href="run/mixes.cgi" target="main" onClick="changeImage(15);"></map>
+<map name="Map16"><area shape="rect" coords="11,7,80,20" href="link_base.htm" target="main" onClick="changeImage(16);"></map>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+   <td width="0%">
+      <table border="0" cellspacing="0" cellpadding="0" width="0%">
+        <tr> 
+          <td valign="bottom"><img src="images/navigation/mbhome.gif" usemap="#Map" border="0" width="71" height="32"></td>
+          <td valign="bottom"><img src="images/navigation/mb1n.gif" name="mb1" usemap="#Map1" border="0" width="68" height="32"></td>
+          <td valign="bottom"><img src="images/navigation/mb2n.gif" name="mb2" usemap="#Map2" border="0" width="83" height="32"></td>
+          <td valign="bottom"><img src="images/navigation/mb3n.gif" name="mb3" usemap="#Map3" border="0" width="75" height="32"></td>
+          <td valign="bottom"><img src="images/navigation/mb4n.gif" name="mb4" usemap="#Map4" border="0" width="95" height="32"></td>
+          <td valign="bottom"><img src="images/navigation/mb5n.gif" name="mb5" usemap="#Map5" border="0" width="97" height="32"></td>
+          <td valign="bottom"><img src="images/navigation/mb15n.gif" name="mb15" usemap="#Map15" border="0" width="86" height="32"></td>
+         <td valign="bottom"><img src="images/navigation/mb6n.gif" name="mb6" usemap="#Map6" width="111" height="32" border="0"></td>
+        </tr>
+      </table>
+   </td>
+   <!-- <td><a href="chat/index2.html" target="main"><font color="#444444">T</font></a></td> -->
+ </tr>
+ <tr>
+   <td width="0%">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td valign="top"><img src="images/navigation/mb7n.gif" name="mb7" width="63" height="30" usemap="#Map7" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb8n.gif" name="mb8" width="73" height="30" usemap="#Map8" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb14n.gif" name="mb14" width="71" height="30" usemap="#Map9" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb10n.gif" name="mb10" width="81" height="30" usemap="#Map10" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb11n.gif" name="mb11" width="94" height="30" usemap="#Map11" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb16n.gif" name="mb16" width="86" height="30" usemap="#Map16" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb12n.gif" name="mb12" width="66" height="30" usemap="#Map12" border="0"></td>
+          <td valign="top"><img src="images/navigation/mb13n.gif" name="mb13" width="65" height="30" usemap="#Map13" border="0"></td>
+          <td valign="top"><img src="images/navigation/mbot.gif" width="87" height="30"></td>
+        </tr>
+      </table>
+   </td>
+ </tr>
+</table>
+ 
+ </body>
+ </html>

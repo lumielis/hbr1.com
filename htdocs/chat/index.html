@@ -1,0 +1,48 @@
+<html>
+<head>
+
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+
+<title>Chat Terminal - HBR1</title>
+
+<script language="JavaScript">
+<!--
+
+PageID = 'chat';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+    return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+//-->
+</script>
+
+</head>
+
+<frameset rows="26,*,26,29" frameborder="0" border="0" framespacing="0">
+	<frame src="top.htm?1" noresize scrolling="no" marginwidth="0" marginheight="0">
+	<frameset cols="64,*,100,64" frameborder="0" border="0" framespacing="0">
+		<frame src="left.htm" noresize scrolling="no" marginwidth="0" marginheight="0">
+		<frame name="chat_main" src="/html/chat_content.html" noresize marginwidth="0" marginheight="0" scrolling="yes">
+		<frame name="chat_users" src="/perl/apax.cgi?Part=Chat&Action=listUsers" noresize marginwidth="0" marginheight="0" scrolling="yes">
+		<frame src="right.htm" noresize scrolling="no" marginwidth="0" marginheight="0">
+	</frameset>
+	<frame src="bottom.htm?1" noresize scrolling="no" marginwidth="0" marginheight="0">
+	<frame name="chat_submit" src="/perl/apax.cgi?Part=Chat&Action=submit" noresize scrolling="no">
+</frameset>
+
+</html>

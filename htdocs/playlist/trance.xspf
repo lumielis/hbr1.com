@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist xmlns="http://xspf.org/ns/0/" version="1">
+	<title/>
+	<creator/>
+	<trackList>
+		<track>
+			<location>http://radio.hbr1.com/stream/trance.ogg</location>
+			<title>HBR1 - Dream Factory</title>
+			<annotation>Stream Title: HBR1 - Dream Factory
+				Stream Description: Music on Futurenet
+				Content Type:application/ogg
+				Bitrate: Quality 4.00
+				Stream Genre: Ambient, Chillout, Downbeat, Trance</annotation>
+			<info>http://www.hbr1.com</info>
+		</track>
+	</trackList>
+</playlist>

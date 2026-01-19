@@ -1,0 +1,54 @@
+<html>
+<head>
+<link rel="stylesheet" href="<URL_DISPLAY>/style/admin.css">
+<script language="JavaScript">
+<!--
+function onLoad() {
+	<IF_PAGE_ERROR>alert("!!! ALERT !!!\n\n<PAGE_MESSAGE>\n\n!!! ALERT !!!");</IF>
+	<IF_PAGE_MESSAGE>alert("<PAGE_MESSAGE>");</IF>
+}
+window.onload = onLoad;
+//-->
+</script>
+</head>
+<body>
+
+<h1 class="title"><ENV_APP_NAME> v<ENV_APP_VERSION></h1>
+
+<IF_MESSAGE_LOG>
+<p><ul class="message_log">
+<LOOP_MESSAGE_LOG>
+	<li class="message_log_<MESSAGE_LOG=type_name>"><MESSAGE_LOG=msg></li>
+</LOOP_MESSAGE_LOG>
+</ul></p>
+</IF>
+
+<table border="1" cellspacing="1" cellpadding="4">
+	<tr>
+		<th colspan="6" class="text" id="header">ACCESS USERS</th>
+	</tr>
+	<tr>
+		<th class="text" id="info">Id</th>
+		<th class="text" id="info">Name</th>
+		<th class="text" id="info">Group</th>
+		<th class="text" id="info">Info</th>
+		<th colspan="2" class="text" id="info">Action</th>
+	</tr>
+<SHOW_TABLE_ACCESS_USER>
+	<tr>
+		<td class="text"><ACCESS_USER_USER_ID></td>
+		<td class="text"><ACCESS_USER_NAME></td>
+		<td class="text"><ACCESS_USER_GROUP=name> (<ACCESS_USER_GROUP=group_id>)</td>
+		<td class="text"><ACCESS_USER_INFO>&nbsp;</td>
+	<IF_ACCESS_USER_USER_ID>
+		<td class="text"><a href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=edit&access_user_id=<ACCESS_USER_ID>">EDIT</a></td>
+		<td class="text"><a class="alert" href="<URL_SYSTEM>/<ENV_FILE>?action=<FORMV_ACTION>&part=kill&access_user_id=<ACCESS_USER_ID>" onclick="return confirm('Deleting user \'<ACCESS_USER_NAME>\'?')">DELETE</a></td>
+	<ELSE>
+		<td colspan="2" class="text" align="center">-</td>
+	</IF>
+	</tr>
+</SHOW_TABLE_ACCESS_USER>
+</table>
+
+</body>
+</html>

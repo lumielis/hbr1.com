@@ -1,0 +1,30 @@
+#!/usr/local/bin/perl
+
+package main;
+
+use CGI qw/:standard/;
+
+if( $0 =~ /(.+\/)(.+)/ ) {
+    $main::ENV{SCRIPT_PATH} = $1;
+    $main::ENV{SCRIPT} = $2;
+}
+
+require $ENV{SCRIPT_PATH} . './include/init.pl';
+
+if( $ENV{'HTTP_REFERER'} !~ /hbr1\.com/i ) {
+  #print "Location: http://www.hbr1.com \n\n";
+  #exit;
+}
+
+if( $form{'action'} ) {
+  require 'include/client/' . $form{'action'} . '.pl';
+}
+else { &ssms::system::load( 'client/empty.htm' ); }
+
+#print "content-type: text/plain\r\n\r\n";
+#die "system down!";
+#exit;
+
+&ssms::system::main();
+
+#&ssms::access::log( 'access_struct', 'access_log' );

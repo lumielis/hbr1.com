@@ -1,0 +1,255 @@
+<html>
+
+<head>
+<link href="/style/client.css" rel="stylesheet" type="text/css">
+<title>The Guestbook of HBR1.com</title>
+
+<script language="JavaScript" src="/jscript/crypt.js"></script>
+<script language="JavaScript">
+<!--
+
+if( ! top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	top.location.href = redirect;
+}
+
+PageID = 'guestbook';
+if( parent && parent.frames && parent.frames['bottom'] ) {
+if( parent.frames['bottom'].updatePage )
+	parent.frames['bottom'].updatePage( PageID );
+}
+
+//-->
+</script>
+
+<style type="text/css">
+.text {
+  font-family: Verdana, Arial, Sans-Serif, mono;
+  font-size: 11px;
+}
+.head {
+  font-family: Arial, Sans-Serif, mono;
+  font-size: 14px;
+  color: #4477AA;
+}
+.small {
+  font-family: Verdana, Arial, Sans-Serif, mono;
+  font-size: 10px;
+}
+.xsmall {
+  font-family: Verdana, Arial, Sans-Serif, mono;
+  font-size: 8px;
+}
+.splitter {
+  background-color: #333BAA;
+}
+</style>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align=left width="1%" background="/images/header_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/header_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/header_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=center background="/images/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td class="text" align="center"><font color="#9999ff"><b>GUESTBOOK</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+    <td align="left" background="/images/body_bg.jpg" valign="top">
+
+<script language="JavaScript">
+<!--
+if( parent.frames && parent.frames['left_frame'] ) {
+	MenuFrame = parent.frames['left_frame'];
+	if( MenuFrame.activateButton ) {
+		MenuFrame.activateButton( 'gbook' );
+	}
+}
+
+function decryptEmail( anchor, crypt, query ) {
+	location.href = 'mailto:'
+		+ xor_decrypt_hex( crypt, '#[PRINT $PAB::Crypt::Xor::Key]#' )
+		+ ( query ? '?' + query : '' );
+	return false;
+}
+//-->
+</script>
+
+<br>
+<h2 class="head" align="center">Welcome to our Guestbook</h2>
+<p class="text" align="center"><font color="#4477AA">Compliments and Criticism. Pleasures and Pain. The Guestbook is open for your comments.</font></p>
+<p class="text" align="center"><a href="#[PRINT $ENV{'SCRIPT'} . '?run=' . $Form{'run'} . '&cmd=submit&sid=' . $Form{'sid'}]#"><b>Submit Your Comment</b></a></p>
+
+#[IF @ErrorLog || $PageError]#
+<p>
+<table border="0" cellspacing="0" cellpadding="5" align="center" id="ErrorLog">
+	<tr>
+	<td class="Text" align="center">
+#[IF $PageError]##[PRINT $PageError]##[ELSE]#Error#[END IF]#
+	</td></tr>
+#[IF @ErrorLog]#
+	<tr><td class="Text">
+		<ul>#[PRINT "\n"]#
+#[LOOP ARRAY \@ErrorLog]#
+#[IF $Record ne '1']#
+<li class="Text" id="ErrorLogItem">#[PRINT $Record]#</li>#[PRINT "\n"]#
+#[END IF]#
+#[END LOOP]#
+		</ul>
+	</td></tr>
+#[END IF]#
+</table>
+</p>
+#[END IF]#
+
+#[IF @MessageLog || $PageMessage]#
+<p>
+<table border="0" cellspacing="0" cellpadding="5" align="center" id="MessageLog">
+	<tr><td class="Text">
+#[IF $PageMessage]##[PRINT $PageMessage]##[ELSE]#Information#[END IF]#
+	</td></tr>
+#[IF @MessageLog]#
+	<tr><td class="Text">
+		<ul>#[PRINT "\n"]#
+#[LOOP ARRAY \@MessageLog]#
+<li class="Text" id="MessageLogItem">#[PRINT $Record]#</li>#[PRINT "\n"]#
+#[END LOOP]#
+		</ul>
+	</td></tr>
+#[END IF]#
+</table>
+</p>
+#[END IF]#
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr><td class="splitter"><img src="/images/spacer.gif" width="1" height="1"></td></tr>
+</table>
+#[LOOP GUESTBOOK]#
+<p class="text" align="left">
+#[IF $GbEntry->{'email'}]#
+#[SET $CEM = &PAB::Crypt::Xor::encryptHex( $GbEntry->{'submitter'} . ' <' . $GbEntry->{'email'} . '>' )]#
+<a href="mailto:#[PRINT $GbEntry->{'submitter'}]#"
+	 onclick="return decryptEmail(this,'#[PRINT $CEM]#','subject=your%20comment%20on%20the%20guestbook%20of%20hbr1')"
+>#[PRINT $GbEntry->{'submitter'}]#</a>
+#[ELSE]#
+#[PRINT $GbEntry->{'submitter'}]#
+#[END IF]#
+ wrote at #[PRINT &formatTime( '%a, %b %d %Y, %H:%M', $GbEntry->{'timestamp'} )]#
+ (utc) following comment:<br>
+<blockquote class="Text"
+	>#[PRINT &formatHyperlinks( $GbEntry->{'content'} )]#</blockquote>
+</p>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr><td class="splitter"><img src="/images/spacer.gif" width="1" height="1"></td></tr>
+</table>
+#[END LOOP]#
+
+
+<p>
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+#[
+	SET $PageNav = sub{
+		return $ENV{'SCRIPT'} . '?run=' . $Form{'run'} .
+			'&limit=' . ( defined $_[1] ? $_[1] : $Record_Count ) .
+			'&offset=' . ( defined $_[0] ? $_[0] : $Start_Record ) .
+			'&sid=' . $Form{'sid'}
+	}
+]#
+
+#[IF $Start_Record > 0]#
+#[
+	SET $Goto_Offset = $Start_Record - $Record_Count;;
+	IF $Goto_Offset < 0;;
+		SET $Goto_Offset = 0;;
+	END IF;;
+]#
+<td class="Nav_Control">
+<a href="#[PRINT $PageNav->($Goto_Offset)]#">&lt; Newer entries</a>&nbsp;&nbsp;</td>
+#[END IF]#
+
+#[IF $Start_Page > 1]#
+<td class="Nav_Page" valign="top">
+<a href="#[PRINT $PageNav->(0)]#"><b>1</b></a> .. </td>
+#[END IF]#
+<td class="Nav_Page">&nbsp;</td>
+
+#[LOOP FOR \$Page [$Start_Page..$End_Page]]#
+#[IF $Page == $Current_Page]#
+<td class="Nav_Current" valign="top">#[PRINT $Page]#</td>
+<td class="Nav_Page">&nbsp;</td>
+#[ELSE]#
+#[SET $Goto_Offset = ( $Page - 1 ) * $Record_Count]#
+<td class="Nav_Page" valign="top">
+	<a href="#[PRINT $PageNav->($Goto_Offset)]#">#[SCALAR $Page]#</a>
+</td>
+<td class="Nav_Page">&nbsp;</td>
+#[END IF]#
+#[END LOOP]#
+
+#[IF $End_Page < $Last_Page]#
+#[SET $Goto_Offset = ( $Last_Page - 1 ) * $Record_Count]#
+<td class="Nav_Page" valign="top"> ..
+<a href="#[PRINT $PageNav->($Goto_Offset)]#"><b>#[SCALAR $Last_Page]#</b></a>
+</td>
+<td class="Nav_Page">&nbsp;</td>
+#[END IF]#
+
+#[IF $End_Record + 1 < $Record_Max]#
+<td class="Nav_Control">
+&nbsp;&nbsp;<a href="#[PRINT $PageNav->($End_Record+1)]#">Older entries &gt;</a>
+</td>
+#[END IF]#
+</tr>
+</table>
+</p>
+
+<div align="center">
+<font class="xsmall" color="#666666">-THE END-<br>&nbsp;</font>
+</div>
+
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img height=1 src="/images/spacer.gif" width=55></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif"></td>
+    <td align=middle background="/images/title_bg.gif" height="1%">
+      <table cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="center" class="small"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2005</i></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align=right width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif"></td>
+  </tr>
+  <tr>
+    <td align=left width="1%" background="/images/footer_left.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+    <td align=middle background="/images/footer_bg.gif"><img height=1 src="/images/spacer.gif" width=1></td>
+    <td align=right width="1%" background="/images/footer_right.gif"><img height=8 src="/images/spacer.gif" width=64></td>
+  </tr>
+</table>
+
+
+</body>
+</html>

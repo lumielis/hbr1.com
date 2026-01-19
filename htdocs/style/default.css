@@ -1,0 +1,226 @@
+/* Version: 1.0.4 */
+
+body, td, th, input, textarea, select, .Text, .T {
+	font-family: Tahoma, Arial, Helvetica, Sans-Serif;
+	font-size: 11px;
+	1line-height: 13px;
+}
+.Header, .H1 {
+	font-family: Tahoma, Arial, Helvetica, Sans-Serif;
+	font-size: 15px;
+	1line-height: 17px;
+}
+.Header2, .H2 {
+	font-family: Tahoma, Arial, Helvetica, Sans-Serif;
+	font-size: 13px;
+	1line-height: 15px;
+}
+.SmallText, .ST {
+	font-family: Tahoma, Arial, Helvetica, Sans-Serif;
+	font-size: 10px;
+	1line-height: 11px;
+}
+
+/* ### ERROR LOG ### */
+
+#ErrorLog {
+	background-color: #fff0f0;
+	border: 1px solid #996666;
+	color: #880000;
+	line-height: 12px;
+}
+table#ErrorLog {
+	width: 600px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+table#ErrorLog td {
+	padding: 5px;
+}
+#ErrorLog ul {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+	padding-right: 10px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 10px;
+	margin-right: 0px;
+	list-style-type: disc;
+}
+#ErrorLogItem {
+	color: #880000;
+	margin-bottom: 3px;
+}
+#ErrorLogHeader {
+	background-color: #ffcccc;
+	color: #660000;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+/* ### MESSAGE LOG ### */
+
+#MessageLog {
+	background-color: #f0f0ff;
+	border: 1px solid #666699;
+	color: #000088;
+	line-height: 12px;
+}
+table#MessageLog {
+	width: 600px;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+table#MessageLog td {
+	padding: 5px;
+}
+#MessageLog ul {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+	padding-right: 10px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 10px;
+	margin-right: 0px;
+	list-style-type: disc;
+}
+#MessageLogItem {
+	color: #000088;
+	margin-bottom: 3px;
+}
+#MessageLogHeader {
+	background-color: #ccccff;
+	color: #000066;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+/* ############### */
+
+#FormError, .FormError {
+	color: red;
+}
+
+#TableHeader, tr#H1, th#H1, td#H1, th#Header, td#Header {
+	background-color: #b5b5b5;
+	color: #ffffff;
+	1padding: 2px;
+}
+#TableHeader2, tr#H2, th#H2, td#H2, th#Header2, td#Header2 {
+	background-color: #aaaaaa;
+	color: #eeeeee;
+}
+#TableRowOdd, tr#Odd, td#Odd, tr#Odd {
+	background-color: #ffffff;
+}
+#TableRowEven, tr#Even, td#Even, th#Even {
+	background-color: #f6f6f6;
+}
+#TableDisabled, tr#Disabled, td#Disabled, th#Disabled {
+	background-color: #eaeaea;
+	color: #777777;
+}
+#TableRow, tr#Row, td#Def, th#Def {
+	background-color: white;
+}
+#TableRowNav, tr#Nav, td#Nav, th#Nav {
+	background-color: #f2f2f2;
+}
+#TableInfo, tr#Info, td#Info {
+	background-color: #e5e5e5;
+	color: #666666;
+}
+#TableError, tr#Error, td#Error {
+	background-color: #ffddee;
+	color: #994466;
+}
+
+#Table, td#Input, table#Input {
+	background-color: #f4f4f4;
+	color: #333333;
+}
+input#Input, textarea#Input, select#Input, input.Input {
+	color: #000000;
+	background-color: #ffffff;
+	scrollbar-face-color: #d7d7d7;
+	scrollbar-highlight-color: #ffffff;
+	scrollbar-shadow-color: #d7d7d7;
+	scrollbar-3dlight-color: #d7d7d7;
+	scrollbar-arrow-color: #666666;
+	scrollbar-track-color: #efefef;
+	scrollbar-darkshadow-color: #aaaaaa;
+}
+input#Button, input.button {
+	color: #000000;
+	background-color: #eeeeee;
+}
+
+table.border {
+	/* border-collapse: collapse; */
+    border: 1px solid #cccccc;
+}
+table.border td, table.border th {
+	border: 1px solid #cccccc;
+}
+table.NoBorder {
+	border-style: none;
+	border-width: 0px;
+}
+table.NoBorder td, table.NoBorder th {
+	border-style: none;
+	border-width: 0px;
+}
+table.Border2 {
+	1border-collapse: collapse;
+    border: 2px solid #cccccc;
+}
+
+table.Title td.Header {
+	color: #999999;
+	font-weight: bold;
+}
+table.Title td.Line {
+	background-color: #999999;
+}
+
+.Nav_Page {
+	font-family: Tahoma, Arial, Sans-Serif;
+	font-size: 13px;
+}
+.Nav_Page a:link, .Nav_Page a:visited {
+	color: #000000;
+}
+.Nav_Control {
+	font-family: Tahoma, Arial, Sans-Serif;
+	font-size: 15px;
+}
+.Nav_Control a:link, .Nav_Control a:visited {
+	color: #0000ff;
+}
+
+body {
+	scrollbar-face-color: #d7d7d7;
+	scrollbar-highlight-color: #ffffff;
+	scrollbar-shadow-color: #d7d7d7;
+	scrollbar-3dlight-color: #d7d7d7;
+	scrollbar-arrow-color: #666666;
+	scrollbar-track-color: #efefef;
+	scrollbar-darkshadow-color: #aaaaaa;
+}
+
+a:link, a:visited {
+	color: #0000ff;
+}
+a:active, a:hover {
+	color: #ff0000;
+}
+
+span.ReqAsterisk {
+	color: #999999;
+}

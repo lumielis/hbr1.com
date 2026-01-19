@@ -1,0 +1,11 @@
+Text=5|115|Michael Aaron
+Font=Arial,Impact,mono|0|9
+Anchor=http://images.burningman.com/index.cgi?q_keyword=&q_year=2001&q_category=&q_photog=maaron&go.x=10&go.y=20
+Refresh=10000
+Precache=0
+Image=S_FireworksattheMan.jpg
+Image=S_HeadArtCar.jpg
+Shuffle=0
+Enabled=1
+Repeat=0
+Color=0

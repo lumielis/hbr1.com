@@ -1,0 +1,138 @@
+IMPORTANT: THIS IS A LICENSE, NOT A SALE. CAREFULLY READ ALL OF THE TERMS AND 
+CONDITIONS OF THIS LICENSE BEFORE ACCEPTING THIS LICENSE AND USING THIS PRODUCT.  
+CLICKING THE YES BUTTON, INDICATES YOUR ACKNOWLEDGMENT THAT YOU HAVE READ THIS 
+LICENSE AND AGREE TO ITS TERMS.  IF YOU DO NOT AGREE, CLICK ON THE NO BUTTON.
+THIS LICENSE AGREEMENT IS YOUR PROOF OF LICENSE. THIS LICENSE HAS BEEN GIVEN 
+TO YOU FOR FREE.
+
+1. Upon the provision of the information requested by Unlimi-Tech Software Inc. 
+(we or us or our) to us, we provide you with this file containing U-Upload Lite 
+which is a computer program (the "Program"), license (the "License"), accompanying 
+documents (Support Materials) (all of these together called the "Product") and 
+grants you a license to use the Product in accordance with the terms of this 
+License.  The copyright and all other rights in the Product shall remain with us. 
+Please note that the terms you means, your business, the corporation, 
+partnership, sole proprietor or other entity that is the owner of the web site 
+where our product will be posted. 
+
+2. This License permits you to: (a) download or otherwise be sent by Unlimi-Tech 
+Software Inc.  and install the Program in the form provided to you on a single 
+computer or a single computer network within your business for use by a single web 
+site as identified by a single domain name which domain name is owned by you; 
+(b) EVALUATE and TEST our product in your own environment. 
+(c) access and use our product FOR NON-COMERCIAL PURPOSES ONLY.
+(d) make one copy of the Program for archive or backup purposes; and 
+(e) make as many copies as necessary of the Support Materials for use only 
+within your business or to visitors to your web site. 
+This License is personal and is non-exclusive.
+
+3. This License does not permit you to and you may not: (a) disassemble, reverse 
+engineer, decompile, convert into human readable form, sub-license, sell, give away, 
+loan, rent, transfer or transmit (electronically, over a network, by telephone, or 
+otherwise), display,all or any part of the Program, and you may not adapt or modify 
+the Program, or develop any derivative works or any competitive or emulating 
+software using the Program; (b) transfer or assign this License without the express, 
+advance written consent of us; (c) remove any proprietary legend from the Product; 
+(d) use the Program in violation of any law including but not limited to any 
+Criminal Law and (e) use the Program or Support Materials in any manner not 
+expressly authorized in Section 2. 
+
+4. The Product is protected by copyright. By providing us the information that 
+we have requested of you and by receiving and/or using a copy of the Product you 
+do not become the owner of them. All intellectual property rights in the Product 
+are and shall remain in us. You acknowledge that any unauthorized publication or 
+disclosure to third persons of the Product may cause immediate and irreparable 
+harm to us. You agree to take all reasonable steps to maintain the confidentiality 
+of the Product and shall not, without our prior written consent, disclose, or make 
+it available in any form to any person. In addition, you allow us to "lock" the 
+Program so that it and any data may not be accessed by you immediately after the 
+license term has ended or the license has been otherwise terminated.
+
+5. If Unlimi-Tech Software Inc. has received the registration information it has 
+requested from you (the Registration Information) prior to or within fourteen (14) 
+days after you download or are sent the Product and if within 90 days after the 
+date you download or are sent the Product you discover a material non-conformity 
+between the Program and the Support Materials and report it in writing to us, 
+we will, at our sole option, provide you with any correction or workaround for 
+the non-conformity made generally available by us to our other licensees of the 
+Program. This remedy is your sole and exclusive remedy for any breach of any 
+warranty or condition. THIS WARRANTY GIVES YOU SPECIFIC LEGAL RIGHTS AND YOU 
+MAY HAVE OTHER RIGHTS WHICH VARY FROM JURISDICTION TO JURISDICTION.
+
+6. We are not responsible for problems that occur as a result of any 
+incompatibility between the Program and the software or hardware of any third 
+person. You assume responsibility for the selection of the Program to achieve your 
+intended purposes.
+
+7. WE EXPRESSLY DISCLAIM ALL REPRESENTATIONS, WARRANTIES AND CONDITIONS EXPRESS OR 
+IMPLIED NOT CONTAINED HEREIN, INCLUDING REPRESENTATIONS, WARRANTIES AND CONDITIONS 
+OF QUALITY, PERFORMANCE, MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A 
+PARTICULAR PURPOSE, TITLE AND THOSE ARISING BY STATUTE OR OTHERWISE IN LAW OR 
+FROM A COURSE OF DEALING OR USE OF TRADE. WE CANNOT AND DO NOT WARRANT THAT THE 
+PROGRAM WILL OPERATE WITHOUT INTERRUPTIONS OR THAT IT WILL BE ERROR-FREE. SHOULD A 
+COURT OF COMPETENT JURISDICTION DETERMINE THAT THE PROGRAM IS A "CONSUMER PRODUCT" 
+UNDER ANY CONSUMER PROTECTION LEGISLATION AND IMPLY ANY WARRANTY OR CONDITION, THEN 
+SUCH IMPLIED WARRANTIES OR CONDITIONS, IF ANY ARE LIMITED IN TIME TO A PERIOD OF 
+NINETY (90) DAYS AFTER YOU ACQUIRE THE PROGRAM. AFTER THAT PERIOD, ALL IMPLIED 
+WARRANTIES AND CONDITIONS ARE EXPRESSLY DISCLAIMED. SOME JURISDICTIONS DO NOT ALLOW
+LIMITATIONS ON HOW LONG AN IMPLIED WARRANTY LASTS, SO THE ABOVE LIMITATIONS MAY NOT 
+APPLY TO YOU.
+
+8. IN NO EVENT WILL WE BE LIABLE FOR LOST PROFITS, LOSS OF DATA, LOSS OF REVENUE OR 
+EARNINGS, CLAIMS MADE BY THIRD PARTIES, OR FOR ANY COMMERCIAL, ECONOMIC, SPECIAL, 
+INCIDENTAL, INDIRECT, CONSEQUENTIAL OR EXEMPLARY DAMAGE INCLUDING WITHOUT LIMITATION 
+ANY DAMAGE ARISING FROM OR RELATED TO THE USE OR INABILITY TO USE THE PROGRAM 
+(INCLUDING WARRANTY, MAINTENANCE, OR SUPPORT SERVICES) PROVIDED OR NOT PROVIDED TO 
+YOU AT ANY TIME RELATED TO THE PROGRAM, EVEN IF WE HAVE BEEN ADVISED OF, OR FORESEE 
+THE POSSIBILITY OF, ANY OF THESE DAMAGES OCCURRING. IN NO EVENT WILL OUR LIABILITY 
+TO YOU EXCEED THE AMOUNT PAID BY YOU TO US OR ANY THIRD PERSON FOR THE PRODUCT. 
+ 
+9. THE LIMITATIONS, EXCLUSIONS AND DISCLAIMERS IN THIS LICENSE SHALL APPLY 
+IRRESPECTIVE OF THE NATURE OF THE CAUSE OF ACTION, DEMAND, OR ACTION BY YOU, 
+INCLUDING BUT NOT LIMITED TO BREACH OF CONTRACT, NEGLIGENCE, STRICT LIABILITY, TORT,
+OR ANY OTHER LEGAL THEORY AND SHALL SURVIVE A FUNDAMENTAL BREACH OR BREACHES AND/OR 
+FAILURE OF THE ESSENTIAL PURPOSE OF THIS LICENSE, OR OF ANY REMEDY CONTAINED HEREIN. 
+SOME JURISDICTIONS DO NOT ALLOW THE LIMITATION OR EXCLUSION OF LIABILITY FOR 
+INCIDENTAL OR CONSEQUENTIAL DAMAGES SO THE ABOVE LIMITATION OR EXCLUSION MAY NOT 
+APPLY TO YOU.
+
+10. The License begins upon acceptance by you, which acceptance shall be indicated
+by your clicking the Yes button, or by your installing the Program, or by your use 
+of the Program, or by your continued possession of the program for a period of 
+fourteen (14) days after you receive it, whichever is the earlier, and shall 
+continue for a period of one (1) year or until earlier termination as provided 
+herein.  This license will terminate immediately upon you failing to comply with 
+any of the terms and conditions of this license. Should we choose to do so we may, 
+but do not have to, advise you of the termination of this license in writing. 
+Upon the termination of this License 
+(a) your rights under Section 2 shall immediately cease, and (b) you shall 
+(i) destroy any copy of the Product received by you, 
+(ii) erase all copies of the Program and Support Materials in your possession or 
+within your control, and 
+(iii) certify in writing to us within fourteen (14) days of the termination of this 
+License that all of the above have been done. 
+
+11. Notwithstanding anything to the contrary in this License, all provisions in this 
+License are hereby limited to the extent mandated by applicable law. To the extent 
+that any provision or portion of this License is determined by a court of competent 
+jurisdiction to be invalid, illegal or unenforceable, to that extent, such portion 
+or provision shall be severed and deleted from the remaining provisions of this 
+License. The invalidity or unenforceability of any provision shall in no way
+affect or impair the validity or enforceability of the remaining provisions.
+
+12. This License shall be governed by and construed in accordance with the laws of 
+the Province of Ontario and the laws of Canada applicable therein and shall be 
+deemed to have been made and completely performed in the Province of Ontario. 
+You hereby agree to submit to the non-exclusive jurisdiction of the courts of 
+the Province of Ontario for any legal action arising out of this License or the 
+performance of obligations arising out of this License. This License constitutes 
+the entire agreement between the parties hereto with respect to the subject matter 
+hereof. The terms of this License shall apply to all updates (including corrections, 
+modifications, and enhancements) made to the Program and Support Materials 
+supplied to you. 
+
+13. The parties have requested that this License and all communications and 
+documents relating hereto be expressed in the English language. Les parties ont 
+exigés que la presente convention ainsi que tous documents s'y rattachant soient 
+redigés dans la langue anglaise.
+

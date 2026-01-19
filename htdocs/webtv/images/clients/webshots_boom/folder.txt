@@ -1,0 +1,16 @@
+Text=5|115|webshots.com_boom 2000
+Font=Arial,Impact,mono|0|9
+Anchor=http://www.webshots.com/search/search.fcgi?words=boom+festival&search=Search%21
+Precache=0
+Refresh=10000
+Image=S_3907235luBwNIGBCg_ph.jpg
+Image=S_21_15_chillout1.jpg
+Image=S_12_boom_chillout_deco.jpg
+Image=S_3907223iKcJnZGjqa_ph.jpg
+Image=S_3907221JGvKkSJAbX_ph.jpg
+Image=S_3907268TDQlejpCnn_ph.jpg
+Image=S_3907277kXnzjErRXC_ph.jpg
+Enabled=1
+Shuffle=0
+Repeat=0
+Color=0
