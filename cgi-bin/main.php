@@ -1,4 +1,4 @@
-<?
+<?php
 
 $P = &$_REQUEST;
 $filename = 'main.php';

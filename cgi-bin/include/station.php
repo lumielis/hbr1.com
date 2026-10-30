@@ -1,4 +1,4 @@
-<?
+<?php
 
 function find_mix( $artist, $title )
 {

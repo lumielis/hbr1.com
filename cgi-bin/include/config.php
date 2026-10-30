@@ -1,4 +1,4 @@
-<?
+<?php
 
 $PathBase = '/home/christian/WWWRoot/www.hbr1.com/';
 $PathTemplate = $PathBase . 'template/';

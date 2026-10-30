@@ -1,4 +1,4 @@
-<?
+<?php
 
 if( $P['show'] == 'pic' ) {
 	$picid = (int) $P['picid'];

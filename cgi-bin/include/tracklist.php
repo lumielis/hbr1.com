@@ -1,4 +1,4 @@
-<?
+<?php
 
 if( $P['show'] == 'secimg' ) {
 	session_start();
