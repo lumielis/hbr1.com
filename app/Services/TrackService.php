@@ -62,6 +62,36 @@ class TrackService
      */
     public function queue(array $station, int $limit = 8): array
     {
+        return $this->queueRows($station, $limit);
+    }
+
+    /**
+     * The full playlist shown on the playlist page: the current track followed
+     * by the queue, with a marker for requested tracks.
+     *
+     * @return array<int, string> display lines, HTML-free
+     */
+    public function playlist(array $station, int $limit = 8): array
+    {
+        $lines = [];
+        $now   = $this->current($station);
+
+        if ($now !== null) {
+            $lines[] = trim($now['artist'] . ' - ' . $now['title'], ' -');
+        }
+
+        foreach ($this->queueRows($station, $limit) as $item) {
+            $lines[] = trim($item['artist'] . ' - ' . $item['title'], ' -');
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @return array<int, array{artist: string, title: string, requested: bool}>
+     */
+    private function queueRows(array $station, int $limit): array
+    {
         if ($this->usesRadioDj($station)) {
             $rows = $this->query($station, 'RadioDjQueue')
                 ->columns(['artist', 'title'])

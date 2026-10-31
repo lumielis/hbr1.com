@@ -4,9 +4,11 @@ namespace App\Controllers\Web;
 
 use App\Controllers\BaseController;
 use App\Services\StationService;
+use App\Services\TrackService;
 
 /**
- * Playlist page (replaces `main.php?module=playlist`).
+ * Playlist page (replaces `main.php?module=playlist` and
+ * `apax.cgi?Part=Playlist`).
  */
 class PlaylistController extends BaseController
 {
@@ -24,11 +26,25 @@ class PlaylistController extends BaseController
     {
         /** @var StationService $stations */
         $stations = $this->service(StationService::class);
+        /** @var TrackService $tracks */
+        $tracks = $this->service(TrackService::class);
+
+        $current = $identifier === null ? null : $stations->find($identifier);
+        $lines   = [];
+
+        if ($current !== null) {
+            try {
+                $lines = $tracks->playlist($current, 12);
+            } catch (\Throwable $e) {
+                error_log('playlist: ' . $e->getMessage());
+            }
+        }
 
         return $this->page('web/playlist', [
             'title'       => 'Playlist - HBR1',
             'stationList' => $stations->all(),
-            'current'     => $identifier === null ? null : $stations->find($identifier),
+            'current'     => $current,
+            'lines'       => $lines,
         ]);
     }
 }

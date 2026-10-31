@@ -16,15 +16,39 @@
     <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
     <td align="center" background="/images/body_bg.jpg" valign="top">
       <div style="margin-top: 15px; margin-bottom: 15px;">
-        <table cellspacing="0" cellpadding="4">
-          {% for station in stationList %}
-          <tr>
-            <td align="center">
-              <a href="/playlist/{{ station:slug }}"><b>{{ station:title }}</b></a>
-            </td>
-          </tr>
-          {% endfor %}
-        </table>
+
+        {% if current is defined and current %}
+          <p><b>{{ current:title }}</b></p>
+
+          {% if lines is defined and lines %}
+          <table cellspacing="0" cellpadding="2">
+            {% for idx, line in lines %}
+            <tr>
+              <td class="station" align="right"><font color="#666666">{{ idx + 1 }}</font></td>
+              <td class="station">{{ line }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% else %}
+          <p><font color="#999999">[playlist unavailable]</font></p>
+          {% endif %}
+
+          <p style="margin-top: 14px;"><a href="/playlist">[choose another station]</a></p>
+
+        {% else %}
+          <p><font color="#999999">Choose a station</font></p>
+          <table cellspacing="0" cellpadding="4">
+            {% for station in stationList %}
+            <tr>
+              <td align="center">
+                <a href="/playlist/{{ station:slug }}"><b>{{ station:title }}</b></a>
+                <div class="genre">{{ station:genre }}</div>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% endif %}
+
       </div>
     </td>
     <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
