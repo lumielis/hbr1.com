@@ -1,13 +1,29 @@
 {#
   The bottom navigation frame. Replaces `template/client/navigation.htm`.
 
-  The original was a table of GIF buttons wired together with <map>/<area>
-  hotspots. Image maps scale terribly and the geometry was hard-coded, so each
-  button is now its own link with the same image, size and rollover.
+  The original was two nested tables of GIF buttons wired together with
+  <map>/<area> hotspots. Image maps scale badly and the geometry was
+  hard-coded, so each button is now its own link with the same image, size and
+  rollover.
 
-  `PageID` and `updatePage()` are kept: `navigation.htm` highlighted the
-  active button by asking the main frame for its PageID, and the ported pages
-  still expose it.
+  Three details of the original are load-bearing and were all lost in the first
+  port, which is why the bar looked wrong:
+
+   - The buttons sit flush against each other. The legacy markup had no
+     whitespace between the <img> tags; with inline elements any whitespace
+     becomes a text node and the browser inserts a space. That pushed the first
+     row from the 686 px the artwork is designed for out to 714 px, and it is
+     why the whole bar drifted right. `font-size: 0` on the cells removes it.
+   - The second row ends with `mbot.gif`, an 87x30 filler that squares the bar
+     off against the first row's 686 px.
+   - The rows are 32 px and 30 px tall, not a uniform 32.
+
+  `PageID` and `updatePage()` are kept: `navigation.htm` highlighted the active
+  button by asking the main frame for its PageID, and the ported pages still
+  expose it. Legacy PageIDs are not button names - `/listen` sets
+  `PageID = 'station'` and lights the "stations" button, and `/mixes` sets
+  `PageID = 'tracklist'` and lights "Mixes" - so the mapping lives in
+  `PAGE_BUTTONS` below, mirroring the `ImageDef` array of the original.
 #}
 <!DOCTYPE html>
 <html lang="en">
@@ -16,9 +32,32 @@
 <title>{{ title }}</title>
 <style>
 body { background-color: #000000; margin: 0; }
+/* The legacy buttons are butted together with no whitespace between them.
+   Inline images cannot be butted without this - the newlines in the template
+   would each become a space. */
+td { line-height: 0; font-size: 0; }
 </style>
 <script>
-var PageID = 'navigation';
+var PageID = null;
+
+// Legacy PageID -> the button whose rollover lights up. Mirrors the `ImageDef`
+// array of `navigation.htm`, which paired each GIF number with the PageID that
+// the matching page set on itself.
+var PAGE_BUTTONS = {
+    guestbook: 'guestbook',
+    events:    'events',
+    party:     'party',
+    station:   'listen',
+    upload:    'upload',
+    inventory: 'inventory',
+    tracklist: 'mixes',
+    chat:      'chat',
+    gallery:   'gallery',
+    playlist:  'playlist',
+    links:     'links',
+    contact:   'contact',
+    shop:      'shop'
+};
 
 // Every legacy page set a `PageID` on itself; the navigation frame read it to
 // light the matching button. Keep the contract so the ported pages work.
@@ -26,7 +65,7 @@ function updatePage(name) {
     if (name) {
         PageID = name;
     }
-    var active = document.getElementById('nav-' + PageID);
+    var active = PAGE_BUTTONS[PageID] || PageID;
     var buttons = document.querySelectorAll('[data-nav]');
     for (var i = 0; i < buttons.length; i++) {
         var img = buttons[i].querySelector('img');
@@ -35,10 +74,10 @@ function updatePage(name) {
         // The home button is a single GIF with no rollover pair, so it must
         // not get the n/p suffix. Everything else has mbNn.gif / mbNp.gif.
         if (img.getAttribute('data-plain')) {
-            img.src = '/images/navigation/' + base + '.gif';
             continue;
         }
-        img.src = '/images/navigation/' + base + (buttons[i] === active ? 'p' : 'n') + '.gif';
+        img.src = '/images/navigation/' + base
+                + (buttons[i].getAttribute('data-key') === active ? 'p' : 'n') + '.gif';
     }
 }
 
@@ -56,21 +95,22 @@ function initPage() {
 window.addEventListener('load', initPage);
 </script>
 </head>
-<body bgcolor="#000000" text="#FF0000" link="#FFFFFF" vlink="#FFFFFF">
+<body bgcolor="#000000" text="#FF0000" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
 {% for row in rows %}
-<div style="white-space: nowrap; line-height: 0;">
-  {% for item in row %}
-  <a id="nav-{{ item:key }}" data-nav href="{{ item:href }}" target="main"
-     onclick="PageID = '{{ item:key }}'; updatePage('{{ item:key }}');"
-     title="{{ item:alt }}"><img
-      src="/images/navigation/{% if item:image == 'mbhome' %}{{ item:image }}.gif{% else %}{{ item:image }}n.gif{% endif %}"
-      data-base="{{ item:image }}"
-      {% if item:image == 'mbhome' %}data-plain="1"{% endif %}
-      width="{{ item:width }}" height="32" border="0" alt="{{ item:alt }}"></a>
-  {% endfor %}
-</div>
+  <tr>
+    <td width="0%">
+      <table border="0" cellspacing="0" cellpadding="0" width="0%">
+        <tr>
+{% for item in row:buttons %}          <td valign="{{ row:valign }}"><a data-nav data-key="{{ item:key }}" href="{{ item:href }}" target="main" onclick="updatePage('{{ item:key }}');" title="{{ item:alt }}"><img src="/images/navigation/{% if item:image == 'mbhome' %}{{ item:image }}.gif{% else %}{{ item:image }}n.gif{% endif %}" data-base="{{ item:image }}"{% if item:image == 'mbhome' %} data-plain="1"{% endif %} width="{{ item:width }}" height="{{ row:height }}" border="0" alt="{{ item:alt }}"></a></td>
+{% endfor %}{% if row:filler %}          <td valign="{{ row:valign }}"><img src="/images/navigation/mbot.gif" width="87" height="{{ row:height }}" border="0" alt=""></td>
+{% endif %}        </tr>
+      </table>
+    </td>
+  </tr>
 {% endfor %}
+</table>
 
 </body>
 </html>

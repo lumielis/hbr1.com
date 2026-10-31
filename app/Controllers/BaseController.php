@@ -33,7 +33,18 @@ abstract class BaseController extends Controller
      */
     protected function page(string $view, array $vars = []): string
     {
-        return $this->view()->render($view, $vars);
+        $config = $this->config();
+        $root   = $config['paths']['legacy'] ?? (BASE_DIR . '/htdocs');
+
+        // Static assets are served straight from the legacy tree by the web
+        // server, so a cached copy survives a stylesheet change. The legacy
+        // templates pinned `client.css?1`; deriving the token from the mtime
+        // does the same job without anyone having to remember to bump it.
+        $css = $root . '/style/client.css';
+
+        return $this->view()->render($view, $vars + [
+            'clientCssVersion' => is_file($css) ? (string) filemtime($css) : null,
+        ]);
     }
 
     /**

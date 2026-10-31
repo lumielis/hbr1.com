@@ -49,7 +49,7 @@ class StationViewService
         'playlist'  => 'playlist',
         'tracklist' => 'inventory',
         'gallery'   => 'gallery',
-        'mixes'     => 'playlist',
+        'mixes'     => 'tracklist',
         'party'     => 'party',
         'guestbook' => 'guestbook',
         'chat'      => 'chat',

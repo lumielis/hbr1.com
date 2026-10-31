@@ -143,6 +143,30 @@ browser fails with "missing ) after argument list" - which silently blanked the
 station names in the header. Emit the bare expression; add no quotes and no
 `|json` filter.
 
+**The legacy pages had no doctype, so every frame rendered in quirks mode.**
+That is load-bearing geometry, not a style preference. In quirks mode an image
+that is the only thing in a table cell is laid out as a block, so a
+`<td><img height=8></td>` band is 8 px tall. In standards mode the same cell
+inherits `client.css`'s `line-height: 13px`, the image sits on the baseline, and
+every band grows by 5 px - the page frame came out 462 px tall instead of 404,
+with 71 px station panels instead of 61. `client.css` now carries
+`img:only-child { display: block }`, which reproduces the quirks behaviour
+explicitly, so the port keeps its doctype and standards mode while matching
+production to the pixel.
+
+**`/mixes` lights the "Mixes" button, but not with `PageID = 'playlist'`.**
+`ImageDef` in `navigation.htm` pairs button 15 with `tracklist` and button 11
+with `playlist`. All three mixes templates set `PageID = 'tracklist'`, which is
+what lights "Mixes"; the first port had them at `'playlist'` and lit the wrong
+button. Production confirms it on all three mixes routes.
+
+**Static assets need a cache buster, and the legacy pages pinned one.**
+`/style/client.css` is served as a plain file, so a browser that has it will not
+re-fetch after an edit - which is exactly what happened while fixing the
+geometry above: the rule was served, but the page still used the cached copy.
+The legacy templates hard-coded `?1`. `BaseController::page()` now appends the
+file's mtime, so the token looks after itself.
+
 ## ⚠️ Do not submission-test the request endpoint
 
 `POST /request/{station}` calls RadioDJ's `LoadTrackToTop` command. That command

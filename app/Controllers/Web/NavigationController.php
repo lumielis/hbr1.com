@@ -23,61 +23,53 @@ class NavigationController extends BaseController
 {
     /**
      * Rows of buttons, exactly as `template/client/navigation.htm` lays them
-     * out: the first row is nine buttons, the second is eight.
+     * out: the first row is eight buttons, the second is eight plus the
+     * `mbot.gif` filler that squares the bar off.
+     *
+     * The `width`/`height` values are the ones the legacy template declared,
+     * which are *not* always the GIF's intrinsic size - `mb4n.gif` is 93 px
+     * wide but was always shown at 95, `mb14n.gif` is 72x32 but was always
+     * shown at 71x30. Reproducing the declared geometry is what keeps the bar
+     * pixel-identical, so the numbers stay as they were.
      */
     private const ROWS = [
         [
-            ['key' => 'home', 'image' => 'mbhome', 'href' => '/', 'width' => 71, 'alt' => 'Home'],
-            ['key' => 'guestbook', 'image' => 'mb1', 'href' => '/guestbook', 'width' => 68, 'alt' => 'Guestbook'],
-            ['key' => 'events', 'image' => 'mb2', 'href' => '/events.html', 'width' => 83, 'alt' => 'Events'],
-            ['key' => 'party', 'image' => 'mb3', 'href' => '/party', 'width' => 75, 'alt' => 'Party'],
-            ['key' => 'listen', 'image' => 'mb4', 'href' => '/listen', 'width' => 95, 'alt' => 'Listen'],
-            ['key' => 'upload', 'image' => 'mb5', 'href' => '/upload/', 'width' => 97, 'alt' => 'Upload'],
-            ['key' => 'tracklist', 'image' => 'mb15', 'href' => '/mixes', 'width' => 86, 'alt' => 'Mixes'],
-            ['key' => 'inventory', 'image' => 'mb6', 'href' => '/tracklist', 'width' => 111, 'alt' => 'Inventory'],
+            'height'  => 32,
+            'valign'  => 'bottom',
+            'filler'  => false,
+            'buttons' => [
+                ['key' => 'home', 'image' => 'mbhome', 'href' => '/', 'width' => 71, 'alt' => 'Home'],
+                ['key' => 'guestbook', 'image' => 'mb1', 'href' => '/guestbook', 'width' => 68, 'alt' => 'Guestbook'],
+                ['key' => 'events', 'image' => 'mb2', 'href' => '/events.html', 'width' => 83, 'alt' => 'Events'],
+                ['key' => 'party', 'image' => 'mb3', 'href' => '/party', 'width' => 75, 'alt' => 'Party'],
+                ['key' => 'listen', 'image' => 'mb4', 'href' => '/listen', 'width' => 95, 'alt' => 'Listen'],
+                ['key' => 'upload', 'image' => 'mb5', 'href' => '/upload/', 'width' => 97, 'alt' => 'Upload'],
+                ['key' => 'mixes', 'image' => 'mb15', 'href' => '/mixes', 'width' => 86, 'alt' => 'Mixes'],
+                ['key' => 'inventory', 'image' => 'mb6', 'href' => '/tracklist', 'width' => 111, 'alt' => 'Inventory'],
+            ],
         ],
         [
-            ['key' => 'djs', 'image' => 'mb7', 'href' => '/djs.htm', 'width' => 63, 'alt' => 'DJs'],
-            ['key' => 'artists', 'image' => 'mb8', 'href' => '/artists.html', 'width' => 73, 'alt' => 'Artists'],
-            ['key' => 'chat', 'image' => 'mb14', 'href' => '/chat', 'width' => 71, 'alt' => 'Chat'],
-            ['key' => 'gallery', 'image' => 'mb10', 'href' => '/gallery', 'width' => 81, 'alt' => 'Gallery'],
-            ['key' => 'playlist', 'image' => 'mb11', 'href' => '/playlist', 'width' => 94, 'alt' => 'Playlist'],
-            ['key' => 'links', 'image' => 'mb16', 'href' => '/link_base.htm', 'width' => 86, 'alt' => 'Links'],
-            ['key' => 'contact', 'image' => 'mb12', 'href' => '/contact.htm', 'width' => 66, 'alt' => 'Contact'],
-            ['key' => 'shop', 'image' => 'mb13', 'href' => '/shop/', 'width' => 65, 'alt' => 'Shop'],
+            'height'  => 30,
+            'valign'  => 'top',
+            'filler'  => true,
+            'buttons' => [
+                ['key' => 'djs', 'image' => 'mb7', 'href' => '/djs.htm', 'width' => 63, 'alt' => 'DJs'],
+                ['key' => 'artists', 'image' => 'mb8', 'href' => '/artists.html', 'width' => 73, 'alt' => 'Artists'],
+                ['key' => 'chat', 'image' => 'mb14', 'href' => '/chat', 'width' => 71, 'alt' => 'Chat'],
+                ['key' => 'gallery', 'image' => 'mb10', 'href' => '/gallery', 'width' => 81, 'alt' => 'Gallery'],
+                ['key' => 'playlist', 'image' => 'mb11', 'href' => '/playlist', 'width' => 94, 'alt' => 'Playlist'],
+                ['key' => 'links', 'image' => 'mb16', 'href' => '/link_base.htm', 'width' => 86, 'alt' => 'Links'],
+                ['key' => 'contact', 'image' => 'mb12', 'href' => '/contact.htm', 'width' => 66, 'alt' => 'Contact'],
+                ['key' => 'shop', 'image' => 'mb13', 'href' => '/shop/', 'width' => 65, 'alt' => 'Shop'],
+            ],
         ],
-    ];
-
-    /**
-     * PageID values the legacy templates set, mapped to the button that should
-     * light up. The old `ImageDef` array used image numbers, not names.
-     */
-    private const PAGE_IDS = [
-        'guestbook' => 'guestbook',
-        'events'    => 'events',
-        'party'     => 'party',
-        'station'   => 'listen',
-        'upload'    => 'upload',
-        'inventory' => 'inventory',
-        'tracklist' => 'tracklist',
-        'mixes'     => 'tracklist',
-        'djs'       => 'djs',
-        'artists'   => 'artists',
-        'chat'      => 'chat',
-        'gallery'   => 'gallery',
-        'playlist'  => 'playlist',
-        'links'     => 'links',
-        'contact'   => 'contact',
-        'shop'      => 'shop',
-        'expired'   => 'home',
     ];
 
     public function indexAction(): string
     {
         return $this->fragment('web/navigation', [
-            'title'   => 'Navigation',
-            'rows'    => self::ROWS,
-            'pageIds' => self::PAGE_IDS,
+            'title' => 'Navigation',
+            'rows'  => self::ROWS,
         ]);
     }
 }

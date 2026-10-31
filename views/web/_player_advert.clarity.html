@@ -6,9 +6,13 @@
   included: the hotspot coordinates are pixel-tuned against the artwork.
 #}
 <div>
+  {# `listen.phtml` says "or" here while `playlist.phtml` says "or the" - a
+     typo that has been live on the site for years. Production still renders
+     both spellings, so the page sets `advert_or` and this partial prints it.
+     The fallback keeps the partial usable on its own. #}
   <font color="#7799CC">To listen in our streams you need a player that supports
     the <a href="http://www.vorbis.com/" target="_blank">Ogg Vorbis</a>
-    or the <a href="http://www.iis.fraunhofer.de/en/bf/amm/produkte/audiocodec/audiocodecs/heaac/index.jsp" target="_blank">AAC+</a>
+    {{ advert_or ?? "or" }} <a href="http://www.iis.fraunhofer.de/en/bf/amm/produkte/audiocodec/audiocodecs/heaac/index.jsp" target="_blank">AAC+</a>
     streaming format.
     The most popular players are listed below.
   </font>

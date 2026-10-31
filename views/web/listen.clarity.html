@@ -80,16 +80,12 @@
                 </td></tr>
                 <tr><td><img src="/images/spacer.gif" width="1" height="6" alt=""></td></tr>
                 <tr><td>
-                  {% for seg in station:stream %}
-                    {% if seg:type == "link" %}
-                      <a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>
-                    {% elseif seg:type == "bracket" %}
-                      <font color="#66dd99">{{ seg:text }}</font>
-                    {% else %}
-                      {{ seg:text }}
-                    {% endif %}
-                  {% endfor %}
-                </td></tr>
+                  {# The row must be emitted with no whitespace between the
+                     segments: the legacy template looped over `$Stream` and
+                     printed each entry back to back, so the browser saw a
+                     single text run. Whitespace here would add a space after
+                     every link. #}
+                  <font color="FFFFAA">Tune In: </font>{% for seg in station:stream %}{% if seg:type == "link" %}<a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>{% elseif seg:type == "bracket" %}<font color="#66dd99">{{ seg:text }}</font>{% else %}{{ seg:text }}{% endif %}{% endfor %}</td></tr>
               </table>
             </td>
             <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>

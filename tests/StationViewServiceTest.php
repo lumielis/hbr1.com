@@ -293,6 +293,18 @@ class StationViewServiceTest extends TestCase
         self::assertSame('chat', $service->pageId('chat'));
     }
 
+    /**
+     * `mixes.cgi` renders `client/mix_categories.htm`, `client/mixes.htm` and
+     * `client/mix_details.htm`, none of which exists in the PHP tree - the
+     * module is served entirely through the ssms templates. All three set
+     * `PageID = 'tracklist'`, which is what lights the "Mixes" button:
+     * `ImageDef` pairs 15 with "tracklist" and 11 with "playlist".
+     */
+    public function testMixesPagesLightTheMixesButton(): void
+    {
+        self::assertSame('tracklist', $this->service()->pageId('mixes'));
+    }
+
     // ----------------------------------------------------------------- promote
 
     public function testPromoteMovesTheStationToTheFront(): void

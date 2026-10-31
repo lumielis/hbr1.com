@@ -95,7 +95,13 @@ class MixesService
 
         $rows = $this->db->query($sql, $params)->fetchAll(\PDO::FETCH_ASSOC);
 
-        return array_map([$this, 'hydrate'], $rows);
+        // A published row with an empty name renders as an empty link that
+        // leads to a 404 (`playlistAction` refuses untitled mixes). The live
+        // database has exactly one such row, left behind by an aborted edit.
+        return array_values(array_filter(
+            array_map([$this, 'hydrate'], $rows),
+            static fn(array $mix): bool => $mix['name'] !== ''
+        ));
     }
 
     /** One mix plus its track listing. */

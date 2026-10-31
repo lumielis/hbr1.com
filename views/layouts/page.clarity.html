@@ -17,13 +17,24 @@
   (the well). `aside` is for the rare page that wants something under the
   well, above the signature band - listen and playlist put the player advert
   there.
+
+  There is a doctype, so pages render in standards mode; the legacy ones did
+  not and therefore rendered in quirks mode (BackCompat) in every frame. That
+  is not a cosmetic detail: quirks mode lays out an image that is the only
+  thing in a table cell as a block, so a `<td><img height=8></td>` band is
+  8 px tall. In standards mode the same cell inherits `client.css`'s
+  `line-height: 13px` and the image sits on the text baseline, which grew
+  every band by 5 px and each station panel by 10 px. `img:only-child
+  { display: block }` in `client.css` reproduces the quirks behaviour
+  explicitly, so the geometry matches production without depending on quirks
+  mode. Keep that rule and this doctype together.
 #}
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>{% block title %}HBR1{% endblock %}</title>
-<link rel="stylesheet" type="text/css" href="/style/client.css">
+<link rel="stylesheet" type="text/css" href="/style/client.css{% if clientCssVersion %}?{{ clientCssVersion }}{% endif %}">
 
 <style type="text/css">
 .genre {

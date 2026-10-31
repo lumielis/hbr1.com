@@ -15,6 +15,17 @@ body, td, th {
 	font-size: 11px;
 	line-height: 13px;
 }
+/*
+	An image that is the only thing inside a table cell is laid out as a block.
+	Browsers only do this in quirks mode, so the legacy pages relied on it
+	implicitly: they had no doctype, and every `header_*.gif` / `footer_*.gif`
+	band is a lone <img> in a <td>. Without this rule the cell inherits the
+	13px line-height above and the image sits on the baseline, which made every
+	band 5px taller and broke the vertical rhythm of the whole page frame.
+*/
+img:only-child {
+	display: block;
+}
 .head {
 	font-size: 11px
 }
