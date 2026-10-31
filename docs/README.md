@@ -14,7 +14,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | Phase 0 — security cleanup | runbook ready (`deploy/PHASE-0-RUNBOOK.md`), **needs execution on the server** |
 | W1 — foundation | **done** — bootstrap, routing, views, legacy redirects, tests, deploy configs |
 | W2 — data layer | **done** — 46-table schema baseline, 46 models, `ModelMapping` for the music schemas |
-| W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files; `vimg`/`earthcam`/`jsm*` open |
+| W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files, `/muses`; `vimg`/`earthcam`/`jsm*` open |
 | W4 — catalogue | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
 | W6 — community | **mostly done** — guestbook, party calendar, chat, navigation frame; party submission is W8 |
@@ -35,7 +35,8 @@ What works against the live server right now:
 /listen/{station}       the same page, that station first
 /playlist               all three panels, "now and soon" list
 /playlist/{station}     the same page, that station first
-/muses/{station}        Muses HTML player popup (linked from "Tune In:")
+/muses                  Muses HTML player popup, default station (Ambient)
+/muses/{station}        the same player for one station ("Tune In:")
 /mixes                  the station catalogue: pick a station ("Inventory")
 /mixes/{station}        paginated catalogue for one station (?offset=)
 /tracklist, /tracklist/{station}   301 -> /mixes (the legacy name)
@@ -182,6 +183,14 @@ re-fetch after an edit - which is exactly what happened while fixing the
 geometry above: the rule was served, but the page still used the cached copy.
 The legacy templates hard-coded `?1`. `BaseController::page()` now appends the
 file's mtime, so the token looks after itself.
+
+**The Muses player's "default station" is the last one in the list.** The route
+had no station-less case, so `/muses` was a 404 while production served a
+player. The legacy `include/muses.php` iterates `$Stations` looking for a match
+and never clears the loop variable, so a request without `?station=` keeps
+whatever the loop ended on - Ambient, hence "HBR1 - Dream Factory" in
+production. `StationService::fallback()` makes that explicit and
+`?module=muses&station=X` now carries the station through to `/muses/x`.
 
 ## ⚠️ Do not submission-test the request endpoint
 

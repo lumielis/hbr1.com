@@ -34,7 +34,9 @@ class MusesController extends BaseController
         /** @var StationService $stations */
         $stations = $this->service(StationService::class);
 
-        $station = $identifier === null ? null : $stations->find($identifier);
+        $station = $identifier === null
+            ? $stations->fallback()
+            : $stations->find($identifier);
 
         if ($station === null) {
             return Response::status(404);

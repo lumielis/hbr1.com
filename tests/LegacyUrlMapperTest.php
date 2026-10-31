@@ -21,6 +21,8 @@ class LegacyUrlMapperTest extends TestCase
             'tracklist module'        => ['/cgi-bin/main.php', ['module' => 'tracklist'], '/mixes'],
             'tracklist with station'  => ['/cgi-bin/main.php', ['module' => 'tracklist', 'station' => 'Trance'], '/mixes/trance'],
             'listen with station'     => ['/cgi-bin/main.php', ['module' => 'listen', 'station' => 'Ambient'], '/listen/ambient'],
+            'muses'                   => ['/cgi-bin/main.php', ['module' => 'muses'], '/muses'],
+            'muses with station'      => ['/cgi-bin/main.php', ['module' => 'muses', 'station' => 'Trance'], '/muses/trance'],
             'playlist'                => ['/cgi-bin/main.php', ['module' => 'playlist'], '/playlist'],
             'topframe'                => ['/cgi-bin/main.php', ['module' => 'topframe'], '/topframe'],
             'gallery'                 => ['/cgi-bin/main.php', ['module' => 'gallery'], '/gallery'],

@@ -42,4 +42,21 @@ class StationServiceTest extends TestCase
     {
         self::assertCount(2, $this->service()->all());
     }
+
+    /**
+     * The legacy `muses.php` looped over `$Stations` without resetting the
+     * variable, so a request without `?station=` fell through to the *last*
+     * configured station. Production serves Dream Factory (Ambient) from the
+     * bare `/cgi-bin/main.php?module=muses` for exactly that reason.
+     */
+    public function testFallbackIsTheLastConfiguredStation(): void
+    {
+        self::assertSame('tronic', $this->service()->fallback()['slug']);
+    }
+
+    public function testFallbackThrowsWhenNothingIsConfigured(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        (new StationService([]))->fallback();
+    }
 }

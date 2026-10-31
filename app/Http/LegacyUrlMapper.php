@@ -52,7 +52,7 @@ final class LegacyUrlMapper
     ];
 
     /** Station-scoped routes that accept an optional `?station=` suffix. */
-    private const STATION_SCOPED = ['/mixes', '/listen', '/playlist'];
+    private const STATION_SCOPED = ['/mixes', '/listen', '/playlist', '/muses'];
 
     /**
      * Resolve a legacy request to its canonical path.

@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Controllers\Web\ListenController;
 use App\Controllers\Web\MixesController;
+use App\Controllers\Web\MusesController;
 use App\Controllers\Web\PlaylistController;
 use App\Controllers\Web\TracklistController;
 use App\Services\StationService;
@@ -70,6 +71,21 @@ class StationNotFoundTest extends TestCase
     }
 
     /**
+     * `/muses` without a station must still render the player, as it did in
+     * production; an unknown slug is still a 404.
+     */
+    public function testMusesRendersTheFallbackStationAnd404sAnUnknownOne(): void
+    {
+        $this->useStations();
+
+        $response = (new MusesController())->indexAction();
+        self::assertIsString($response);
+        self::assertStringContainsString('MRP.insert', $response);
+
+        self::assertSame(404, (new MusesController())->stationAction('nope')->getStatus());
+    }
+
+    /**
      * The chooser pages themselves must stay 200 - only the station-scoped
      * routes can 404 on an unknown name.
      */
@@ -92,7 +108,7 @@ class StationNotFoundTest extends TestCase
                 'slug'       => 'trance',
                 'title'      => 'Trance',
                 'genre'      => 'Trance',
-                'stream'     => [],
+                'stream'     => ['ogg' => 'http://radio.hbr1.com:19800/trance.ogg'],
                 'muses_url'  => '',
                 'iphone_url' => '',
                 'radiodj_db' => 'radiodj_trance',

@@ -41,6 +41,25 @@ class StationService
         return $this->bySlug[$key] ?? $this->byId[$identifier] ?? null;
     }
 
+    /**
+     * The station to use when a request names none.
+     *
+     * The legacy `include/muses.php` looped over `$Stations` looking for a
+     * match and never reset the variable, so a request without `?station=`
+     * silently used the *last* station in the list. That is the Ambient
+     * stream, and production still serves "HBR1 - Dream Factory" there.
+     */
+    public function fallback(): array
+    {
+        $last = end($this->bySlug);
+
+        if ($last === false) {
+            throw new \RuntimeException('No stations are configured');
+        }
+
+        return $last;
+    }
+
     public function findOrFail(string $identifier): array
     {
         $station = $this->find($identifier);
