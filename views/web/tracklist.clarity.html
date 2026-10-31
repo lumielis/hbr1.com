@@ -3,6 +3,13 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<style>
+.current { font-weight: bold; color: #FFFF88; }
+.pager a { margin: 0 3px; }
+.genre { font-size: 10px; font-family: Arial, Helvetica, sans-serif; }
+.station { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
+</style>
+
 <table cellspacing="0" cellpadding="0" border="0" width="583">
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif">
@@ -16,9 +23,41 @@
     <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
     <td align="center" background="/images/body_bg.jpg" valign="top">
       <div style="margin-top: 15px; margin-bottom: 15px;">
+
         {% if current is defined and current %}
           <p><b>{{ current:title }}</b></p>
-          <p><a href="/tracklist">[play another mix]</a></p>
+
+          {% if page is defined and page and page:rows %}
+          <table cellspacing="0" cellpadding="2" width="100%">
+            {% for row in page:rows %}
+            <tr>
+              <td class="station" align="right" width="1%"><font color="#666666">{{ row:id }}</font></td>
+              <td class="station">{{ row:artist }}</td>
+              <td class="station" width="1%">&ndash;</td>
+              <td class="station">{{ row:title }}</td>
+              <td class="station" align="right" width="1%"><font color="#666666">{{ row:durationLabel }}</font></td>
+            </tr>
+            {% endfor %}
+          </table>
+
+          <p class="pager" style="margin-top: 14px;">
+            {% if pager:hasPrev %}
+              <a href="/tracklist/{{ current:slug }}?offset={{ pager:prevOff }}">&laquo; prev</a>
+            {% endif %}
+            <font color="#999999">
+              page {{ pager:current }} of {{ pager:last }}
+              ({{ pager:total }} tracks)
+            </font>
+            {% if pager:hasNext %}
+              <a href="/tracklist/{{ current:slug }}?offset={{ pager:nextOff }}">next &raquo;</a>
+            {% endif %}
+          </p>
+          {% else %}
+          <p><font color="#999999">[no tracks]</font></p>
+          {% endif %}
+
+          <p style="margin-top: 14px;"><a href="/tracklist">[play another mix]</a></p>
+
         {% else %}
           <p><font color="#999999">Choose a station</font></p>
           <table cellspacing="0" cellpadding="4">
@@ -26,11 +65,13 @@
             <tr>
               <td align="center">
                 <a href="/tracklist/{{ station:slug }}"><b>{{ station:title }}</b></a>
+                <div class="genre">{{ station:genre }}</div>
               </td>
             </tr>
             {% endfor %}
           </table>
         {% endif %}
+
       </div>
     </td>
     <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>

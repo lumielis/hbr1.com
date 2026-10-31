@@ -95,6 +95,20 @@ class Bootstrap implements BootstrapProvider
                 AppContext::instance()->get(\App\Services\StationService::class)
             )
         );
+
+        $ctx->set(
+            \App\Services\SongService::class,
+            fn() => new \App\Services\SongService(
+                AppContext::instance()->get(\App\Services\StationService::class)
+            )
+        );
+
+        $ctx->set(
+            \App\Services\RequestService::class,
+            fn() => new \App\Services\RequestService(
+                AppContext::instance()->get(\App\Services\StationService::class)
+            )
+        );
     }
 
     private function configureDispatcher(AppContext $ctx): void
@@ -130,7 +144,6 @@ class Bootstrap implements BootstrapProvider
         // Tracklist (W4).
         $router->add('GET', '/tracklist', 'Web\\TracklistController::indexAction');
         $router->add('GET', '/tracklist/{station:alpha}', 'Web\\TracklistController::stationAction');
-
         // Gallery (W5).
         $router->add('GET', '/gallery', 'Web\\GalleryController::indexAction');
         $router->add('GET', '/gallery/pic/{id:int}', 'Web\\GalleryController::pictureAction');
