@@ -115,6 +115,35 @@ class Bootstrap implements BootstrapProvider
             \App\Services\GalleryService::class,
             fn() => new \App\Services\GalleryService()
         );
+
+        $ctx->set(
+            \App\Services\GuestbookService::class,
+            fn() => new \App\Services\GuestbookService(
+                AppContext::instance()->dbManager()->getDefault()
+            )
+        );
+
+        $ctx->set(
+            \App\Services\PartyService::class,
+            fn() => new \App\Services\PartyService(
+                AppContext::instance()->dbManager()->getDefault(),
+                AppContext::instance()->Config['app']['timezone'] ?? 'Europe/Berlin'
+            )
+        );
+
+        $ctx->set(
+            \App\Services\MixesService::class,
+            fn() => new \App\Services\MixesService(
+                AppContext::instance()->dbManager()->getDefault()
+            )
+        );
+
+        $ctx->set(
+            \App\Services\ChatService::class,
+            fn() => new \App\Services\ChatService(
+                AppContext::instance()->dbManager()->getDefault()
+            )
+        );
     }
 
     private function configureDispatcher(AppContext $ctx): void
@@ -160,5 +189,22 @@ class Bootstrap implements BootstrapProvider
         $router->add('GET', '/gallery/pic/{id:int}', 'Web\\GalleryController::pictureAction');
         $router->add('GET', '/gallery/{category:int}', 'Web\\GalleryController::categoryAction');
         $router->add('GET', '/gallery/{category:int}/{gallery:int}', 'Web\\GalleryController::galleryAction');
+
+        // Navigation frame (W6). The frameset's bottom bar.
+        $router->add('GET', '/navigation', 'Web\\NavigationController::indexAction');
+
+        // Community (W6).
+        $router->add('GET', '/guestbook', 'Web\\GuestbookController::indexAction');
+        $router->add('POST', '/guestbook', 'Web\\GuestbookController::submitAction');
+
+        $router->add('GET', '/party', 'Web\\PartyController::indexAction');
+        $router->add('GET', '/party/{id:int}', 'Web\\PartyController::detailAction');
+
+        $router->add('GET', '/mixes', 'Web\\MixesController::indexAction');
+        $router->add('GET', '/mixes/playlist/{id:int}', 'Web\\MixesController::playlistAction');
+        $router->add('GET', '/mixes/{category:int}', 'Web\\MixesController::categoryAction');
+
+        $router->add('GET', '/chat', 'Web\\ChatController::indexAction');
+        $router->add('POST', '/chat', 'Web\\ChatController::submitAction');
     }
 }

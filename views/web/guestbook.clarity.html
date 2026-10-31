@@ -1,0 +1,97 @@
+{% extends "layouts/main" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+.entry { border-bottom: 1px solid #222244; padding: 8px 0; }
+.entry-name { font-size: 11px; font-family: Verdana, Arial, sans-serif; color: #9999FF; font-weight: bold; }
+.entry-date { font-size: 10px; font-family: Arial, sans-serif; color: #666666; }
+.entry-body { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
+.field-error { color: #FF5555; font-size: 10px; font-family: Arial, sans-serif; }
+.pager a { margin: 0 3px; }
+textarea { width: 420px; height: 90px; }
+</style>
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img src="/images/title_left.gif" alt=""></td>
+    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
+      <font color="#9999ff"><b>GUESTBOOK</b></font></td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+      <div style="margin-top: 15px; margin-bottom: 15px; text-align: left;">
+
+        {% if page is defined and page:entries %}
+          {% for entry in page:entries %}
+          <div class="entry">
+            <span class="entry-name">{{ entry:submitter }}</span>
+            <span class="entry-date">{{ entry:date }}</span>
+            <div class="entry-body">{{ entry:content|raw }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p><font color="#999999">[no entries yet]</font></p>
+        {% endif %}        {% if pager is defined and pager:last > 1 %}
+        <p class="pager" align="center">
+          {% if pager:hasPrev %}
+            <a href="/guestbook?offset={{ pager:prevOff }}">&laquo; newer</a>
+          {% endif %}
+          <font color="#666666">page {{ pager:current }} of {{ pager:last }}</font>
+          {% if pager:hasNext %}
+            <a href="/guestbook?offset={{ pager:nextOff }}">older &raquo;</a>
+          {% endif %}
+        </p>
+        {% endif %}
+
+        <hr color="#222244">
+
+        <h3><font color="#9999ff">Sign the guestbook</font></h3>
+
+        {% if errors:submitter or errors:email or errors:content %}
+        <p class="field-error">Please correct the marked fields.</p>
+        {% endif %}
+
+        <form method="post" action="/guestbook">
+          <input type="hidden" name="_csrf_token" value="{{ csrf }}">          <table cellspacing="2" cellpadding="2" border="0">
+            <tr>
+              <td class="entry-body" align="right">Name</td>
+              <td><input type="text" name="submitter" size="32" maxlength="255"
+                         value="{{ values:submitter }}"></td>
+            </tr>
+            {% if errors:submitter %}
+            <tr><td></td><td class="field-error">{{ errors:submitter }}</td></tr>
+            {% endif %}
+            <tr>
+              <td class="entry-body" align="right">E-mail</td>
+              <td><input type="text" name="email" size="32" maxlength="255"
+                         value="{{ values:email }}"></td>
+            </tr>
+            {% if errors:email %}
+            <tr><td></td><td class="field-error">{{ errors:email }}</td></tr>
+            {% endif %}
+            <tr>
+              <td class="entry-body" align="right" valign="top">Message</td>
+              <td><textarea name="content">{{ values:content }}</textarea></td>
+            </tr>
+            {% if errors:content %}
+            <tr><td></td><td class="field-error">{{ errors:content }}</td></tr>
+            {% endif %}
+            <tr>
+              <td></td>
+              <td><input type="submit" value="Submit"></td>
+            </tr>
+          </table>
+        </form>
+
+      </div>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
+  </tr>
+</table>
+{% endblock %}

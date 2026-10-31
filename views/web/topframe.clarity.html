@@ -52,16 +52,20 @@
 (function () {
     // The legacy frame ticked the clock client-side; keep that behaviour so
     // the header does not freeze between page loads.
-    var base = {{ utc }};
-    var offsets = {{ offsets }};
+    //
+    // The offsets must be emitted as a JS *array*. Rendering them as a bare
+    // string ("0,3600,...") made `offsets[i]` index characters and produced
+    // NaN:NaN in every cell.
+    var utc = {{ utc }};
+    var offsets = {{ offsets|raw }};
     var cells = document.querySelectorAll('[id^="clock-"]');
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
     function tick() {
-        var now = Math.floor(Date.now() / 1000) - base;
+        var now = Math.floor(Date.now() / 1000) - utc;
         for (var i = 0; i < cells.length; i++) {
-            var d = new Date(({{ utc }} + now + offsets[i]) * 1000);
+            var d = new Date((utc + now + offsets[i]) * 1000);
             cells[i].textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
         }
     }

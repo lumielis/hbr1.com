@@ -17,7 +17,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files; `vimg`/`earthcam`/`jsm*` open |
 | W4 — tracklist | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
-| W6 — community | not started — see `deploy/CHAT-STATE.md` first |
+| W6 — community | **mostly done** — guestbook, party calendar, mixes, chat, navigation frame; party submission is W8 |
 | W7 — webtv / ticker / broadcast | not started |
 | W8 — admin | not started |
 | W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |
@@ -44,6 +44,25 @@ What works against the live server right now:
 /stream/{station}.asx
 ```
 
+W6 community pages:
+
+```
+/navigation             bottom navigation frame
+/guestbook              guestbook (33/page, spam filter, CSRF posting)
+/party                  party calendar (year/month/day grid)
+/party/{id}             single party
+/mixes                  mix styles
+/mixes/{category}       mixes in a style
+/mixes/playlist/{id}    one mix and its track listing
+/chat                   chat room (database-backed, not the jsm* file transport)
+```
+
+The frameset also loads plain files from the old document root
+(`/ltop.htm`, `/djs.htm`, `/webtv/ticker/`, ...). Those are served by
+`App\Http\LegacyStatic`, which only ever returns files with a static extension
+inside `htdocs` - it never serves `.php`, `.pl` or `.inc`, so the Perl
+configuration stays unreachable.
+
 Every legacy URL form still resolves — `/cgi-bin/main.php?module=…`,
 `/perl/apax.cgi?run=…`, `/run/main.xp?action=…`, `/cgi-bin/asx.cgi?trance` — as
 a 301 onto the canonical route.
@@ -64,8 +83,7 @@ bash tools/probe-vhost.sh   # over HTTP through nginx: catches config-level bugs
 for itself: a nginx `alias` for `/playlist/` shadowed `/playlist/{station}` and
 returned 404, which the in-process test could never see.
 
-## Two findings that shaped the work
-
+## Findings that shaped the work
 **No SAM Broadcaster databases exist any more.** The server only has
 `radiodj_trance|tronic|ambient`. All three stations are on RadioDJ, so the SAM
 code paths have been removed from the mapping — not just left dormant.
@@ -75,6 +93,13 @@ pointed at the same host; the split existed only because `hbr1` could not
 INSERT song requests. `hbr1-web` now holds all of `hbr1`'s privileges, so the
 application uses a single connection and a single credential. See
 `deploy/DB-CONNECTIONS.md`, including the dead grants still to revoke.
+
+**The chat is a database, not a directory.** W6 was blocked on "where does
+`data/chat/` live". It does not exist, on any server: `$path{'data'}` is
+commented out in `cgi-bin/include/settings.inc`, so the `jsm*` transport wrote
+to `/chat/<room>.txt` at the filesystem root, where it had no permission. The
+real chat is the `chat` table (25,029 rows). Ported against the table; the
+`jsm*` scripts are unrecoverable as designed. See `deploy/CHAT-STATE.md`.
 
 ## ⚠️ Do not submission-test the request endpoint
 

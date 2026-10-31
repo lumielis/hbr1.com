@@ -1,0 +1,76 @@
+{#
+  The bottom navigation frame. Replaces `template/client/navigation.htm`.
+
+  The original was a table of GIF buttons wired together with <map>/<area>
+  hotspots. Image maps scale terribly and the geometry was hard-coded, so each
+  button is now its own link with the same image, size and rollover.
+
+  `PageID` and `updatePage()` are kept: `navigation.htm` highlighted the
+  active button by asking the main frame for its PageID, and the ported pages
+  still expose it.
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>
+body { background-color: #000000; margin: 0; }
+</style>
+<script>
+var PageID = 'navigation';
+
+// Every legacy page set a `PageID` on itself; the navigation frame read it to
+// light the matching button. Keep the contract so the ported pages work.
+function updatePage(name) {
+    if (name) {
+        PageID = name;
+    }
+    var active = document.getElementById('nav-' + PageID);
+    var buttons = document.querySelectorAll('[data-nav]');
+    for (var i = 0; i < buttons.length; i++) {
+        var img = buttons[i].querySelector('img');
+        if (!img) { continue; }
+        var base = img.getAttribute('data-base');
+        // The home button is a single GIF with no rollover pair, so it must
+        // not get the n/p suffix. Everything else has mbNn.gif / mbNp.gif.
+        if (img.getAttribute('data-plain')) {
+            img.src = '/images/navigation/' + base + '.gif';
+            continue;
+        }
+        img.src = '/images/navigation/' + base + (buttons[i] === active ? 'p' : 'n') + '.gif';
+    }
+}
+
+function initPage() {
+    try {
+        if (parent.frames['main'] && parent.frames['main'].PageID) {
+            PageID = parent.frames['main'].PageID;
+        }
+    } catch (e) {
+        // A framed page from another origin - ignore and keep the default.
+    }
+    updatePage();
+}
+
+window.addEventListener('load', initPage);
+</script>
+</head>
+<body bgcolor="#000000" text="#FF0000" link="#FFFFFF" vlink="#FFFFFF">
+
+{% for row in rows %}
+<div style="white-space: nowrap; line-height: 0;">
+  {% for item in row %}
+  <a id="nav-{{ item:key }}" data-nav href="{{ item:href }}" target="main"
+     onclick="PageID = '{{ item:key }}'; updatePage('{{ item:key }}');"
+     title="{{ item:alt }}"><img
+      src="/images/navigation/{% if item:image == 'mbhome' %}{{ item:image }}.gif{% else %}{{ item:image }}n.gif{% endif %}"
+      data-base="{{ item:image }}"
+      {% if item:image == 'mbhome' %}data-plain="1"{% endif %}
+      width="{{ item:width }}" height="32" border="0" alt="{{ item:alt }}"></a>
+  {% endfor %}
+</div>
+{% endfor %}
+
+</body>
+</html>

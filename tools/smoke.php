@@ -43,6 +43,16 @@ $checks = [
     ['/stream/trance.m3u', 200],
     ['/stream/trance.asx', 200],
     ['/stream/trance.pls', 200],
+    // W6 community pages.
+    ['/navigation', 200],
+    ['/guestbook', 200],
+    ['/party', 200],
+    ['/mixes', 200],
+    ['/mixes/9999', 404],
+    ['/chat', 200],
+    // Legacy static pages still reached by the frameset.
+    ['/ltop.htm', 200],
+    ['/djs.htm', 200],
     ['/nope', 404],
 ];
 
@@ -51,15 +61,23 @@ $failed = 0;
 foreach ($checks as [$path, $expected]) {
     $route = $ctx->router()->match($path, 'GET');
 
-    // No route is the framework's 404 path, not a bug in the check.
+    // No route may still be a legacy static page (the frameset loads several
+    // .htm files), so fall through to the static handler before calling it 404.
     if ($route === null) {
-        $ok = $expected === 404;
+        $config = $ctx->Config;
+        $static = new \App\Http\LegacyStatic($config['paths']['legacy'] ?? dirname(__DIR__) . '/htdocs');
+        $hit    = $static->resolve($path);
+
+        // No route and no file is the framework's 404 path.
+        $status = $hit === null ? 404 : 200;
+        $ok     = $status === $expected;
+
         printf(
             "%-34s %s %d%s\n",
             $path,
             $ok ? 'ok  ' : 'FAIL',
-            404,
-            $ok ? ' (unrouted)' : ' (unrouted, expected ' . $expected . ')'
+            $status,
+            $ok ? ' (static)' : ' (expected ' . $expected . ')'
         );
         $failed += $ok ? 0 : 1;
         continue;

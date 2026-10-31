@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\AppContext;
 use Azera\Core\Controller;
 use Azera\Db\Paginator;
+use Azera\Security\CsrfMiddleware;
 
 /**
  * Shared helpers for application controllers.
@@ -62,5 +63,19 @@ abstract class BaseController extends Controller
             'previous'    => $paginator->previousPage(),
             'next'        => $paginator->nextPage(),
         ];
+    }
+
+    /**
+     * The CSRF token for a form in the current session.
+     *
+     * CsrfMiddleware verifies every POST globally, so a form that does not
+     * echo this will be rejected. Empty string when there is no session, which
+     * only happens outside a web request.
+     */
+    protected function csrfToken(): string
+    {
+        $session = $this->context()->session();
+
+        return $session === null ? '' : (new CsrfMiddleware())->ensureToken($session);
     }
 }

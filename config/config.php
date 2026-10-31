@@ -90,6 +90,10 @@ return [
         'log'    => BASE_DIR . '/var/log',
         'public' => BASE_DIR . '/public',
         'data'   => BASE_DIR . '/data',
+        // The retired document root. Still holds the static pages the
+        // frameset references (`/ltop.htm`, `/djs.htm`, …) plus the asset
+        // directories the web server aliases. Read-only.
+        'legacy' => BASE_DIR . '/htdocs',
     ],
 
     'db' => [

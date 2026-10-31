@@ -7,7 +7,6 @@ use App\Services\RequestService;
 use App\Services\SongService;
 use App\Services\StationService;
 use Azera\Http\Response;
-use Azera\Security\CsrfMiddleware;
 
 /**
  * Song requests (replaces the `cmd=request` / `cmd=reqver` branches of
@@ -134,12 +133,5 @@ class RequestController extends BaseController
             'queued'  => true,
             'csrf'    => $this->csrfToken(),
         ]));
-    }
-
-    private function csrfToken(): string
-    {
-        $session = $this->context()->session();
-
-        return $session === null ? '' : (new CsrfMiddleware())->ensureToken($session);
     }
 }

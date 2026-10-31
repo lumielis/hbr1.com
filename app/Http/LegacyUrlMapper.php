@@ -35,6 +35,7 @@ final class LegacyUrlMapper
         'playlist'   => '/playlist',
         'party'      => '/party',
         'mixes'      => '/mixes',
+        'expired'    => '/',
         'ticker'     => '/admin/ticker',
         'news'       => '/admin/news',
         'setup'      => '/admin',
@@ -68,10 +69,33 @@ final class LegacyUrlMapper
             '/cgi-bin/asx.cgi' => self::fromStream($query, 'asx'),
             '/cgi-bin/m3u.cgi' => self::fromStream($query, 'm3u'),
             '/cgi-bin/listen.cgi' => '/listen',
-            '/cgi-bin/mixes.cgi', '/run/mixes.cgi', '/perl/mixes.cgi' => '/mixes',
+            '/cgi-bin/mixes.cgi', '/run/mixes.cgi', '/perl/mixes.cgi' => self::fromMixes($query),
             '/cgi-bin/party.cgi' => '/party',
+            '/cgi-bin/chat.cgi', '/perl/chat.cgi' => '/chat',
+            '/cgi-bin/gallery.cgi', '/perl/gallery.cgi' => '/gallery',
             '/cgi-bin/admin.cgi' => '/admin',
             default => null,
+        };
+    }
+
+    /**
+     * `mixes.cgi` used `?action=` for its three levels:
+     *   (none)                  -> categories
+     *   action=view&cat_id=N    -> mixes in a category
+     *   action=playlist&mix_id=N -> one mix
+     */
+    private static function fromMixes(array $query): string
+    {
+        $action = $query['action'] ?? '';
+
+        return match ($action) {
+            'view' => isset($query['cat_id']) && ctype_digit((string) $query['cat_id'])
+                ? '/mixes/' . $query['cat_id']
+                : '/mixes',
+            'playlist' => isset($query['mix_id']) && ctype_digit((string) $query['mix_id'])
+                ? '/mixes/playlist/' . $query['mix_id']
+                : '/mixes',
+            default => '/mixes',
         };
     }
 

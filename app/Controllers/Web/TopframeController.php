@@ -46,7 +46,10 @@ class TopframeController extends BaseController
             'title'    => 'HBR1',
             'utc'      => $now->getTimestamp(),
             'zones'    => $zones,
-            'offsets'  => implode(',', $offsets),
+            // Rendered into a JS literal, so it must be a real JSON array and
+            // must not be escaped. Passing a comma-joined string produced
+            // ["0,3600,..."] - one string element, hence NaN:NaN.
+            'offsets'  => json_encode($offsets, JSON_THROW_ON_ERROR),
             'timezone' => $this->config()['app']['timezone'],
         ]);
     }

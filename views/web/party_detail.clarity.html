@@ -1,0 +1,64 @@
+{% extends "layouts/main" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+.party-title { font-size: 14px; font-family: Verdana, Arial, sans-serif; color: #9999FF; font-weight: bold; }
+.party-meta { font-size: 11px; font-family: Verdana, Arial, sans-serif; color: #999999; }
+.party-body { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
+.party-field { color: #666666; font-size: 10px; font-family: Arial, sans-serif; }
+.flyer { border: 1px solid #333366; margin: 10px 0; }
+</style>
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img src="/images/title_left.gif" alt=""></td>
+    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
+      <font color="#9999ff"><b>PARTY</b></font></td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
+    <td align="left" background="/images/body_bg.jpg" valign="top">
+      <div style="margin: 15px;">
+
+        <div class="party-title">{{ party:title }}</div>
+        <div class="party-meta">
+          {{ party:startDate }}{% if party:endDate and party:endDate != party:startDate %} &ndash; {{ party:endDate }}{% endif %}
+          {% if party:city %}<br>{{ party:city }}{% if party:countryName %}, {{ party:countryName }}{% endif %}{% endif %}
+        </div>
+
+        {% if party:flyerUrl %}
+          <img class="flyer" src="{{ party:flyerUrl }}" alt="flyer">
+        {% endif %}
+
+        <table cellspacing="0" cellpadding="4" border="0" class="party-body">
+          {% if party:type %}<tr><td class="party-field">Type</td><td>{{ party:type }}</td></tr>{% endif %}
+          {% if party:location %}<tr><td class="party-field" valign="top">Location</td><td>{{ party:location|raw }}</td></tr>{% endif %}
+          {% if party:djs %}<tr><td class="party-field" valign="top">DJs</td><td>{{ party:djs|raw }}</td></tr>{% endif %}
+          {% if party:live %}<tr><td class="party-field" valign="top">Live</td><td>{{ party:live|raw }}</td></tr>{% endif %}
+          {% if party:chillout %}<tr><td class="party-field" valign="top">Chillout</td><td>{{ party:chillout|raw }}</td></tr>{% endif %}
+          {% if party:deco %}<tr><td class="party-field" valign="top">Decoration</td><td>{{ party:deco|raw }}</td></tr>{% endif %}
+          {% if party:organizer %}<tr><td class="party-field">Organizer</td><td>{{ party:organizer }}</td></tr>{% endif %}
+          {% if party:hotline %}<tr><td class="party-field">Hotline</td><td>{{ party:hotline }}</td></tr>{% endif %}
+          {% if party:email %}<tr><td class="party-field">E-mail</td><td>{{ party:email }}</td></tr>{% endif %}
+          {% if party:url %}<tr><td class="party-field">URL</td><td>{{ party:url }}</td></tr>{% endif %}
+        </table>
+
+        {% if party:memo %}
+          <div class="party-body" style="margin-top: 10px;">{{ party:memo|raw }}</div>
+        {% endif %}
+
+        <p style="margin-top: 20px;">
+          <a href="/party">&laquo; back to the calendar</a>
+        </p>
+
+      </div>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
+  </tr>
+</table>
+{% endblock %}

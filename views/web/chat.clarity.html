@@ -1,0 +1,73 @@
+{% extends "layouts/main" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+.msg { font-size: 11px; font-family: Verdana, Arial, sans-serif; padding: 1px 0; }
+.msg-time { color: #444444; font-size: 9px; font-family: Arial, sans-serif; }
+.field-error { color: #FF5555; font-size: 10px; font-family: Arial, sans-serif; }
+</style>
+{# The legacy room polled itself every 30 s; keep that so a parked tab stays
+   current without JavaScript. #}
+<meta http-equiv="refresh" content="30">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img src="/images/title_left.gif" alt=""></td>
+    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
+      <font color="#9999ff"><b>CHAT</b></font></td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
+    <td align="left" background="/images/body_bg.jpg" valign="top">
+      <div style="margin: 15px; height: 320px; overflow-y: auto;">
+
+        {% if messages %}
+          {% for msg in messages %}
+          <div class="msg">
+            <span class="msg-time">{{ msg:time }}</span>
+            <b style="color: #{{ msg:color }}">{{ msg:name }}</b>:
+            {{ msg:content }}
+          </div>
+          {% endfor %}
+        {% else %}
+          <p><font color="#999999">Nobody has said anything yet.</font></p>
+        {% endif %}
+
+      </div>
+
+      <hr color="#222244">
+
+      <form method="post" action="/chat">
+        <input type="hidden" name="_csrf_token" value="{{ csrf }}">
+        <table cellspacing="2" cellpadding="2" border="0">
+          <tr>
+            <td class="msg" align="right">Nickname</td>
+            <td><input type="text" name="name" size="20" maxlength="50" value="{{ values:name }}"></td>
+          </tr>
+          {% if errors:name %}
+          <tr><td></td><td class="field-error">{{ errors:name }}</td></tr>
+          {% endif %}
+          <tr>
+            <td class="msg" align="right">Message</td>
+            <td><input type="text" name="content" size="52" maxlength="255" value=""></td>
+          </tr>
+          {% if errors:content %}
+          <tr><td></td><td class="field-error">{{ errors:content }}</td></tr>
+          {% endif %}
+          <tr>
+            <td></td>
+            <td><input type="submit" value="Say it"></td>
+          </tr>
+        </table>
+      </form>
+
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
+  </tr>
+</table>
+{% endblock %}
