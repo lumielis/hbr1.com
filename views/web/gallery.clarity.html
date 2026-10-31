@@ -3,6 +3,12 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<style>
+.gallery-thumb { border: 1px solid #333366; }
+.gallery-cell { padding: 10px; text-align: center; }
+.gallery-name { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
+</style>
+
 <table cellspacing="0" cellpadding="0" border="0" width="583">
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif">
@@ -16,9 +22,27 @@
     <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
     <td align="center" background="/images/body_bg.jpg" valign="top">
       <div style="margin-top: 15px; margin-bottom: 15px;">
-        <p><font color="#999999">Galleries</font></p>
-        {% if category is defined and category %}
-        <p><a href="/gallery">&laquo; all categories</a></p>
+        <p><font color="#999999">Categories</font></p>
+
+        {% if categories is defined and categories %}
+        <table cellspacing="0" cellpadding="0" border="0">
+          {% for idx, category in categories %}
+            {% if idx % 3 == 0 %}<tr>{% endif %}
+            <td class="gallery-cell">
+              <a href="/gallery/{{ category:id }}">
+                {% if category:thumb %}
+                  <img class="gallery-thumb" src="/gp/tn/{{ category:thumb:file }}" width="120" alt="{{ category:name }}">
+                {% else %}
+                  <font color="#666666">[no image]</font>
+                {% endif %}
+                <div class="gallery-name">{{ category:name }}</div>
+              </a>
+            </td>
+            {% if idx % 3 == 2 or idx + 1 == categories|length %}</tr>{% endif %}
+          {% endfor %}
+        </table>
+        {% else %}
+        <p><font color="#999999">[no galleries]</font></p>
         {% endif %}
       </div>
     </td>

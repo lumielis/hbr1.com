@@ -110,6 +110,11 @@ class Bootstrap implements BootstrapProvider
                 AppContext::instance()->get(\App\Services\StationService::class)
             )
         );
+
+        $ctx->set(
+            \App\Services\GalleryService::class,
+            fn() => new \App\Services\GalleryService()
+        );
     }
 
     private function configureDispatcher(AppContext $ctx): void
