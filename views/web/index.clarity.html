@@ -1,0 +1,50 @@
+{#
+  The legacy front page is a frameset (htdocs/index.html). The frame
+  geometry is kept identical; only the frame sources move from the CGI
+  entry points to canonical routes. A frameset cannot live inside the HTML
+  layout, so this template is rendered as a fragment.
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<meta name="description" content="Music on Futurenet">
+<meta name="keywords" content="radio, audio, video, psy, trance, party, house, ambient, music, sound, mp3, live, stream, media">
+<link rel="stylesheet" href="/style/client.css">
+<script>
+if (navigator.userAgent.indexOf("iPhone") >= 0) {
+    location.replace("/iphone");
+}
+</script>
+</head>
+<frameset cols="*,794,*" frameborder="NO" border="0" framespacing="0">
+  <frame noresize src="/empty.htm" marginwidth="0" marginheight="0" scrolling="NO">
+  <frameset rows="*,64" frameborder="0" border="0" framespacing="0">
+    <frameset cols="194,*" frameborder="NO" border="0" framespacing="0">
+      <frameset rows="189,120,1*" frameborder="NO" border="0" framespacing="0">
+        <frame name="ltop" scrolling="NO" noresize src="/ltop.htm" marginwidth="0" marginheight="0">
+        <frame name="lcam" scrolling="NO" noresize src="/webtv/ticker/" marginwidth="0" marginheight="0">
+        <frame name="lbot" scrolling="NO" noresize src="/html/lbot.html" marginwidth="0" marginheight="0">
+      </frameset>
+      <frameset rows="136,*" frameborder="NO" border="0" framespacing="0">
+        <frame noresize name="top" scrolling="NO" src="/topframe" marginwidth="0" marginheight="0">
+        <frame name="main" src="/listen" bgcolor="#000000">
+      </frameset>
+    </frameset>
+    <frame noresize name="bottom" scrolling="NO" src="/navigation" marginwidth="0" marginheight="0">
+  </frameset>
+  <frame noresize src="/empty.htm" marginwidth="0" marginheight="0" scrolling="NO">
+</frameset>
+
+<noframes>
+  <body bgcolor="#000000" text="#FFFFFF">
+    <b>HBR1 - Music on Futurenet</b>
+    <ul>
+      {% for station in stations %}
+      <li><a href="/listen/{{ station:slug }}">{{ station:title }}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</noframes>
+</html>

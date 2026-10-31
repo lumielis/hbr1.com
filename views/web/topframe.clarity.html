@@ -1,0 +1,74 @@
+{#
+  The clock/header frame. The legacy version emitted a table of digit images
+  and drove them from JavaScript. The geometry is preserved so the frameset
+  looks unchanged; the values are now computed in PHP instead of by a MySQL
+  CONVERT_TZ() round-trip.
+#}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<link rel="stylesheet" href="/style/client.css">
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" leftMargin="0" topMargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="left" width="1%" background="/images/header_left.gif">
+      <img height="8" src="/images/spacer.gif" width="64" alt=""></td>
+    <td align="middle" background="/images/header_bg.gif">
+      <img height="1" src="/images/spacer.gif" width="1" alt=""></td>
+    <td align="right" width="1%" background="/images/header_right.gif">
+      <img height="8" src="/images/spacer.gif" width="64" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img src="/images/title_left.gif" alt=""></td>
+    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
+      <font color="#9999ff"><b>HBR1 - MUSIC ON FUTURENET</b></font></td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img height="1" src="/images/spacer.gif" width="55" alt=""></td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+      <table cellspacing="8" cellpadding="0" border="0">
+        <tr>
+          {% for idx, zone in zones %}
+          <td align="center">
+            <div class="station">{{ zone:name }}</div>
+            <div class="head" id="clock-{{ idx }}">{{ zone:time }}</div>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img height="1" src="/images/spacer.gif" width="55" alt=""></td>
+  </tr>
+</table>
+<script>
+(function () {
+    // The legacy frame ticked the clock client-side; keep that behaviour so
+    // the header does not freeze between page loads.
+    var base = {{ utc }};
+    var offsets = {{ offsets }};
+    var cells = document.querySelectorAll('[id^="clock-"]');
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function tick() {
+        var now = Math.floor(Date.now() / 1000) - base;
+        for (var i = 0; i < cells.length; i++) {
+            var d = new Date(({{ utc }} + now + offsets[i]) * 1000);
+            cells[i].textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+        }
+    }
+
+    tick();
+    setInterval(tick, 10000);
+})();
+</script>
+</body>
+</html>

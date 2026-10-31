@@ -1,0 +1,7 @@
+*.o
+*.so
+*.a
+blib/
+Makefile
+Makefile.old
+pm_to_blib

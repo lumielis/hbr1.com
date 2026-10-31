@@ -1,0 +1,59 @@
+{
+  "name": "hbr1/hbr1.com",
+  "description": "HBR1 - Music on Futurenet",
+  "type": "project",
+  "license": "proprietary",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../Sailantis/clarity-engine",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../../Sailantis/azera-framework",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-gd": "*",
+    "sailantis/clarity-engine": "dev-main",
+    "sailantis/azera-framework": "dev-main"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5 || ^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "8.3.0"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "test": "@php vendor/bin/phpunit",
+    "lint": "@php tools/lint.php",
+    "console": "@php console.php"
+  }
+}

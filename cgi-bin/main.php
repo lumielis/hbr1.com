@@ -3,8 +3,10 @@
 $P = &$_REQUEST;
 $filename = 'main.php';
 
-set_exception_handler( 'handle_exception' );
-set_error_handler( 'handle_error', (E_ALL | E_STRICT) & ~E_NOTICE & ~2048 );
+ini_set( 'display_errors', 1 );
+ini_set( 'log_errors', 1 );
+//set_exception_handler( 'handle_exception' );
+//set_error_handler( 'handle_error', (E_ALL | E_STRICT) & ~E_NOTICE & ~2048 );
 register_shutdown_function( 'handle_shutdown' ); 
 
 require 'lib/class_db_mysqli.php';

@@ -1,0 +1,76 @@
+{% extends "layouts/main" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img src="/images/title_left.gif" alt=""></td>
+    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
+      <font color="#9999ff"><b>LISTEN</b></font></td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+      <div style="margin-top: 15px; margin-bottom: 15px;">
+
+        {% if current is defined and current %}
+          {# A single station is selected: show what is playing and the queue. #}
+          <p><b>{{ current:title }}</b></p>
+          <div class="genre">{{ current:genre }}</div>
+
+          <p style="margin-top: 12px;">
+            {% if now is defined and now %}
+              <font color="#FFFF88">{{ now:artist }}</font> &ndash; {{ now:title }}
+            {% else %}
+              <font color="#999999">[no track information]</font>
+            {% endif %}
+          </p>
+
+          <p>
+            <a href="/stream/{{ current:slug }}.m3u">OGG / MP3 playlist</a>
+            &middot;
+            <a href="/stream/{{ current:slug }}.asx">Windows Media</a>
+            &middot;
+            <a href="/tracklist/{{ current:slug }}">request a track</a>
+          </p>
+
+          {% if queue is defined and queue %}
+          <p style="margin-top: 14px;"><font color="#999999">Up next</font></p>
+          <table cellspacing="0" cellpadding="2">
+            {% for item in queue %}
+            <tr>
+              <td class="station">{{ item:artist }}</td>
+              <td class="station">&ndash;</td>
+              <td class="station">{{ item:title }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% endif %}
+
+          <p style="margin-top: 14px;"><a href="/listen">[choose another station]</a></p>
+
+        {% else %}
+          {# No station selected: the legacy station chooser. #}
+          <p><font color="#999999">Choose a station</font></p>
+          <table cellspacing="0" cellpadding="4">
+            {% for station in stationList %}
+            <tr>
+              <td align="center">
+                <a href="/listen/{{ station:slug }}"><b>{{ station:title }}</b></a>
+                <div class="genre">{{ station:genre }}</div>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% endif %}
+
+      </div>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
+  </tr>
+</table>
+{% endblock %}

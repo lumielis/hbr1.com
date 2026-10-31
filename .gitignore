@@ -1,3 +1,23 @@
 .idea/
 .vscode/
 temp/
+
+# Composer
+/vendor/
+composer.phar
+/auth.json
+
+# Runtime state
+/var/
+*.log
+
+# Local secrets (never commit) - see env.php
+/env.local.php
+
+# Perl library sources, used only to build the throwaway 5.10 oracle
+/docker/legacy-perl/perl-lib/PAB/
+/docker/legacy-perl/perl-lib/PAB2/
+/docker/legacy-perl/perl-lib/PAB3/
+/docker/legacy-perl/perl-lib/pab3/
+/docker/legacy-perl/perl-lib/ssms/
+/docker/legacy-perl/build/
