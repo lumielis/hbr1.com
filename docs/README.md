@@ -46,6 +46,29 @@ point at `mariadb.lan.etwnet.com`; the split is a *grant* split (`hbr1` is
 SELECT-only on `radiodj_%`, `hbr1-web` can INSERT for song requests). It can be
 collapsed after a single `GRANT INSERT` — see `deploy/DB-CONNECTIONS.md`.
 
+## ⚠️ Do not submission-test the request endpoint
+
+`POST /request/{station}` calls RadioDJ's `LoadTrackToTop` command. That command
+**queues a real track on a live radio station**. There is no dry-run mode.
+
+This was confirmed the hard way during development: an end-to-end probe queued
+track 1 on the Trance stream. It was removed again immediately (one row in
+`radiodj_trance.requests`, one in `queuelist`), and the probe scripts were
+deleted rather than kept, because a test that can affect a live broadcast is
+not a test.
+
+The endpoint is therefore covered like this:
+
+- `RequestServiceTest` — all limit and repeat rules against synthetic history
+  (11 cases), no I/O at all.
+- `RequestControllerTest` — the reject paths (unknown station, station without
+  request support) and that CSRF is actually registered.
+- The accept path is verified against `evaluate()` returning `STATUS_OK`, and
+  the real submission is left untested by design.
+
+If a staging RadioDJ instance ever exists, point `radio_dj_request_url` at it
+and add a real end-to-end case.
+
 ## Layout
 
 ```

@@ -1,0 +1,66 @@
+{% extends "layouts/main" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">
+      <img src="/images/title_left.gif" alt=""></td>
+    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
+      <font color="#9999ff"><b>REQUEST</b></font></td>
+    <td align="right" width="1%" background="/images/body_right.gif">
+      <img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+      <div style="margin-top: 15px; margin-bottom: 15px;">
+        <p><b>{{ station:title }}</b></p>
+
+        {% if error is defined and error %}
+          <p><font color="#FF6666">{{ error }}</font></p>
+        {% endif %}
+
+        {% if queued is defined and queued %}
+          <p><font color="#88FF88">Your request has been queued.</font></p>
+          <p>
+            {% if track is defined and track %}
+              {{ track:artist }} &ndash; {{ track:title }}
+            {% endif %}
+          </p>
+          <p style="margin-top: 14px;">
+            <a href="/tracklist/{{ station:slug }}">[back to the tracklist]</a>
+            &middot;
+            <a href="/playlist/{{ station:slug }}">[see the queue]</a>
+          </p>
+
+        {% elseif track is defined and track %}
+          <p>{{ track:artist }} &ndash; {{ track:title }}</p>
+
+          <form method="post" action="/request/{{ station:slug }}">
+            <input type="hidden" name="song" value="{{ track:id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf }}">
+            <p style="margin-top: 12px;">
+              <input type="submit" value="Request this track">
+              &nbsp;
+              <a href="/tracklist/{{ station:slug }}">[cancel]</a>
+            </p>
+          </form>
+
+          <p style="margin-top: 18px;"><font color="#666666" size="1">
+            Requests are limited per listener: 10 per day and 2 per hour.
+            A track, title or artist that has played recently cannot be
+            requested again straight away.
+          </font></p>
+
+        {% else %}
+          <p><font color="#999999">[track not available]</font></p>
+          <p><a href="/tracklist/{{ station:slug }}">[back to the tracklist]</a></p>
+        {% endif %}
+      </div>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
+  </tr>
+</table>
+{% endblock %}

@@ -111,6 +111,8 @@ class SongService
 
         $row = (array) $row;
 
+        $duration = $this->durationSeconds($station, (int) ($row['duration'] ?? 0));
+
         return [
             'id'            => (int) ($row['ID'] ?? 0),
             'artist'        => (string) ($row['artist'] ?? ''),

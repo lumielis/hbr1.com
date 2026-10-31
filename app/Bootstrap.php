@@ -9,6 +9,7 @@ use Azera\Core\Engines\ClarityEngine;
 use Azera\Core\ViewEngine;
 use Azera\Db\Database;
 use Azera\Http\SessionMiddleware;
+use Azera\Security\CsrfMiddleware;
 
 /**
  * Application bootstrap.
@@ -119,6 +120,7 @@ class Bootstrap implements BootstrapProvider
         $dispatcher->setDefaultAction('indexAction');
         $dispatcher->addMiddleware(new SessionMiddleware());
         $dispatcher->addMiddleware(new LegacyRedirectMiddleware());
+        $dispatcher->addMiddleware(new CsrfMiddleware());
     }
 
     private function registerRoutes(\Azera\Core\Router $router): void
@@ -144,6 +146,10 @@ class Bootstrap implements BootstrapProvider
         // Tracklist (W4).
         $router->add('GET', '/tracklist', 'Web\\TracklistController::indexAction');
         $router->add('GET', '/tracklist/{station:alpha}', 'Web\\TracklistController::stationAction');
+
+        // Song requests.
+        $router->add('GET', '/request/{station:alpha}/{song:int}', 'Web\\RequestController::formAction');
+        $router->add('POST', '/request/{station:alpha}', 'Web\\RequestController::submitAction');
         // Gallery (W5).
         $router->add('GET', '/gallery', 'Web\\GalleryController::indexAction');
         $router->add('GET', '/gallery/pic/{id:int}', 'Web\\GalleryController::pictureAction');
