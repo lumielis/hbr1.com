@@ -42,6 +42,8 @@ What works against the live server right now:
 /tracklist, /tracklist/{station}   301 -> /mixes (the legacy name)
 /request/{station}/{id} song request form (CSRF, per-IP limits)
 /topframe               clock/header frame
+/iphone                 oversized station chooser for the iPhone
+/admin                  placeholder until W8 (the real admin area)
 /gallery                public categories
 /gallery/{category}     galleries in a category
 /gallery/{cat}/{gal}    pictures in a gallery
@@ -203,6 +205,22 @@ instead, so only files that exist in the document root are ever shown, and the
 legacy query string is rejected unless it is a plain relative path with an
 extension. Verified by clicking a thumbnail on `/djs.htm` through to the
 lightbox.
+
+**`/admin` was a frameset that loaded itself.** `htdocs/admin/index.html` is
+the legacy admin frameset, and its content frame is `/cgi-bin/admin.cgi` -
+which the URL mapper sends back to `/admin`. So the page nested itself as deep
+as the browser allowed, and served the old admin chrome with no authentication
+in front of it (production answers 401 from an `.htpasswd` gate that this build
+does not reproduce yet). `/admin` is now a real route serving a placeholder
+until W8; the legacy admin entry points (`run=ticker`, `run=news`,
+`run=userman`, `run=crypt`, `run=setup`, `Part=Broadcast`,
+`run=tracklist.creator`) redirect there instead of to URLs that never
+existed.
+
+**`?run=iphone` redirected to a 404.** The mapper knew the target but the
+route was never registered. `/iphone` now renders `template/client/iphone.htm`:
+899 px wide, 30 pt body text, 32 pt station names, one button per station, each
+captioned with the live track. Verified against the running site.
 
 ## ⚠️ Do not submission-test the request endpoint
 

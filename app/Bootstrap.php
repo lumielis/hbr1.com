@@ -217,6 +217,11 @@ class Bootstrap implements BootstrapProvider
         // Song requests.
         $router->add('GET', '/request/{station:alpha}/{song:int}', 'Web\\RequestController::formAction');
         $router->add('POST', '/request/{station:alpha}', 'Web\\RequestController::submitAction');
+
+        // The iPhone chooser (`apax.cgi?run=iphone`). Oversized buttons, one
+        // per station; the URL mapper sent this to /iphone but no such route
+        // existed, so the legacy entry point landed on a 404.
+        $router->add('GET', '/iphone', 'Web\\IphoneController::indexAction');
         // Gallery (W5).
         $router->add('GET', '/gallery', 'Web\\GalleryController::indexAction');
         $router->add('GET', '/gallery/pic/{id:int}', 'Web\\GalleryController::pictureAction');
@@ -225,6 +230,11 @@ class Bootstrap implements BootstrapProvider
 
         // Navigation frame (W6). The frameset's bottom bar.
         $router->add('GET', '/navigation', 'Web\\NavigationController::indexAction');
+
+        // The administration area is W8. Until it exists, `/admin` must be
+        // ours - otherwise it falls through to the legacy frameset in
+        // `htdocs/admin/`, whose content frame redirects back here.
+        $router->add('GET', '/admin', 'Web\\AdminController::indexAction');
 
         // Community (W6).
         $router->add('GET', '/guestbook', 'Web\\GuestbookController::indexAction');

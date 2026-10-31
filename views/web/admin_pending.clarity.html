@@ -1,0 +1,26 @@
+{# Stand-in for the administration area until W8.
+
+   `/admin` previously fell through to the legacy `htdocs/admin/index.html`
+   frameset, whose content frame is `/cgi-bin/admin.cgi` - which the URL
+   mapper redirects straight back to `/admin`. The page therefore nested
+   itself recursively and exposed the old admin chrome without any
+   authentication in front of it. #}
+{% extends "layouts/page" %}
+
+{% block title %}HBR1 Administration{% endblock %}
+{% block heading %}ADMINISTRATION{% endblock %}
+{% block pageid %}PageID = 'admin';{% endblock %}
+
+{% block content %}
+<p><b>The administration area is not ported yet.</b></p>
+
+<p>
+  <font color="#999999">
+  The Perl admin modules are still on the old server and are being replaced
+  module by module. Until then this page deliberately does nothing rather than
+  exposing the legacy frameset, which redirected to itself.
+  </font>
+</p>
+
+<p><font color="#999999"><a href="/">&laquo; back to the site</a></font></p>
+{% endblock %}

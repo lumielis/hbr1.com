@@ -31,7 +31,7 @@ class LegacyUrlMapperTest extends TestCase
             'apax navigation'         => ['/perl/apax.cgi', ['run' => 'navigation'], '/navigation'],
             'apax guestbook'          => ['/perl/apax.cgi', ['run' => 'gbms'], '/guestbook'],
             'apax Part (capitalised)' => ['/perl/apax.cgi', ['Part' => 'Playlist'], '/playlist'],
-            'admin_v2'                => ['/perl/admin_v2.cgi', ['run' => 'tracklist.creator'], '/'],
+            'admin_v2'                => ['/perl/admin_v2.cgi', ['run' => 'tracklist.creator'], '/admin'],
             'asx'                     => ['/cgi-bin/asx.cgi', ['trance' => ''], '/stream/trance.asx'],
             'm3u'                     => ['/cgi-bin/m3u.cgi', ['tronic' => ''], '/stream/tronic.m3u'],
             'mixes (run alias)'       => ['/run/mixes.cgi', [], '/mixes'],

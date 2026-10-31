@@ -44,11 +44,16 @@ final class LegacyUrlMapper
         'party'      => '/party',
         'mixes'      => '/mixes',
         'expired'    => '/',
-        'ticker'     => '/admin/ticker',
-        'news'       => '/admin/news',
+        // The admin modules themselves are W8. Their legacy entry points must
+        // not become dangling redirects, so they all land on the placeholder
+        // page rather than on a 404.
+        'ticker'     => '/admin',
+        'news'       => '/admin',
         'setup'      => '/admin',
-        'userman'    => '/admin/members',
-        'crypt'      => '/admin/crypt',
+        'userman'    => '/admin',
+        'crypt'      => '/admin',
+        'tracklist.creator' => '/admin',
+        'broadcast'  => '/admin',
     ];
 
     /** Station-scoped routes that accept an optional `?station=` suffix. */

@@ -62,6 +62,10 @@ $checks = [
     ['/mixes/ambient', 200],
     ['/mixes/nope', 404],
     ['/chat', 200],
+    // The iPhone chooser, and the admin placeholder that replaced the legacy
+    // self-redirecting frameset.
+    ['/iphone', 200],
+    ['/admin', 200],
     // W7 webtv ticker. The left frame loads the frameset, which then walks the
     // meta-refresh ring of content pages.
     ['/webtv/ticker', 200],
