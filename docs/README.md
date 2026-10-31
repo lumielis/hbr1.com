@@ -11,12 +11,40 @@ lives in the session artifact `plan.md`. The operational checklist is
 
 | Workstream | State |
 |---|---|
-| Phase 0 — security cleanup | runbook ready, **needs execution on the server** |
-| W1 — foundation | **done** (bootstrap, routing, views, redirects, tests, deploy configs) |
-| W2 — data layer | not started |
-| W3 — streams & station core | routing + playlist endpoints done; live data pending |
-| W4–W8 | not started |
+| Phase 0 — security cleanup | runbook ready (`deploy/PHASE-0-RUNBOOK.md`), **needs execution on the server** |
+| W1 — foundation | **done** — bootstrap, routing, views, legacy redirects, tests, deploy configs |
+| W2 — data layer | **done** — 46-table schema baseline, 46 models, `ModelMapping` for the music schemas |
+| W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files; `vimg`/`earthcam`/`jsm*` open |
+| W4 — tracklist | **mostly done** — pagination, request rules + tests; the POST endpoint is open |
+| W5–W8 | not started |
 | W9 — cutover | not started |
+
+What works against the live server right now:
+
+```
+/                       frameset front page
+/listen/{station}       current track + queue (live RadioDJ data)
+/playlist/{station}     current track + queue, legacy layout
+/tracklist/{station}    paginated catalogue (?offset=)
+/topframe               clock/header frame
+/stream/{station}.m3u   playlist files (these 500 in production)
+/stream/{station}.asx
+```
+
+Every legacy URL form still resolves — `/cgi-bin/main.php?module=…`,
+`/perl/apax.cgi?run=…`, `/run/main.xp?action=…`, `/cgi-bin/asx.cgi?trance` — as
+a 301 onto the canonical route.
+
+## Two findings that shaped the work
+
+**No SAM Broadcaster databases exist any more.** The server only has
+`radiodj_trance|tronic|ambient`. All three stations are on RadioDJ, so the SAM
+code paths are dormant fallbacks, not live code.
+
+**The two database connections are one server.** `$Db` and `$Db_Music` both
+point at `mariadb.lan.etwnet.com`; the split is a *grant* split (`hbr1` is
+SELECT-only on `radiodj_%`, `hbr1-web` can INSERT for song requests). It can be
+collapsed after a single `GRANT INSERT` — see `deploy/DB-CONNECTIONS.md`.
 
 ## Layout
 
