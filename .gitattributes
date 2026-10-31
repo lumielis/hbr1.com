@@ -1,0 +1,4 @@
+# Keep one line-ending convention regardless of where git runs.
+# Windows git has core.autocrlf=true while the WSL copy does not, which made
+# every tracked file look modified from WSL. Force LF in the working tree.
+* text=auto eol=lf

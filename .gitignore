@@ -10,6 +10,8 @@ composer.phar
 # Runtime state
 /var/
 *.log
+.phpunit.result.cache
+.phpunit.cache/
 
 # Local secrets (never commit) - see env.php
 /env.local.php
