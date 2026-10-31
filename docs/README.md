@@ -15,8 +15,9 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W1 — foundation | **done** — bootstrap, routing, views, legacy redirects, tests, deploy configs |
 | W2 — data layer | **done** — 46-table schema baseline, 46 models, `ModelMapping` for the music schemas |
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files; `vimg`/`earthcam`/`jsm*` open |
-| W4 — tracklist | **mostly done** — pagination, request rules + tests; the POST endpoint is open |
-| W5–W8 | not started |
+| W4 — tracklist | **done** — pagination, request endpoint, request rules + tests |
+| W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
+| W6–W8 | not started |
 | W9 — cutover | not started |
 
 What works against the live server right now:
@@ -26,7 +27,12 @@ What works against the live server right now:
 /listen/{station}       current track + queue (live RadioDJ data)
 /playlist/{station}     current track + queue, legacy layout
 /tracklist/{station}    paginated catalogue (?offset=)
+/request/{station}/{id} song request form (CSRF, per-IP limits)
 /topframe               clock/header frame
+/gallery                public categories
+/gallery/{category}     galleries in a category
+/gallery/{cat}/{gal}    pictures in a gallery
+/gallery/pic/{id}       single picture, prev/next
 /stream/{station}.m3u   playlist files (these 500 in production)
 /stream/{station}.asx
 ```
