@@ -1,8 +1,15 @@
 {% extends "layouts/page" %}
 
+{% set submenu = true %}
+
 {% block title %}HBR1 Request{% endblock %}
 {% block heading %}REQUEST{% endblock %}
 {% block pageid %}PageID = 'inventory';{% endblock %}
+
+{% block submenu_href %}/mixes{% endblock %}
+{% block submenu_label %}CHANGE_STATION{% endblock %}
+{% block submenu_bottom_href %}/mixes{% endblock %}
+{% block submenu_bottom_label %}CHANGE_STATION{% endblock %}
 
 {% block content %}
 <p><b>{{ station:title }}</b></p>

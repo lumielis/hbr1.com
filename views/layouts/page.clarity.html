@@ -28,7 +28,13 @@
   { display: block }` in `client.css` reproduces the quirks behaviour
   explicitly, so the geometry matches production without depending on quirks
   mode. Keep that rule and this doctype together.
+
+  A few legacy pages - the catalogue and the request form, both of which used
+  `tracklist.*.phtml` - carry a SUBMENU band directly above and below the
+  content well and start the well without the leading <br>. They opt in by
+  setting `submenu` in their preamble; every other page leaves the default.
 #}
+{% set submenu = false %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -164,16 +170,50 @@ function openMuses( url )
     </td>
     <td align="right" width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif" alt=""></td>
   </tr>
+  {% if submenu %}
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
+    <td align="center" background="/images/body_bg.jpg" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0" background="/images/submenu_bg.gif">
+        <tr>
+          <td align="left"><img src="/images/submenu_left.gif" alt=""></td>
+          <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+          <td><b><a href="{% block submenu_href %}/mixes{% endblock %}"><font color="#AACC33">{% block submenu_label %}CHANGE_STATION{% endblock %}</font></a></b></td>
+          <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+          <td align="left"><img src="/images/submenu_right.gif" alt=""></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
+  </tr>
+  {% endif %}
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="55" alt=""></td>
     <td align="center" background="/images/body_bg.jpg" valign="top">
 
-    <br>
+    {% if not submenu %}<br>{% endif %}
 {% block content %}{% endblock %}
 {% block aside %}{% endblock %}
     </td>
     <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="55" alt=""></td>
   </tr>
+  {% if submenu %}
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
+    <td align="center" background="/images/body_bg.jpg" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0" background="/images/submenu_bot_bg.gif">
+        <tr>
+          <td align="left"><img src="/images/submenu_bot_left.gif" alt=""></td>
+          <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+          <td><b><a href="{% block submenu_bottom_href %}/mixes{% endblock %}"><font color="#AACC33">{% block submenu_bottom_label %}CHANGE_STATION{% endblock %}</font></a></b></td>
+          <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+          <td align="left"><img src="/images/submenu_bot_right.gif" alt=""></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
+  </tr>
+  {% endif %}
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif" alt=""></td>
     <td align="middle" background="/images/title_bg.gif" height="1%">

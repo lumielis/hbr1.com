@@ -1,18 +1,24 @@
-{# The station catalogue. Serves both `/mixes` and the retired `/tracklist`.
+{# One station's catalogue, paged twenty at a time.
 
-   With no station selected this is the legacy "HBR1 Inventory" chooser
-   (`template/tracklist.phtml`): the three station names as gradient links, in
-   a `cellpadding="4"` table inside a `margin: 15px` block.
+   This is `template/tracklist.mix.phtml`, the "Inventory" page. The legacy page
+   put its content between two SUBMENU bands (`CHANGE_STATION` above and below
+   the well) and led with a `th_bg.gif` cap reading "- TRANCE MIXES -". That
+   chrome is what makes the page look like the rest of the site; without it the
+   table is a bare list on the body background.
 
-   With a station it pages through that station's catalogue, twenty rows at a
-   time. The legacy title for both states was "HBR1 Inventory", which is why
-   the band still says INVENTORY even though the URL is `/mixes`.
+   The legacy `Play it` link carried a `backlink` round-trip so the request page
+   could send the listener back to the exact page they left. `/request/...`
+   knows the station and the mix, so the backlink is derived rather than passed
+   - it cannot go stale or be pointed at another host.
 
-   Two deliberate additions over the legacy chooser: the station genre under
-   each name, and the `<noscript>` fallbacks. The genre makes the chooser
-   taller than production did; it is worth it, because "Dream Factory" alone
-   says nothing about what the station plays. #}
+   The pager reproduces `page_navigation()`: a seven-page window that holds the
+   current page near its left edge until it would overrun the last page, then
+   slides back, with `1 ..` / `.. N` shortcuts when the window does not touch
+   either end. The classes come from `style/default.css`, which the legacy page
+   did *not* link - but the browser still resolved them, so the sizes hold. #}
 {% extends "layouts/page" %}
+
+{% set submenu = true %}
 
 {% block title %}HBR1 Inventory{% endblock %}
 {% block heading %}INVENTORY{% endblock %}
@@ -25,70 +31,120 @@
 
 {% block styles %}
 <style>
-.genre { font-size: 10px; font-family: Arial, Helvetica, sans-serif; }
 .station { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-.pager a { margin: 0 3px; }
-#current { font-weight: bold; color: #FFFF88; }
 </style>
 {% endblock %}
 
 {% block content %}
-{% if current is defined and current %}
-          <p><b>{{ current:title }}</b></p>
+          <div style="margin-top: 15px; margin-bottom: 15px;">
+          <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+              <td align="left" background="/images/table/th_bg.gif"><img src="/images/table/th_left.gif" width="23" height="18" alt=""></td>
+              <td align="center" background="/images/table/th_bg.gif">
+                <script language="JavaScript">
+                document.write( TextLight( {{ bandLabel|json|raw }}, '3333cc', '6699ff' ) );
+                </script>
+                <noscript>
+                <font color="#3333cc">{{ bandLabel }}</font>
+                </noscript>
+              </td>
+              <td align="right" background="/images/table/th_bg.gif"><img src="/images/table/th_right.gif" width="23" height="18" alt=""></td>
+            </tr>
+          </table>
 
           {% if page is defined and page and page:rows %}
-          <table cellspacing="0" cellpadding="2" width="100%">
+          <table border="0" cellspacing="0" cellpadding="1" width="100%">
+            <tr>
+              <td bgcolor="#100040"><font color="#495568"><b>Title</b></font></td>
+              <td bgcolor="#100040"><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td bgcolor="#100040" background="/images/table/tr_bg.gif" valign="top"><img src="/images/table/tr_top.gif" width="3" height="8" alt=""></td>
+              <td bgcolor="#100040"><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td bgcolor="#100040"><font color="#495568"><b>Duration</b></font></td>
+              <td bgcolor="#100040"><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td bgcolor="#100040" background="/images/table/tr_bg.gif" valign="top"><img src="/images/table/tr_top.gif" width="3" height="8" alt=""></td>
+              <td bgcolor="#100040"><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td bgcolor="#100040"><font color="#495568"><b>Action</b></font></td>
+            </tr>
             {% for row in page:rows %}
             <tr>
-              <td class="station" align="right" width="1%"><font color="#666666">{{ row:id }}</font></td>
-              <td class="station">{{ row:artist }}</td>
-              <td class="station" width="1%">&ndash;</td>
-              <td class="station">{{ row:title }}</td>
-              <td class="station" align="right" width="1%"><font color="#666666">{{ row:durationLabel }}</font></td>
-              <td class="station" align="right" width="1%">
-                {% if row:title %}
-                <a href="/request/{{ current:slug }}/{{ row:id }}" title="request this mix">+</a>
+              <td valign="top">{% if row:artist %}{{ row:artist }} - {% endif %}{{ row:title }}</td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td background="/images/table/tr_bg.gif"><img src="/images/table/tr_bg.gif" width="3" height="1" alt=""></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td valign="top"><font color="#aaaadd">{{ row:durationLabel }}</font></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td background="/images/table/tr_bg.gif"><img src="/images/table/tr_bg.gif" width="3" height="1" alt=""></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td valign="top">
+                {% if canRequest %}
+                <a href="/request/{{ current:slug }}/{{ row:id }}">Play it</a>
+                {% else %}
+                <font color="gray">Request</font>
                 {% endif %}
               </td>
             </tr>
-            {% endfor %}
-          </table>
-
-          <p class="pager" style="margin-top: 14px;">
-            {% if pager:hasPrev %}
-              <a href="/mixes/{{ current:slug }}?offset={{ pager:prevOff }}">&laquo; prev</a>
-            {% endif %}
-            <font color="#999999">
-              page {{ pager:current }} of {{ pager:last }}
-              ({{ pager:total }} mixes)
-            </font>
-            {% if pager:hasNext %}
-              <a href="/mixes/{{ current:slug }}?offset={{ pager:nextOff }}">next &raquo;</a>
-            {% endif %}
-          </p>
-          {% else %}
-          <p><font color="#999999">[no mixes]</font></p>
-          {% endif %}
-
-          <p style="margin-top: 14px;"><a href="/mixes">[change station]</a></p>
-
-        {% else %}
-          <p><font color="#999999">Choose a station</font></p>
-          <table cellspacing="0" cellpadding="4">
-            {% for station in stationList %}
             <tr>
-              <td align="center"><a href="/mixes/{{ station:slug }}"><b>
-                <script language="JavaScript">
-                document.write( TextLight( {{ station:title }}, '3366cc', '66ccff' ) );
-                </script>
-                <noscript>
-                <font color="#3333cc">{{ station:title }}</font>
-                </noscript>
-                </b></a>
-                <div class="genre">{{ station:genre }}</div>
-              </td>
+              <td valign="top"><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td background="/images/table/tr_bg.gif"><img src="/images/table/tr_bg.gif" width="3" height="1" alt=""></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td valign="top"><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td background="/images/table/tr_bg.gif"><img src="/images/table/tr_bg.gif" width="3" height="1" alt=""></td>
+              <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+              <td valign="top"><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
             </tr>
             {% endfor %}
           </table>
-        {% endif %}
+
+          {% else %}
+          <p><font color="#999999">[no mixes]</font></p>
+          {% endif %}
+          </div>
+
+          {% if pager is defined and pager and pager:last > 1 %}
+          {# The pager sits in its own block below the content block, so the
+             legacy page had two 15px gutters where a single one would do. #}
+          <div style="margin-bottom: 15px;">
+            <table border="0" cellspacing="0" cellpadding="0" align="center">
+              <tr>
+                <td class="Nav_Control">
+                  {% if pager:hasPrev %}
+                  <a href="/mixes/{{ current:slug }}?offset={{ pager:prevOff }}"><b>&lt;&lt;</b></a>
+                  {% else %}
+                  <b><font color="gray">&lt;&lt;</font></b>
+                  {% endif %}
+                  &nbsp;
+                </td>
+                <td class="Nav_Page">&nbsp;</td>
+
+                {% if pager:leadEllipsis %}
+                <td class="Nav_Page" valign="top"><a href="/mixes/{{ current:slug }}?offset={{ pager:firstOff }}"><b>1</b></a> ..&nbsp;</td>
+                {% endif %}
+
+                {% for entry in pager:pages %}
+                {% if entry:current %}
+                <td class="Nav_Current" valign="top">{{ entry:number }}</td>
+                {% else %}
+                <td class="Nav_Page" valign="top"><a href="/mixes/{{ current:slug }}?offset={{ entry:offset }}">{{ entry:number }}</a></td>
+                {% endif %}
+                <td class="Nav_Page">&nbsp;</td>
+                {% endfor %}
+
+                {% if pager:trailEllipsis %}
+                <td class="Nav_Page" valign="top"> .. <a href="/mixes/{{ current:slug }}?offset={{ pager:lastOff }}"><b>{{ pager:last }}</b></a></td>
+                <td class="Nav_Page">&nbsp;</td>
+                {% endif %}
+
+                <td class="Nav_Control">&nbsp;
+                  {% if pager:hasNext %}
+                  <a href="/mixes/{{ current:slug }}?offset={{ pager:nextOff }}"><b>&gt;&gt;</b></a>
+                  {% else %}
+                  <b><font color="gray">&gt;&gt;</font></b>
+                  {% endif %}
+                </td>
+              </tr>
+            </table>
+          </div>
+          {% endif %}
 {% endblock %}

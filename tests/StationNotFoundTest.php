@@ -98,6 +98,33 @@ class StationNotFoundTest extends TestCase
         self::assertStringContainsString('<', (new MixesController())->indexAction());
     }
 
+    /**
+     * The two catalogue states are different pages in the legacy tree and must
+     * stay different: the chooser (`tracklist.phtml`) has no SUBMENU band, no
+     * `th_*.gif` title cap and no `<br>` above its list; the station catalogue
+     * (`tracklist.mix.phtml`) has all three. A previous port rendered the
+     * chooser chrome for both, which is why the page looked wrong next to
+     * production.
+     */
+    public function testTheChooserAndTheCatalogueCarryDifferentChrome(): void
+    {
+        $this->useStations();
+
+        $chooser = (new MixesController())->indexAction();
+
+        self::assertStringNotContainsString('submenu_bg.gif', $chooser);
+        self::assertStringNotContainsString('table/th_left.gif', $chooser);
+        self::assertStringContainsString('Choose a station', $chooser);
+
+        // The station page needs a database, so only its chrome is asserted
+        // through the view itself rather than a rendered response.
+        $view = file_get_contents(BASE_DIR . '/views/web/mixes.clarity.html');
+
+        self::assertStringContainsString('/images/table/th_left.gif', $view);
+        self::assertStringContainsString('/images/table/tr_bg.gif', $view);
+        self::assertStringContainsString('{% set submenu = true %}', $view);
+    }
+
     private function useStations(): void
     {
         \App\Bootstrap::bootstrap();

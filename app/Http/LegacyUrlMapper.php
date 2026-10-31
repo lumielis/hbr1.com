@@ -123,6 +123,13 @@ final class LegacyUrlMapper
                 return '/';
             }
 
+            // `tracklist` also served the request flow: every "Play it" link on
+            // the Inventory page was `module=tracklist&cmd=request&songid=N`,
+            // and inbound bookmarks and old search results still use it.
+            if ($base === '/mixes' && ($query['cmd'] ?? null) === 'request') {
+                return self::toRequest($query);
+            }
+
             return self::withStation($base, $query);
         }
 
@@ -133,6 +140,29 @@ final class LegacyUrlMapper
         }
 
         return '/';
+    }
+
+    /**
+     * `?module=tracklist&cmd=request&songid=N&station=X` -> `/request/x/N`.
+     *
+     * The legacy link also carried a `backlink` round-trip; the ported form
+     * derives that from the station and mix, so it is not needed - and not
+     * trusted, since the legacy code sent the browser to whatever it held.
+     */
+    private static function toRequest(array $query): string
+    {
+        $station = $query['station'] ?? null;
+        $songId  = $query['songid'] ?? null;
+
+        if (!is_string($station) || preg_match('/^[a-z]+$/i', $station) !== 1) {
+            return '/mixes';
+        }
+
+        if (!is_scalar($songId) || preg_match('/^\d{1,10}$/', (string) $songId) !== 1) {
+            return '/mixes/' . strtolower($station);
+        }
+
+        return '/request/' . strtolower($station) . '/' . (int) $songId;
     }
 
     private static function fromRun(array $query): string

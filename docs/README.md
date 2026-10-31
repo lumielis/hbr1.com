@@ -180,6 +180,46 @@ with `playlist`. The first port had the mixes pages at `'playlist'` and lit the
 wrong button; the catalogue now declares both `['inventory', 'tracklist']`, so
 both buttons light.
 
+**The two catalogue states are two different legacy templates.** The chooser
+is `template/tracklist.phtml` and the station page is
+`template/tracklist.mix.phtml`, and they do not share a frame: the chooser has
+no SUBMENU band, no `th_*.gif` title cap, and it starts its content well with
+`<!-- CONTENT -->` where the station page starts it with a `<table>` of
+`th_left/bg/right.gif`. The port rendered one view for both, so every visit to
+`/mixes/{station}` was missing the `CHANGE_STATION` bands, the
+`- TRANCE MIXES -` cap, the `#100040` column header, the `tr_bg.gif` column
+gutters and the `Nav_Control`/`Nav_Page`/`Nav_Current` pager - the whole visual
+difference from a bare table. They are now `views/web/mixes_chooser` and
+`views/web/mixes`, and the shared layout grows an opt-in `{% set submenu = true %}`
+for the SUBMENU bands (the request form needs them too; nothing else does).
+
+**`page_navigation()` is asymmetric, and the port had squared it off.** The
+legacy window holds the current page at its *left* edge with seven pages after
+it, and only slides back once it would overrun the last page. So page 1 of 18
+shows 1..15 and page 9 shows 2..16. The port had `±5` around the current page,
+which put page 1 in the middle of a 1..11 window. The seven-page window is
+restored, with the `1 ..` / `.. 18` shortcuts the legacy template emitted.
+
+**Without `?offset=`, production picks a random page.** `tracklist.php` did
+`rand(0, COUNT(*) - 20)` when no offset was supplied, so the same URL shows a
+different slice on every visit - three fetches landed on pages 14, 8 and 4.
+That is reproduced, because it is what the page does, but only for a station
+that resolved and only when the parameter is absent: `?offset=` is honoured as
+given and a malformed value is clamped.
+
+**A blank RadioDJ row still offered "Play it".** The legacy template gated the
+action on `$hasreq = $station['SAMHOST'] && $station['SAMPORT']` - a property of
+the *station*, not of the row - so the three `song_type = 0` rows with no artist
+and no title still rendered a working request link. Production does exactly
+this. The port had started hiding the link on empty rows, which is tidier and
+wrong; it is now gated on the station again.
+
+**The pager's `Nav_*` classes are unstyled in production.** They are defined in
+`style/default.css`, which the legacy page does not link, and the browser
+resolves unknown classes to nothing. Adding the rules would have made the pager
+13 px and bold where production renders it 11 px and plain, so the port leaves
+them undefined too.
+
 **Static assets need a cache buster, and the legacy pages pinned one.**
 `/style/client.css` is served as a plain file, so a browser that has it will not
 re-fetch after an edit - which is exactly what happened while fixing the

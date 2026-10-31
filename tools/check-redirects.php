@@ -19,6 +19,9 @@ $ctx = App\AppContext::instance();
 $cases = [
     '/cgi-bin/main.php?module=tracklist',
     '/cgi-bin/main.php?module=tracklist&station=Trance',
+    // Every Inventory row's "Play it" link, and the shape of any bookmark to
+    // the old request page.
+    '/cgi-bin/main.php?module=tracklist&cmd=request&station=Trance&songid=2',
     '/cgi-bin/main.php?module=listen&station=Ambient',
     '/cgi-bin/main.php?module=topframe',
     '/cgi-bin/main.php?module=gallery',
@@ -64,5 +67,44 @@ foreach ($cases as $case) {
         $case,
         $response === null ? '(passthrough)' : (string) $response->getHeader('Location'),
         $response === null ? '' : $response->getStatus()
+    );
+}
+
+/*
+ * Chrome parity between the two catalogue states.
+ *
+ * They are separate legacy templates with different frames - the chooser has
+ * none, the station page has a SUBMENU band and a `th_*.gif` title cap - and
+ * rendering the wrong one is invisible to a status-code check. This asserts the
+ * markers instead.
+ */
+$chrome = [
+    // path, must contain, must not contain
+    ['/mixes', ['Choose a station'], ['submenu_bg.gif', 'table/th_left.gif']],
+];
+
+echo "\n";
+
+foreach ($chrome as [$path, $must, $mustNot]) {
+    try {
+        $rendered = (string) file_get_contents(
+            'http://' . ($_SERVER['HTTP_HOST'] ?? 'hbr1.evo') . $path,
+            false,
+            stream_context_create(['http' => ['timeout' => 5]])
+        );
+    } catch (\Throwable $e) {
+        printf("%-52s skipped (server unreachable)\n", $path);
+        continue;
+    }
+
+    $missing = array_filter($must, static fn($needle) => !str_contains($rendered, $needle));
+    $extra   = array_filter($mustNot, static fn($needle) => str_contains($rendered, $needle));
+
+    printf(
+        "%-52s %s\n",
+        $path,
+        ($missing === [] && $extra === []) ? 'chrome ok' : 'chrome FAIL'
+            . ($missing ? ' missing=' . implode(',', $missing) : '')
+            . ($extra ? ' unexpected=' . implode(',', $extra) : '')
     );
 }

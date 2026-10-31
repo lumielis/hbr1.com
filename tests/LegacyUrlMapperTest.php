@@ -36,6 +36,10 @@ class LegacyUrlMapperTest extends TestCase
             'm3u'                     => ['/cgi-bin/m3u.cgi', ['tronic' => ''], '/stream/tronic.m3u'],
             'mixes (run alias)'       => ['/run/mixes.cgi', [], '/mixes'],
             'mixes (cgi-bin)'         => ['/cgi-bin/mixes.cgi', [], '/mixes'],
+            // Every Inventory row's "Play it" link was this shape.
+            'tracklist request'       => ['/cgi-bin/main.php', ['module' => 'tracklist', 'cmd' => 'request', 'station' => 'Trance', 'songid' => '2'], '/request/trance/2'],
+            'tracklist request, no id' => ['/cgi-bin/main.php', ['module' => 'tracklist', 'cmd' => 'request', 'station' => 'Tronic'], '/mixes/tronic'],
+            'tracklist request, no station' => ['/cgi-bin/main.php', ['module' => 'tracklist', 'cmd' => 'request', 'songid' => '2'], '/mixes'],
             'admin.cgi'               => ['/cgi-bin/admin.cgi', [], '/admin'],
             'listen.cgi'              => ['/cgi-bin/listen.cgi', [], '/listen'],
             'party.cgi'               => ['/cgi-bin/party.cgi', [], '/party'],
