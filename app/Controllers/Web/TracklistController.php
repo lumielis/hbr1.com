@@ -5,6 +5,7 @@ namespace App\Controllers\Web;
 use App\Controllers\BaseController;
 use App\Services\SongService;
 use App\Services\StationService;
+use Azera\Http\Response;
 
 /**
  * Tracklist page (replaces `main.php?module=tracklist`).
@@ -19,7 +20,7 @@ class TracklistController extends BaseController
         return $this->renderFor(null, $this->requestedOffset());
     }
 
-    public function stationAction(string $station): string
+    public function stationAction(string $station): string|Response
     {
         return $this->renderFor($station, $this->requestedOffset());
     }
@@ -36,7 +37,7 @@ class TracklistController extends BaseController
         return is_numeric($offset) ? max(0, (int) $offset) : 0;
     }
 
-    private function renderFor(?string $identifier, int $offset): string
+    private function renderFor(?string $identifier, int $offset): string|Response
     {
         /** @var StationService $stations */
         $stations = $this->service(StationService::class);
@@ -44,8 +45,13 @@ class TracklistController extends BaseController
         $songs = $this->service(SongService::class);
 
         $current = $identifier === null ? null : $stations->find($identifier);
-        $page    = null;
-        $pager   = null;
+
+        if ($identifier !== null && $current === null) {
+            return Response::status(404);
+        }
+
+        $page  = null;
+        $pager = null;
 
         if ($current !== null) {
             try {

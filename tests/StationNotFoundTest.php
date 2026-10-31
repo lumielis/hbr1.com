@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Tests;
+
+use App\Controllers\Web\ListenController;
+use App\Controllers\Web\PlaylistController;
+use App\Controllers\Web\TracklistController;
+use App\Services\StationService;
+use App\Services\TrackService;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * An unknown station must be a 404, not a rendered page.
+ *
+ * The first pass of these controllers treated a missing station as "no station
+ * selected" and rendered the chooser with HTTP 200. That was wrong twice over:
+ * it makes every typo and every stale inbound link a live, indexable URL, and
+ * it hid the mistake from the smoke test, which only looked at route matching.
+ */
+class StationNotFoundTest extends TestCase
+{
+    public function testListenReturnsNotFoundForUnknownStation(): void
+    {
+        $this->useStations();
+
+        self::assertSame(404, (new ListenController())->stationAction('nope')->getStatus());
+    }
+
+    public function testPlaylistReturnsNotFoundForUnknownStation(): void
+    {
+        $this->useStations();
+
+        self::assertSame(404, (new PlaylistController())->stationAction('nope')->getStatus());
+    }
+
+    public function testTracklistReturnsNotFoundForUnknownStation(): void
+    {
+        $this->useStations();
+
+        self::assertSame(404, (new TracklistController())->stationAction('nope')->getStatus());
+    }
+
+    /**
+     * The chooser pages themselves must stay 200 - only the station-scoped
+     * routes can 404 on an unknown name.
+     */
+    public function testStationChoosersStillRender(): void
+    {
+        $this->useStations();
+
+        self::assertStringContainsString('<', (new ListenController())->indexAction());
+        self::assertStringContainsString('<', (new PlaylistController())->indexAction());
+        self::assertStringContainsString('<', (new TracklistController())->indexAction());
+    }
+
+    private function useStations(): void
+    {
+        \App\Bootstrap::bootstrap();
+
+        $stations = new StationService([
+            [
+                'id'         => 'Trance',
+                'slug'       => 'trance',
+                'title'      => 'Trance',
+                'genre'      => 'Trance',
+                'stream'     => [],
+                'muses_url'  => '',
+                'iphone_url' => '',
+                'radiodj_db' => 'radiodj_trance',
+                'playlists'  => [],
+            ],
+        ]);
+
+        $ctx = \App\AppContext::instance();
+        $ctx->set(StationService::class, static fn() => $stations);
+        // Never reached: an unknown station is rejected before any query, so
+        // this keeps the test offline.
+        $ctx->set(TrackService::class, static fn() => new TrackService($stations));
+    }
+}

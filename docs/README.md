@@ -17,8 +17,15 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files; `vimg`/`earthcam`/`jsm*` open |
 | W4 — tracklist | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
-| W6–W8 | not started |
-| W9 — cutover | not started |
+| W6 — community | not started — see `deploy/CHAT-STATE.md` first |
+| W7 — webtv / ticker / broadcast | not started |
+| W8 — admin | not started |
+| W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |
+
+Deployment design (git-based, no composer on the host) is in
+[`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md). What the legacy chat actually
+stores — and why `data/chat/` does not exist — is in
+[`deploy/CHAT-STATE.md`](deploy/CHAT-STATE.md).
 
 What works against the live server right now:
 
@@ -40,6 +47,22 @@ What works against the live server right now:
 Every legacy URL form still resolves — `/cgi-bin/main.php?module=…`,
 `/perl/apax.cgi?run=…`, `/run/main.xp?action=…`, `/cgi-bin/asx.cgi?trance` — as
 a 301 onto the canonical route.
+
+An unknown station (`/listen/nope`, `/playlist/nope`, `/tracklist/nope`) and an
+unknown gallery id are **404**, not an empty 200.
+
+## Verifying
+
+Two levels, both worth running after any change:
+
+```
+php tools/smoke.php     # in-process: dispatcher + view, asserts status codes
+bash tools/probe-vhost.sh   # over HTTP through nginx: catches config-level bugs
+```
+
+`probe-vhost.sh` is the one that catches web-server mistakes. It already paid
+for itself: a nginx `alias` for `/playlist/` shadowed `/playlist/{station}` and
+returned 404, which the in-process test could never see.
 
 ## Two findings that shaped the work
 

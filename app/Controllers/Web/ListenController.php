@@ -5,6 +5,7 @@ namespace App\Controllers\Web;
 use App\Controllers\BaseController;
 use App\Services\StationService;
 use App\Services\TrackService;
+use Azera\Http\Response;
 
 /**
  * Station listening page (replaces `main.php?module=listen`).
@@ -16,12 +17,12 @@ class ListenController extends BaseController
         return $this->renderFor(null);
     }
 
-    public function stationAction(string $station): string
+    public function stationAction(string $station): string|Response
     {
         return $this->renderFor($station);
     }
 
-    private function renderFor(?string $identifier): string
+    private function renderFor(?string $identifier): string|Response
     {
         /** @var StationService $stations */
         $stations = $this->service(StationService::class);
@@ -29,8 +30,15 @@ class ListenController extends BaseController
         $tracks = $this->service(TrackService::class);
 
         $current = $identifier === null ? null : $stations->find($identifier);
-        $now     = null;
-        $queue   = [];
+
+        // An unknown station is a 404, not the station chooser: the legacy
+        // script rendered an empty page, which search engines indexed.
+        if ($identifier !== null && $current === null) {
+            return Response::status(404);
+        }
+
+        $now   = null;
+        $queue = [];
 
         if ($current !== null) {
             try {
