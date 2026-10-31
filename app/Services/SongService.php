@@ -11,8 +11,8 @@ use Azera\Db\Resolver\ModelResolver;
  * The song catalogue for a station.
  *
  * Replaces the tracklist half of `main.php?module=tracklist`, which used
- * `SELECT SQL_CALC_FOUND_ROWS` plus a hand-written page_navigation(). The
- * query builder does the counting; the sort key is the same
+ * `SELECT SQL_CALC_FOUND_ROWS` plus a hand-written page_navigation(). The query
+ * builder does the counting; the sort key is the same
  * `UCASE(CONCAT(artist, title))` the legacy code ordered by.
  */
 class SongService
@@ -34,25 +34,9 @@ class SongService
         $offset = max(0, $offset);
         $limit  = max(1, $limit);
 
-        $query = $this->songs($station);
+        $total = $this->playable($station)->count();
 
-        if ($station['radiodj_db'] ?? null) {
-            $query->where('song_type', 0);
-        } else {
-            $query->where('songtype', 'S');
-        }
-
-        $total = (int) $query->count();
-
-        $rows = $this->songs($station);
-
-        if ($station['radiodj_db'] ?? null) {
-            $rows->where('song_type', 0);
-        } else {
-            $rows->where('songtype', 'S');
-        }
-
-        $rows = $rows
+        $rows = $this->playable($station)
             ->columns(['ID', 'artist', 'title', 'duration'])
             ->orderBy('UCASE(CONCAT(artist, title))')
             ->limit($limit, $offset)
@@ -61,16 +45,15 @@ class SongService
         $out = [];
 
         foreach ($rows as $row) {
-            $row = (array) $row;
-
-            $duration = $this->durationSeconds($station, (int) ($row['duration'] ?? 0));
+            $row     = (array) $row;
+            $seconds = $this->durationSeconds((int) ($row['duration'] ?? 0));
 
             $out[] = [
                 'id'            => (int) ($row['ID'] ?? 0),
                 'artist'        => (string) ($row['artist'] ?? ''),
                 'title'         => (string) ($row['title'] ?? ''),
-                'duration'      => $duration,
-                'durationLabel' => $this->durationLabel($duration),
+                'duration'      => $seconds,
+                'durationLabel' => $this->durationLabel($seconds),
             ];
         }
 
@@ -85,47 +68,48 @@ class SongService
     /** A random offset, as the legacy page did when none was supplied. */
     public function randomOffset(array $station): int
     {
-        $total = (int) $this->songs($station)->count();
+        $total = $this->playable($station)->count();
 
         return $total <= self::PAGE_SIZE ? 0 : random_int(0, $total - self::PAGE_SIZE);
     }
 
-    /**
-     * One track by id, constrained to whatever the station can play.
-     */
+    /** One track by id, constrained to what the station can play. */
     public function find(array $station, int $id): ?array
     {
-        $query = $this->songs($station);
+        $row = $this->playable($station)
+            ->where('ID', $id)
+            ->columns(['ID', 'artist', 'title', 'duration'])
+            ->select()
+            ->fetchAssoc();
 
-        if ($station['radiodj_db'] ?? null) {
-            $query->where('song_type', 0)->where('ID', $id);
-        } else {
-            $query->where('songtype', 'S')->where('ID', $id);
-        }
-
-        $row = $query->columns(['ID', 'artist', 'title', 'duration'])->select()->fetchAssoc();
-
-        if (!$row) {
+        if ($row === false) {
             return null;
         }
 
-        $row = (array) $row;
-
-        $duration = $this->durationSeconds($station, (int) ($row['duration'] ?? 0));
+        $row     = (array) $row;
+        $seconds = $this->durationSeconds((int) ($row['duration'] ?? 0));
 
         return [
             'id'            => (int) ($row['ID'] ?? 0),
             'artist'        => (string) ($row['artist'] ?? ''),
             'title'         => (string) ($row['title'] ?? ''),
-            'duration'      => $duration,
-            'durationLabel' => $this->durationLabel($duration),
+            'duration'      => $seconds,
+            'durationLabel' => $this->durationLabel($seconds),
         ];
     }
 
     /**
+     * RadioDJ stores whole seconds in `duration` but as a float column, so the
+     * value arrives as e.g. 4275.14871 and must be truncated, not rounded.
+     */
+    private function durationSeconds(int $duration): int
+    {
+        return $duration < 0 ? -1 : $duration;
+    }
+
+    /**
      * mm:ss, or an empty string when the playout system reports no length.
-     * The legacy tracklist template did this arithmetic inline; keeping it in
-     * PHP avoids relying on template-side integer division.
+     * Kept in PHP because Clarity has no integer-division operator.
      */
     private function durationLabel(int $seconds): string
     {
@@ -136,28 +120,19 @@ class SongService
         return sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
     }
 
-    /**
-     * RadioDJ stores seconds, SAM stores milliseconds - the legacy code
-     * divided by 1000 for SAM (`durationDiv`).
-     */
-    private function durationSeconds(array $station, int $duration): int
+    /** Rows the station can actually play: song_type 0 excludes jingles/ads. */
+    private function playable(array $station): Query
     {
-        if ($duration < 0) {
-            return -1;
-        }
-
-        return ($station['radiodj_db'] ?? null) ? $duration : intdiv($duration, 1000);
+        return $this->query($station)->where('song_type', 0);
     }
 
-    private function songs(array $station): Query
+    private function query(array $station): Query
     {
-        $prefix = ($station['radiodj_db'] ?? null) ? 'RadioDjSongs' : 'SamSonglist';
-
         return Query::new()
             ->using(new ChainResolver([
                 new ModelResolver(),
                 new MappingResolver(MusicDatabaseMapping::forStation($station['id'])),
             ]))
-            ->from($prefix . '_' . $station['id']);
+            ->from('RadioDjSongs_' . $station['id']);
     }
 }

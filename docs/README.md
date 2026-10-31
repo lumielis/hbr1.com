@@ -45,12 +45,13 @@ a 301 onto the canonical route.
 
 **No SAM Broadcaster databases exist any more.** The server only has
 `radiodj_trance|tronic|ambient`. All three stations are on RadioDJ, so the SAM
-code paths are dormant fallbacks, not live code.
+code paths have been removed from the mapping — not just left dormant.
 
-**The two database connections are one server.** `$Db` and `$Db_Music` both
-point at `mariadb.lan.etwnet.com`; the split is a *grant* split (`hbr1` is
-SELECT-only on `radiodj_%`, `hbr1-web` can INSERT for song requests). It can be
-collapsed after a single `GRANT INSERT` — see `deploy/DB-CONNECTIONS.md`.
+**The two database connections became one.** `$Db` and `$Db_Music` always
+pointed at the same host; the split existed only because `hbr1` could not
+INSERT song requests. `hbr1-web` now holds all of `hbr1`'s privileges, so the
+application uses a single connection and a single credential. See
+`deploy/DB-CONNECTIONS.md`, including the dead grants still to revoke.
 
 ## ⚠️ Do not submission-test the request endpoint
 

@@ -15,10 +15,9 @@ $tracks   = $ctx->get(App\Services\TrackService::class);
 
 foreach ($stations->all() as $station) {
     printf(
-        "\n=== %s (%s) — %s ===\n",
+        "\n=== %s (%s) ===\n",
         $station['title'],
-        $station['id'],
-        $tracks->usesRadioDj($station) ? 'RadioDJ' : 'SAM'
+        $station['radiodj_db'] ?? '?'
     );
 
     try {
@@ -29,7 +28,7 @@ foreach ($stations->all() as $station) {
         printf("  queue: %d entries\n", count($queue));
 
         foreach (array_slice($queue, 0, 3) as $item) {
-            printf("    %s%s - %s\n", $item['requested'] ? '* ' : '', $item['artist'], $item['title']);
+            printf("    %s - %s\n", $item['artist'], $item['title']);
         }
     } catch (Throwable $e) {
         printf("  ERROR: %s\n", $e->getMessage());

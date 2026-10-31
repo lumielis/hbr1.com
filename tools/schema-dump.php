@@ -20,7 +20,7 @@ $pdo = new PDO(DB_DSN, DB_USER, DB_PASSWORD, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
 
-$dbName = $pdo->query('SELECT DATABASE()')->fetchColumn();
+$dbName = defined('DB_DATABASE') ? DB_DATABASE : 'hbr1';
 
 $tables = $pdo->query(
     'SELECT TABLE_NAME FROM information_schema.TABLES

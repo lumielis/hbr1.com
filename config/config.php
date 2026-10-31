@@ -24,7 +24,6 @@ $stations = [
         ],
         'muses_url'  => 'http://radio.hbr1.com:19800/trance',
         'iphone_url' => 'http://radio.hbr1.com:19800/trance.aac.m3u',
-        'sam_db'     => 'samdb_trance',
         'radiodj_db' => 'radiodj_trance',
         'radiodj_request_url' => 'http://192.168.9.134:8080/opt?auth=plain&command=LoadTrackToTop&arg={id}',
         'playlists' => [
@@ -45,7 +44,6 @@ $stations = [
         ],
         'muses_url'  => 'http://radio.hbr1.com:19800/tronic',
         'iphone_url' => 'http://radio.hbr1.com:19800/tronic.aac.m3u',
-        'sam_db'     => 'samdb_tronic',
         'radiodj_db' => 'radiodj_tronic',
         'radiodj_request_url' => 'http://192.168.9.135:8080/opt?auth=plain&command=LoadTrackToTop&arg={id}',
         'playlists' => [
@@ -66,7 +64,6 @@ $stations = [
         ],
         'muses_url'  => 'http://radio.hbr1.com:19800/ambient',
         'iphone_url' => 'http://radio.hbr1.com:19800/ambient.aac.m3u',
-        'sam_db'     => 'samdb_ambient',
         'radiodj_db' => 'radiodj_ambient',
         'radiodj_request_url' => 'http://192.168.9.133:8080/opt?auth=plain&command=LoadTrackToTop&arg={id}',
         'playlists' => [
@@ -96,31 +93,23 @@ return [
     ],
 
     'db' => [
-        // One server, one connection.
+        // One server, one credential, one connection.
         //
-        // The legacy cgi-bin/main.php opened two handles ($Db and $Db_Music).
-        // They always pointed at the same host/port - the split existed purely
-        // because 'hbr1' has SELECT-only grants on the music schemas while
-        // 'hbr1-web' has SELECT/INSERT/UPDATE/DELETE on radiodj_%.
+        // The legacy cgi-bin/main.php opened two handles ($Db and $Db_Music)
+        // purely because the two MySQL users had different grants: 'hbr1' was
+        // SELECT-only on the playout schemas while 'hbr1-web' could INSERT
+        // song requests. 'hbr1-web' now holds ALL on `hbr1`.* as well, so the
+        // split has no remaining purpose.
         //
-        // Verified against the live server:
-        //   hbr1      : ALL on hbr1.*, SELECT on radiodj_%.* and samdb_%.*
-        //   hbr1-web  : SELECT on samdb_%.*, SELECT/INSERT/UPDATE/DELETE on radiodj_%.*
-        //
-        // So the two roles are grants, not destinations. They are kept as two
-        // named roles (least privilege: reads default to the site user, the
-        // song-request write uses the music user) but they share a host. See
-        // deploy/DB-CONNECTIONS.md for the grant change that would collapse
-        // them into one credential.
+        // The connection has no default database: the playout tables are
+        // always schema-qualified (`radiodj_trance.history`) and the site
+        // tables are qualified by their model. Keeping the connection
+        // database-less means a missing qualification fails loudly instead of
+        // silently resolving against `hbr1`.
         'default' => [
             'dsn'  => DB_DSN,
             'user' => DB_USER,
             'pass' => DB_PASSWORD,
-        ],
-        'music' => [
-            'dsn'  => DB_MUSIC_DSN,
-            'user' => DB_MUSIC_USER,
-            'pass' => DB_MUSIC_PASSWORD,
         ],
     ],
 

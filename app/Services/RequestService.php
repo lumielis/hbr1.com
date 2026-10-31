@@ -117,9 +117,6 @@ class RequestService
     /**
      * The station's request history for roughly the last day.
      *
-     * Only RadioDJ exposes this; the SAM schema is dormant (no samdb_* exists
-     * on the server any more).
-     *
      * @return array<int, array<string, mixed>>
      */
     public function historyForToday(array $station, int $now): array
