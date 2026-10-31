@@ -179,7 +179,7 @@ class StationViewServiceTest extends TestCase
         for ($i = 1; $i < 8; $i++) {
             self::assertSame('[play another mix]', $lines[$i]['text']);
             self::assertTrue($lines[$i]['link']);
-            self::assertSame('/tracklist/trance', $lines[$i]['href']);
+            self::assertSame('/mixes/trance', $lines[$i]['href']);
         }
     }
 
@@ -294,15 +294,17 @@ class StationViewServiceTest extends TestCase
     }
 
     /**
-     * `mixes.cgi` renders `client/mix_categories.htm`, `client/mixes.htm` and
-     * `client/mix_details.htm`, none of which exists in the PHP tree - the
-     * module is served entirely through the ssms templates. All three set
-     * `PageID = 'tracklist'`, which is what lights the "Mixes" button:
-     * `ImageDef` pairs 15 with "tracklist" and 11 with "playlist".
+     * The catalogue sits behind two buttons. "Tracklist" (`ImageDef` 15) and
+     * "Inventory" (`ImageDef` 6) used to be different pages - `mixes.cgi` and
+     * `main.php?module=tracklist` - that listed the same mixes. They are one
+     * page now, so it declares both PageIDs and the bar lights both buttons.
      */
-    public function testMixesPagesLightTheMixesButton(): void
+    public function testCatalogueLightsBothTheTracklistAndInventoryButtons(): void
     {
-        self::assertSame('tracklist', $this->service()->pageId('mixes'));
+        $service = $this->service();
+
+        self::assertSame('inventory', $service->pageId('tracklist'));
+        self::assertSame('tracklist', $service->pageId('mixes'));
     }
 
     // ----------------------------------------------------------------- promote

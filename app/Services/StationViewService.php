@@ -43,6 +43,10 @@ class StationViewService
      * button to light (`navigation.htm` + `updatePage()`). The ported pages had
      * dropped it, so the wrong button stayed lit. Values are the ones the
      * legacy templates used.
+     *
+     * `mixes` and `tracklist` are the same page now and light both buttons:
+     * "Tracklist" (`ImageDef` 15) and "Inventory" (`ImageDef` 6). The catalogue
+     * sets `PageIDs` to carry both; this map is the single-button fallback.
      */
     public const PAGE_IDS = [
         'listen'    => 'station',
@@ -216,7 +220,7 @@ class StationViewService
         ?array $lead = null,
     ): array {
         $out    = [];
-        $target = $stationSlug === '' ? '/tracklist' : '/tracklist/' . $stationSlug;
+        $target = $stationSlug === '' ? '/mixes' : '/mixes/' . $stationSlug;
 
         $items = $lead === null
             ? $queue

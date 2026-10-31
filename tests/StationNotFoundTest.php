@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Controllers\Web\ListenController;
+use App\Controllers\Web\MixesController;
 use App\Controllers\Web\PlaylistController;
 use App\Controllers\Web\TracklistController;
 use App\Services\StationService;
@@ -41,6 +42,34 @@ class StationNotFoundTest extends TestCase
     }
 
     /**
+     * `/mixes/{station}` is the catalogue proper; an unknown slug is a 404
+     * there too, now that it replaced the mix-category level.
+     */
+    public function testMixesReturnsNotFoundForUnknownStation(): void
+    {
+        $this->useStations();
+
+        self::assertSame(404, (new MixesController())->stationAction('nope')->getStatus());
+    }
+
+    /**
+     * The retired `/tracklist` name redirects permanently to the catalogue,
+     * and validates the slug first so a typo does not become a live 301.
+     */
+    public function testTracklistRedirectsToTheCatalogue(): void
+    {
+        $this->useStations();
+
+        $response = (new TracklistController())->indexAction();
+        self::assertSame(301, $response->getStatus());
+        self::assertSame('/mixes', $response->getHeader('Location'));
+
+        $response = (new TracklistController())->stationAction('Trance');
+        self::assertSame(301, $response->getStatus());
+        self::assertSame('/mixes/trance', $response->getHeader('Location'));
+    }
+
+    /**
      * The chooser pages themselves must stay 200 - only the station-scoped
      * routes can 404 on an unknown name.
      */
@@ -50,7 +79,7 @@ class StationNotFoundTest extends TestCase
 
         self::assertStringContainsString('<', (new ListenController())->indexAction());
         self::assertStringContainsString('<', (new PlaylistController())->indexAction());
-        self::assertStringContainsString('<', (new TracklistController())->indexAction());
+        self::assertStringContainsString('<', (new MixesController())->indexAction());
     }
 
     private function useStations(): void

@@ -14,9 +14,17 @@ namespace App\Http;
  */
 final class LegacyUrlMapper
 {
-    /** Legacy module names that map straight onto a canonical route. */
+    /**
+     * Legacy module names that map straight onto a canonical route.
+     *
+     * `tracklist` is the odd one: in the legacy tree it was the *station song
+     * catalogue* (`main.php?module=tracklist`, the "Inventory" button), while
+     * the button labelled "Tracklist" pointed at `mixes.cgi`. HBR1 plays mixes
+     * only - the "songs" table holds the DJ sets - so both are now the same
+     * page, and `/mixes` is the canonical URL for it.
+     */
     private const MODULE_ROUTES = [
-        'tracklist' => '/tracklist',
+        'tracklist' => '/mixes',
         'listen'    => '/listen',
         'playlist'  => '/playlist',
         'topframe'  => '/topframe',
@@ -29,7 +37,7 @@ final class LegacyUrlMapper
         'navigation' => '/navigation',
         'gbms'       => '/guestbook',
         'guestbook'  => '/guestbook',
-        'tracklist'  => '/tracklist',
+        'tracklist'  => '/mixes',
         'jorbis'     => '/listen',
         'iphone'     => '/iphone',
         'playlist'   => '/playlist',
@@ -44,7 +52,7 @@ final class LegacyUrlMapper
     ];
 
     /** Station-scoped routes that accept an optional `?station=` suffix. */
-    private const STATION_SCOPED = ['/tracklist', '/listen', '/playlist'];
+    private const STATION_SCOPED = ['/mixes', '/listen', '/playlist'];
 
     /**
      * Resolve a legacy request to its canonical path.
@@ -80,23 +88,16 @@ final class LegacyUrlMapper
 
     /**
      * `mixes.cgi` used `?action=` for its three levels:
-     *   (none)                  -> categories
-     *   action=view&cat_id=N    -> mixes in a category
+     *   (none)                   -> categories
+     *   action=view&cat_id=N     -> mixes in a category
      *   action=playlist&mix_id=N -> one mix
+     *
+     * The category and single-mix levels were retired with the mix editor;
+     * everything lands on the catalogue now.
      */
     private static function fromMixes(array $query): string
     {
-        $action = $query['action'] ?? '';
-
-        return match ($action) {
-            'view' => isset($query['cat_id']) && ctype_digit((string) $query['cat_id'])
-                ? '/mixes/' . $query['cat_id']
-                : '/mixes',
-            'playlist' => isset($query['mix_id']) && ctype_digit((string) $query['mix_id'])
-                ? '/mixes/playlist/' . $query['mix_id']
-                : '/mixes',
-            default => '/mixes',
-        };
+        return '/mixes';
     }
 
     private static function fromModuleOrAction(array $query): string

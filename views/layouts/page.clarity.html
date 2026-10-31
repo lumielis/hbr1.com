@@ -80,12 +80,18 @@ function redirect() {
 }
 
 {# The bottom navigation frame asks its sibling for its PageID to decide which
-   button to light. Dropping this breaks the highlight. #}
+   button to light. Dropping this breaks the highlight.
+
+   `PageID` is the legacy single-button contract. A page reached from more than
+   one button adds `PageIDs` (an array), which wins - that is how the catalogue
+   at `/mixes` lights both "Tracklist" and "Inventory". #}
 {% block pageid %}{% endblock %}
 
 if( parent && parent.frames && parent.frames['bottom'] ) {
 	if( parent.frames['bottom'].updatePage )
-		parent.frames['bottom'].updatePage( PageID );
+		parent.frames['bottom'].updatePage(
+			( typeof PageIDs != 'undefined' && PageIDs.length ) ? PageIDs : PageID
+		);
 }
 
 //-->

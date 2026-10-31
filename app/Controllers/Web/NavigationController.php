@@ -16,6 +16,11 @@ use App\Controllers\BaseController;
  *    "active" button through `parent.frames['bottom'].updatePage()`, and the
  *    ported pages still call it.
  *
+ * Two buttons share one destination: "Tracklist" (`mb15`) and "Inventory"
+ * (`mb6`) both open the station catalogue at `/mixes`, because HBR1 plays
+ * mixes only and the two legacy pages listed the same data. The catalogue sets
+ * `PageIDs` so the bar lights both.
+ *
  * The image rollovers are kept as-is; they are static GIFs in the legacy
  * `images/navigation/` tree.
  */
@@ -44,8 +49,8 @@ class NavigationController extends BaseController
                 ['key' => 'party', 'image' => 'mb3', 'href' => '/party', 'width' => 75, 'alt' => 'Party'],
                 ['key' => 'listen', 'image' => 'mb4', 'href' => '/listen', 'width' => 95, 'alt' => 'Listen'],
                 ['key' => 'upload', 'image' => 'mb5', 'href' => '/upload/', 'width' => 97, 'alt' => 'Upload'],
-                ['key' => 'mixes', 'image' => 'mb15', 'href' => '/mixes', 'width' => 86, 'alt' => 'Mixes'],
-                ['key' => 'inventory', 'image' => 'mb6', 'href' => '/tracklist', 'width' => 111, 'alt' => 'Inventory'],
+                ['key' => 'mixes', 'image' => 'mb15', 'href' => '/mixes', 'width' => 86, 'alt' => 'Tracklist'],
+                ['key' => 'inventory', 'image' => 'mb6', 'href' => '/mixes', 'width' => 111, 'alt' => 'Inventory'],
             ],
         ],
         [

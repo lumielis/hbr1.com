@@ -104,20 +104,26 @@ class SongService
      */
     private function durationSeconds(int $duration): int
     {
-        return $duration < 0 ? -1 : $duration;
+        return $duration;
     }
 
     /**
-     * mm:ss, or an empty string when the playout system reports no length.
-     * Kept in PHP because Clarity has no integer-division operator.
+     * hh:mm:ss, the legacy `format_duration()` output, or `-` when the playout
+     * system reports no length. Kept in PHP because Clarity has no
+     * integer-division operator.
      */
     private function durationLabel(int $seconds): string
     {
-        if ($seconds < 0) {
-            return '';
+        if ($seconds <= 0) {
+            return '-';
         }
 
-        return sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
+        return sprintf(
+            '%02d:%02d:%02d',
+            intdiv($seconds, 3600),
+            intdiv($seconds % 3600, 60),
+            $seconds % 60
+        );
     }
 
     /** Rows the station can actually play: song_type 0 excludes jingles/ads. */

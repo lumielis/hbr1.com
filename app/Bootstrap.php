@@ -197,7 +197,15 @@ class Bootstrap implements BootstrapProvider
             'Stream\\StreamController::playlistAction'
         );
 
-        // Tracklist (W4).
+        // The station song catalogue (W4). It lives at /mixes because the
+        // catalogue *is* the mix collection: HBR1 plays DJ sets only, so the
+        // RadioDJ "songs" rows are the mixes themselves. `/tracklist` was the
+        // legacy name for the same thing and is kept as a redirect (see
+        // TracklistController).
+        $router->add('GET', '/mixes', 'Web\\MixesController::indexAction');
+        $router->add('GET', '/mixes/{station:alpha}', 'Web\\MixesController::stationAction');
+
+        // The retired `/tracklist` name. Both nav buttons now point at /mixes.
         $router->add('GET', '/tracklist', 'Web\\TracklistController::indexAction');
         $router->add('GET', '/tracklist/{station:alpha}', 'Web\\TracklistController::stationAction');
 
@@ -219,10 +227,6 @@ class Bootstrap implements BootstrapProvider
 
         $router->add('GET', '/party', 'Web\\PartyController::indexAction');
         $router->add('GET', '/party/{id:int}', 'Web\\PartyController::detailAction');
-
-        $router->add('GET', '/mixes', 'Web\\MixesController::indexAction');
-        $router->add('GET', '/mixes/playlist/{id:int}', 'Web\\MixesController::playlistAction');
-        $router->add('GET', '/mixes/{category:int}', 'Web\\MixesController::categoryAction');
 
         $router->add('GET', '/chat', 'Web\\ChatController::indexAction');
         $router->add('POST', '/chat', 'Web\\ChatController::submitAction');

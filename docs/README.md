@@ -15,9 +15,9 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W1 — foundation | **done** — bootstrap, routing, views, legacy redirects, tests, deploy configs |
 | W2 — data layer | **done** — 46-table schema baseline, 46 models, `ModelMapping` for the music schemas |
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files; `vimg`/`earthcam`/`jsm*` open |
-| W4 — tracklist | **done** — pagination, request endpoint, request rules + tests |
+| W4 — catalogue | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
-| W6 — community | **mostly done** — guestbook, party calendar, mixes, chat, navigation frame; party submission is W8 |
+| W6 — community | **mostly done** — guestbook, party calendar, chat, navigation frame; party submission is W8 |
 | W7 — webtv / ticker / broadcast | **mostly done** — ticker renders live from the `ticker` table (no more generated `content*.htm`); `broadcast`, `streamstats`, `jsm*`/CamTV upload open |
 | W8 — admin | not started |
 | W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |
@@ -36,7 +36,9 @@ What works against the live server right now:
 /playlist               all three panels, "now and soon" list
 /playlist/{station}     the same page, that station first
 /muses/{station}        Muses HTML player popup (linked from "Tune In:")
-/tracklist/{station}    paginated catalogue (?offset=)
+/mixes                  the station catalogue: pick a station ("Inventory")
+/mixes/{station}        paginated catalogue for one station (?offset=)
+/tracklist, /tracklist/{station}   301 -> /mixes (the legacy name)
 /request/{station}/{id} song request form (CSRF, per-IP limits)
 /topframe               clock/header frame
 /gallery                public categories
@@ -60,9 +62,6 @@ W6 community pages:
 /guestbook              guestbook (33/page, spam filter, CSRF posting)
 /party                  party calendar (year/month/day grid)
 /party/{id}             single party
-/mixes                  mix styles
-/mixes/{category}       mixes in a style
-/mixes/playlist/{id}    one mix and its track listing
 /chat                   chat room (database-backed, not the jsm* file transport)
 ```
 
@@ -94,7 +93,7 @@ Every legacy URL form still resolves — `/cgi-bin/main.php?module=…`,
 `/perl/apax.cgi?run=…`, `/run/main.xp?action=…`, `/cgi-bin/asx.cgi?trance` — as
 a 301 onto the canonical route.
 
-An unknown station (`/listen/nope`, `/playlist/nope`, `/tracklist/nope`) and an
+An unknown station (`/listen/nope`, `/playlist/nope`, `/mixes/nope`) and an
 unknown gallery id are **404**, not an empty 200.
 
 ## Verifying
@@ -143,8 +142,7 @@ browser fails with "missing ) after argument list" - which silently blanked the
 station names in the header. Emit the bare expression; add no quotes and no
 `|json` filter.
 
-**The legacy pages had no doctype, so every frame rendered in quirks mode.**
-That is load-bearing geometry, not a style preference. In quirks mode an image
+**The legacy pages had no doctype, so every frame rendered in quirks mode.**That is load-bearing geometry, not a style preference. In quirks mode an image
 that is the only thing in a table cell is laid out as a block, so a
 `<td><img height=8></td>` band is 8 px tall. In standards mode the same cell
 inherits `client.css`'s `line-height: 13px`, the image sits on the baseline, and
@@ -154,11 +152,29 @@ with 71 px station panels instead of 61. `client.css` now carries
 explicitly, so the port keeps its doctype and standards mode while matching
 production to the pixel.
 
-**`/mixes` lights the "Mixes" button, but not with `PageID = 'playlist'`.**
+**`/mixes` and `/tracklist` were the same data, and are now the same page.**
+HBR1 plays mixes only - there are no standalone songs - so the RadioDJ `songs`
+rows the "Inventory" page listed *are* the DJ sets. The legacy tree still had
+two pages for them: `main.php?module=tracklist` (button 6, "Inventory") and
+`mixes.cgi` (button 15, "Tracklist"). The second one's distinguishing feature
+was a per-mix track listing that nobody ever filled in: `releases` holds **0
+rows**, and `labels` holds 1091 rows pointing at nothing, so its detail page
+was structurally empty. Both buttons now point at `/mixes`, which renders the
+catalogue; `/tracklist` and `/tracklist/{station}` are 301s. The retired
+`?action=view&cat_id=N` and `?action=playlist&mix_id=N` levels collapse onto
+`/mixes` as well. A page can now light more than one nav button by declaring
+`PageIDs` (an array) instead of the legacy single `PageID`.
+
+**`format_duration()` prints hh:mm:ss and `-` for nothing.** The ported
+catalogue had drifted to mm:ss and printed `0:00` for the three RadioDJ rows
+that carry `duration = 0`; production prints `03:19:57` and `-`. Restored,
+including the `-` placeholder the legacy template used.
+
+**`/mixes` lights the "Tracklist" button, but not with `PageID = 'playlist'`.**
 `ImageDef` in `navigation.htm` pairs button 15 with `tracklist` and button 11
-with `playlist`. All three mixes templates set `PageID = 'tracklist'`, which is
-what lights "Mixes"; the first port had them at `'playlist'` and lit the wrong
-button. Production confirms it on all three mixes routes.
+with `playlist`. The first port had the mixes pages at `'playlist'` and lit the
+wrong button; the catalogue now declares both `['inventory', 'tracklist']`, so
+both buttons light.
 
 **Static assets need a cache buster, and the legacy pages pinned one.**
 `/style/client.css` is served as a plain file, so a browser that has it will not

@@ -35,7 +35,7 @@ class RequestController extends BaseController
         $track = $songs->find($data, $song);
 
         if ($track === null) {
-            return Response::redirect('/tracklist/' . $data['slug'], 302);
+            return Response::redirect('/mixes/' . $data['slug'], 302);
         }
 
         return Response::html($this->page('web/request', [
@@ -75,7 +75,7 @@ class RequestController extends BaseController
         $track = $songs->find($data, $songId);
 
         if ($track === null) {
-            return Response::redirect('/tracklist/' . $data['slug'], 302);
+            return Response::redirect('/mixes/' . $data['slug'], 302);
         }
 
         /** @var RequestService $requests */

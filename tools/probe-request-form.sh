@@ -12,7 +12,7 @@ sleep 2
 
 BASE="http://127.0.0.1:${PORT}"
 
-ids=$(curl -s "${BASE}/tracklist/trance" | grep -oE '/request/trance/[0-9]+' | head -3)
+ids=$(curl -s "${BASE}/mixes/trance" | grep -oE '/request/trance/[0-9]+' | head -3)
 
 if [ -z "${ids}" ]; then
   echo "no request links found on the tracklist"

@@ -1,50 +1,94 @@
+{# The station catalogue. Serves both `/mixes` and the retired `/tracklist`.
+
+   With no station selected this is the legacy "HBR1 Inventory" chooser
+   (`template/tracklist.phtml`): the three station names as gradient links, in
+   a `cellpadding="4"` table inside a `margin: 15px` block.
+
+   With a station it pages through that station's catalogue, twenty rows at a
+   time. The legacy title for both states was "HBR1 Inventory", which is why
+   the band still says INVENTORY even though the URL is `/mixes`.
+
+   Two deliberate additions over the legacy chooser: the station genre under
+   each name, and the `<noscript>` fallbacks. The genre makes the chooser
+   taller than production did; it is worth it, because "Dream Factory" alone
+   says nothing about what the station plays. #}
 {% extends "layouts/page" %}
 
-{% block title %}HBR1 Mixes{% endblock %}
-{% block heading %}MIXES{% endblock %}
-{% block pageid %}PageID = 'tracklist';{% endblock %}
+{% block title %}HBR1 Inventory{% endblock %}
+{% block heading %}INVENTORY{% endblock %}
+
+{# Both nav buttons point here now, so both are highlighted. The navigation
+   frame reads `PageIDs` (plural) in preference to `PageID`, which lets a page
+   light more than one button. `PageID` is still set because that is the legacy
+   contract every other page uses, and `PageIDs[0]` mirrors it. #}
+{% block pageid %}PageID = 'inventory'; PageIDs = ['inventory', 'tracklist'];{% endblock %}
 
 {% block styles %}
 <style>
-.mix-row { font-size: 11px; font-family: Verdana, Arial, sans-serif; border-bottom: 1px solid #222244; }
-.mix-dj { color: #666666; font-size: 10px; }
-.cat-row { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-.cat-count { color: #666666; font-size: 10px; }
+.genre { font-size: 10px; font-family: Arial, Helvetica, sans-serif; }
+.station { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
+.pager a { margin: 0 3px; }
+#current { font-weight: bold; color: #FFFF88; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div style="margin: 15px;">
+{% if current is defined and current %}
+          <p><b>{{ current:title }}</b></p>
 
-        {% if categories %}
-          <p><font color="#999999">Please select one of the styles listed below.</font></p>
-          <table cellspacing="2" cellpadding="2" border="0">
-            {% for category in categories %}
+          {% if page is defined and page and page:rows %}
+          <table cellspacing="0" cellpadding="2" width="100%">
+            {% for row in page:rows %}
             <tr>
-              <td><img src="/images/dot_5x5.gif" alt=""></td>
-              <td class="cat-row">
-                <a href="/mixes/{{ category:id }}"><b>{{ category:name }}</b></a>
-                <span class="cat-count">({{ category:count }})</span>
+              <td class="station" align="right" width="1%"><font color="#666666">{{ row:id }}</font></td>
+              <td class="station">{{ row:artist }}</td>
+              <td class="station" width="1%">&ndash;</td>
+              <td class="station">{{ row:title }}</td>
+              <td class="station" align="right" width="1%"><font color="#666666">{{ row:durationLabel }}</font></td>
+              <td class="station" align="right" width="1%">
+                {% if row:title %}
+                <a href="/request/{{ current:slug }}/{{ row:id }}" title="request this mix">+</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+
+          <p class="pager" style="margin-top: 14px;">
+            {% if pager:hasPrev %}
+              <a href="/mixes/{{ current:slug }}?offset={{ pager:prevOff }}">&laquo; prev</a>
+            {% endif %}
+            <font color="#999999">
+              page {{ pager:current }} of {{ pager:last }}
+              ({{ pager:total }} mixes)
+            </font>
+            {% if pager:hasNext %}
+              <a href="/mixes/{{ current:slug }}?offset={{ pager:nextOff }}">next &raquo;</a>
+            {% endif %}
+          </p>
+          {% else %}
+          <p><font color="#999999">[no mixes]</font></p>
+          {% endif %}
+
+          <p style="margin-top: 14px;"><a href="/mixes">[change station]</a></p>
+
+        {% else %}
+          <p><font color="#999999">Choose a station</font></p>
+          <table cellspacing="0" cellpadding="4">
+            {% for station in stationList %}
+            <tr>
+              <td align="center"><a href="/mixes/{{ station:slug }}"><b>
+                <script language="JavaScript">
+                document.write( TextLight( {{ station:title }}, '3366cc', '66ccff' ) );
+                </script>
+                <noscript>
+                <font color="#3333cc">{{ station:title }}</font>
+                </noscript>
+                </b></a>
+                <div class="genre">{{ station:genre }}</div>
               </td>
             </tr>
             {% endfor %}
           </table>
         {% endif %}
-
-        <hr color="#222244">
-
-        <h3><font color="#9999ff">All mixes</font></h3>
-
-        {% if mixes %}
-          {% for mix in mixes %}
-          <div class="mix-row">
-            <a href="/mixes/playlist/{{ mix:id }}">{{ mix:name }}</a>
-            {% if mix:dj %}<span class="mix-dj">by {{ mix:dj }}</span>{% endif %}
-          </div>
-          {% endfor %}
-        {% else %}
-          <p><font color="#999999">There are no mixes published at the moment.</font></p>
-        {% endif %}
-
-      </div>
 {% endblock %}

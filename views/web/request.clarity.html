@@ -19,7 +19,7 @@
             {% endif %}
           </p>
           <p style="margin-top: 14px;">
-            <a href="/tracklist/{{ station:slug }}">[back to the tracklist]</a>
+            <a href="/mixes/{{ station:slug }}">[back to the catalogue]</a>
             &middot;
             <a href="/playlist/{{ station:slug }}">[see the queue]</a>
           </p>
@@ -33,7 +33,7 @@
             <p style="margin-top: 12px;">
               <input type="submit" value="Request this track">
               &nbsp;
-              <a href="/tracklist/{{ station:slug }}">[cancel]</a>
+              <a href="/mixes/{{ station:slug }}">[cancel]</a>
             </p>
           </form>
 
@@ -45,6 +45,6 @@
 
         {% else %}
           <p><font color="#999999">[track not available]</font></p>
-          <p><a href="/tracklist/{{ station:slug }}">[back to the tracklist]</a></p>
+          <p><a href="/mixes/{{ station:slug }}">[back to the catalogue]</a></p>
         {% endif %}
 {% endblock %}

@@ -6,12 +6,14 @@ use App\Services\MixesService;
 use PHPUnit\Framework\TestCase;
 
 /**
- * The mixes catalogue, against the live `mixes` table.
+ * Mix lookup, against the live `mixes` table.
  *
- * The listing has to hide published rows with an empty name. The live database
- * has exactly one (id 889, `status = 1`, blank `name` and `dj`), left behind by
- * an aborted edit; `MixesController::playlistAction()` refuses it as a 404, so
- * rendering it in the listing produced a link that led straight to a 404.
+ * The mix archive's read side was retired: the per-mix track listing
+ * (`releases`) has 0 rows, so `/mixes/{category}` and `/mixes/playlist/{id}`
+ * could never show anything, and the catalogue is now the station song list.
+ * What remains of this service is {@see MixesService::matchTrack()}, which
+ * links the "Running:" line on `/listen` and `/playlist` to the mix being
+ * played, plus its two string helpers.
  *
  * Skipped automatically when the database is unreachable.
  */
@@ -30,78 +32,80 @@ class MixesServiceTest extends TestCase
         $this->mixes = new MixesService($this->db);
 
         try {
-            $this->mixes->mixes();
+            $this->db->query('SELECT 1 FROM `mixes` LIMIT 1');
         } catch (\Throwable $e) {
             self::markTestSkipped('Database unavailable: ' . $e->getMessage());
         }
     }
 
-    /** Ids of the published rows the database holds directly, names included. */
-    private function publishedIds(bool $unnamedOnly): array
+    /**
+     * A published row with a blank name and DJ (id 889) must never be matched:
+     * it is a leftover from an aborted edit, not a mix. Both sides of the
+     * comparison are empty, and the overlap guard rejects that.
+     */
+    public function testBlankMixIsNeverMatched(): void
     {
-        $sql = $unnamedOnly
-            ? 'SELECT `id` FROM `mixes` WHERE `status` = 1 AND `name` = \'\''
-            : 'SELECT `id` FROM `mixes` WHERE `status` = 1';
+        self::assertNull($this->mixes->matchTrack('', ''));
+        self::assertNull($this->mixes->matchTrack('   ', '  '));
 
-        return array_map('intval', $this->db->query($sql)->fetchAll(\PDO::FETCH_COLUMN));
+        // Its `dj` and `name` are both empty, so no query term can find it.
+        $unnamed = array_map('intval', $this->db->query(
+            'SELECT `id` FROM `mixes` WHERE `status` = 1 AND `name` = \'\' AND `dj` = \'\''
+        )->fetchAll(\PDO::FETCH_COLUMN));
+
+        foreach ($unnamed as $id) {
+            self::assertNotSame($id, $this->mixes->matchTrack('Anything', 'At All'));
+        }
     }
 
     /**
-     * Every listed mix must be reachable: a row the controller 404s must not
-     * appear in the catalogue. The live table has one such row, so this also
-     * proves the filter is doing something rather than being vacuous.
+     * Every id the matcher returns must be a real, published, named mix - the
+     * link it drives on `/listen` has to lead somewhere that exists.
      */
-    public function testListingNeverContainsAnUnnamedMix(): void
+    public function testMatchedIdsResolveToAPublishedMix(): void
     {
-        $listed = array_column($this->mixes->mixes(), 'id');
-        $unnamed = $this->publishedIds(true);
+        $matched = $this->mixes->matchTrack('Dschinn', 'Dschinn');
 
-        self::assertSame([], array_values(array_intersect($listed, $unnamed)));
-        self::assertSame([], array_values(array_filter(
-            $this->mixes->mixes(),
-            static fn(array $mix): bool => $mix['name'] === ''
-        )));
+        if ($matched === null) {
+            self::assertTrue(true, 'No mix matches the probe term in this database.');
 
-        // Whatever survives must be the named subset of what the table holds.
-        $named = array_values(array_diff($this->publishedIds(false), $unnamed));
-        sort($listed);
-        sort($named);
-        self::assertSame($named, $listed);
+            return;
+        }
+
+        $row = $this->db->query(
+            'SELECT `status`, `name` FROM `mixes` WHERE `id` = ?',
+            [$matched]
+        )->fetch(\PDO::FETCH_ASSOC);
+
+        self::assertNotFalse($row);
+        self::assertSame(1, (int) $row['status']);
+        self::assertNotSame('', (string) $row['name']);
     }
 
     /**
-     * The category listing is filtered the same way, and every row in it
-     * belongs to the category that was asked for.
+     * `matchTrack()` compares the artist against `dj` and the title against
+     * `name`, both normalised: lowercase, underscores as spaces, single
+     * spaces. The legacy code did the same so "Dschinn" matched a DJ called
+     * "Dschinn vs. Trippin Troll" either way round.
      */
-    public function testCategoryListingHidesUnnamedMixesAndStaysInCategory(): void
+    public function testMatchingToleratesCaseUnderscoresAndPartialNames(): void
     {
-        $unnamed = $this->publishedIds(true);
-        $seen    = 0;
+        $rows = $this->db->query(
+            'SELECT `dj`, `name` FROM `mixes`'
+            . ' WHERE `status` = 1 AND `dj` <> \'\' AND `name` <> \'\' LIMIT 1'
+        )->fetchAll(\PDO::FETCH_ASSOC);
 
-        foreach ($this->mixes->categories() as $category) {
-            foreach ($this->mixes->mixes((int) $category['id']) as $mix) {
-                $seen++;
-                self::assertNotContains($mix['id'], $unnamed);
-                self::assertSame((int) $category['id'], $mix['category']);
-            }
+        if ($rows === []) {
+            self::assertTrue(true, 'No fully populated mix in this database.');
+
+            return;
         }
 
-        // An empty catalogue is a valid state; not reaching this line is not.
-        self::assertGreaterThanOrEqual(0, $seen);
-    }
+        $dj   = (string) $rows[0]['dj'];
+        $name = (string) $rows[0]['name'];
 
-    /** A search hit must not be the untitled row either. */
-    public function testSearchHidesUnnamedMixes(): void
-    {
-        $unnamed = $this->publishedIds(true);
+        $id = $this->mixes->matchTrack(strtoupper(str_replace(' ', '_', $dj)), $name);
 
-        foreach ($this->mixes->mixes(null, 'a') as $mix) {
-            self::assertNotContains($mix['id'], $unnamed);
-        }
-
-        self::assertSame([], array_values(array_intersect(
-            array_column($this->mixes->mixes(null, 'a'), 'id'),
-            $unnamed
-        )));
+        self::assertNotNull($id, 'The exact DJ and name, recased, must still match.');
     }
 }

@@ -38,6 +38,8 @@ body { background-color: #000000; margin: 0; }
 td { line-height: 0; font-size: 0; }
 </style>
 <script>
+// Kept for the legacy contract: the navigation frame used to record the
+// current page here. `activePages` below is the real state now.
 var PageID = null;
 
 // Legacy PageID -> the button whose rollover lights up. Mirrors the `ImageDef`
@@ -59,13 +61,36 @@ var PAGE_BUTTONS = {
     shop:      'shop'
 };
 
-// Every legacy page set a `PageID` on itself; the navigation frame read it to
-// light the matching button. Keep the contract so the ported pages work.
-function updatePage(name) {
-    if (name) {
-        PageID = name;
+// The PageIDs the main frame currently claims. The legacy contract was a
+// single `PageID`; a page reached from more than one button - the catalogue
+// sits behind both "Inventory" and "Tracklist" - declares `PageIDs` instead
+// and every matching button lights up.
+var activePages = [];
+
+function setActive(names) {
+    activePages = [];
+    for (var i = 0; i < names.length; i++) {
+        if (names[i] && activePages.indexOf(names[i]) < 0) {
+            activePages.push(names[i]);
+        }
     }
-    var active = PAGE_BUTTONS[PageID] || PageID;
+    paint();
+}
+
+// Every legacy page set a `PageID` on itself; the navigation frame read it to
+// light the matching button. One page is active at a time, so this replaces
+// the previous selection - the legacy `updatePage()` did the same, and without
+// that a page left over from an earlier in-frame navigation stayed lit.
+//
+// A page reached from more than one button passes an array of PageIDs instead
+// of a single one, and every matching button lights up.
+function updatePage(name) {
+    setActive(Object.prototype.toString.call(name) === '[object Array]'
+        ? name
+        : (name ? [name] : []));
+}
+
+function paint() {
     var buttons = document.querySelectorAll('[data-nav]');
     for (var i = 0; i < buttons.length; i++) {
         var img = buttons[i].querySelector('img');
@@ -76,20 +101,40 @@ function updatePage(name) {
         if (img.getAttribute('data-plain')) {
             continue;
         }
-        img.src = '/images/navigation/' + base
-                + (buttons[i].getAttribute('data-key') === active ? 'p' : 'n') + '.gif';
+        var key = buttons[i].getAttribute('data-key');
+        var lit = false;
+        for (var j = 0; j < activePages.length; j++) {
+            if ((PAGE_BUTTONS[activePages[j]] || activePages[j]) === key) {
+                lit = true;
+                break;
+            }
+        }
+        img.src = '/images/navigation/' + base + (lit ? 'p' : 'n') + '.gif';
     }
 }
 
 function initPage() {
+    var main = null;
     try {
-        if (parent.frames['main'] && parent.frames['main'].PageID) {
-            PageID = parent.frames['main'].PageID;
-        }
+        main = parent.frames['main'] || null;
     } catch (e) {
         // A framed page from another origin - ignore and keep the default.
     }
-    updatePage();
+    var names = [];
+    if (main) {
+        // `PageIDs` wins when present, so a page can light several buttons and
+        // does not depend on which frame finished parsing first.
+        try {
+            if (main.PageIDs && main.PageIDs.length) {
+                names = main.PageIDs;
+            } else if (main.PageID) {
+                names = [main.PageID];
+            }
+        } catch (e) {
+            // Cross-origin main frame - nothing to read.
+        }
+    }
+    setActive(names);
 }
 
 window.addEventListener('load', initPage);

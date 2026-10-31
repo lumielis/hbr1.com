@@ -13,7 +13,7 @@ sleep 2
 urls=(
   "/"
   "/listen/trance"
-  "/tracklist"
+  "/mixes"
   "/topframe"
   "/stream/trance.m3u"
   "/cgi-bin/main.php?module=tracklist&station=Trance"

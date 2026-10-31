@@ -38,8 +38,8 @@ $checks = [
     // before this route existed that link was a 404.
     ['/muses/trance', 200],
     ['/muses/nope', 404],
-    ['/tracklist', 200],
-    ['/tracklist/ambient', 200],
+    ['/tracklist', 301],
+    ['/tracklist/ambient', 301],
     ['/topframe', 200],
     ['/gallery', 200],
     ["/gallery/{$categoryId}", 200],
@@ -54,7 +54,8 @@ $checks = [
     ['/guestbook', 200],
     ['/party', 200],
     ['/mixes', 200],
-    ['/mixes/9999', 404],
+    ['/mixes/ambient', 200],
+    ['/mixes/nope', 404],
     ['/chat', 200],
     // W7 webtv ticker. The left frame loads the frameset, which then walks the
     // meta-refresh ring of content pages.

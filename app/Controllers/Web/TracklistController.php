@@ -3,113 +3,46 @@
 namespace App\Controllers\Web;
 
 use App\Controllers\BaseController;
-use App\Services\SongService;
 use App\Services\StationService;
 use Azera\Http\Response;
 
 /**
- * Tracklist page (replaces `main.php?module=tracklist`).
+ * The retired `/tracklist` URLs.
  *
- * With no station selected it is the station chooser (the legacy
- * "HBR1 Inventory" page). With a station it pages through the catalogue.
+ * `/tracklist` was the legacy `main.php?module=tracklist` - the station song
+ * catalogue behind the "Inventory" button. The button labelled "Tracklist"
+ * pointed somewhere else entirely: `mixes.cgi`, a DJ-set archive whose
+ * per-mix track listing was never used.
+ *
+ * HBR1 plays mixes only, so the catalogue and the mix archive are the same
+ * thing and now share one page at `/mixes`. These routes exist only to carry
+ * the old name, the bookmarks and the search results across, with a permanent
+ * redirect so the canonical URL is the one that gets indexed.
+ *
+ * A 301 is correct here even though the two pages had different titles in the
+ * legacy tree: they now render identical content, so there is nothing to lose
+ * by collapsing them.
  */
 class TracklistController extends BaseController
 {
-    public function indexAction(): string
+    public function indexAction(): Response
     {
-        return $this->renderFor(null, $this->requestedOffset());
-    }
-
-    public function stationAction(string $station): string|Response
-    {
-        return $this->renderFor($station, $this->requestedOffset());
+        return Response::redirect('/mixes', 301);
     }
 
     /**
-     * The legacy page took its position from the query string. It is clamped
-     * to a non-negative integer so a hand-crafted value cannot produce a
-     * negative SQL offset.
+     * An unknown station must not become a live redirect target, so the slug
+     * is validated before the 301 is issued.
      */
-    private function requestedOffset(): int
-    {
-        $offset = $this->context()->request()->query('offset');
-
-        return is_numeric($offset) ? max(0, (int) $offset) : 0;
-    }
-
-    private function renderFor(?string $identifier, int $offset): string|Response
+    public function stationAction(string $station): Response
     {
         /** @var StationService $stations */
         $stations = $this->service(StationService::class);
-        /** @var SongService $songs */
-        $songs = $this->service(SongService::class);
 
-        $current = $identifier === null ? null : $stations->find($identifier);
-
-        if ($identifier !== null && $current === null) {
+        if ($stations->find($station) === null) {
             return Response::status(404);
         }
 
-        $page  = null;
-        $pager = null;
-
-        if ($current !== null) {
-            try {
-                $page = $songs->page($current, $offset);
-
-                // An offset past the end would otherwise render an empty
-                // table with no explanation.
-                if ($page['total'] > 0 && $offset >= $page['total']) {
-                    $page = $songs->page($current, max(0, $page['total'] - SongService::PAGE_SIZE));
-                }
-
-                $pager = $this->pager($page);
-            } catch (\Throwable $e) {
-                error_log('tracklist: ' . $e->getMessage());
-            }
-        }
-
-        return $this->page('web/tracklist', [
-            'title'       => 'HBR1 Inventory',
-            'stationList' => $stations->all(),
-            'current'     => $current,
-            'page'        => $page,
-            'pager'       => $pager,
-        ]);
-    }
-
-    /**
-     * Page arithmetic, matching the legacy page_navigation() window
-     * (five pages either side of the current one).
-     */
-    private function pager(array $page): array
-    {
-        $total   = $page['total'];
-        $limit   = $page['limit'];
-        $offset  = $page['offset'];
-        $current = intdiv($offset, $limit) + 1;
-        $last    = max(1, (int) ceil($total / $limit));
-        $window  = 5;
-
-        $start = max(1, $current - $window);
-        $end   = min($last, $start + $window * 2);
-
-        if ($end - $start < $window * 2) {
-            $start = max(1, $end - $window * 2);
-        }
-
-        return [
-            'current' => $current,
-            'last'    => $last,
-            'start'   => $start,
-            'end'     => $end,
-            'offset'  => $offset,
-            'limit'   => $limit,
-            'total'   => $total,
-            'hasPrev' => $current > 1,
-            'hasNext' => $current < $last,
-            'prevOff' => max(0, $offset - $limit),
-            'nextOff' => min(max(0, $total - 1), $offset + $limit),
-        ];
+        return Response::redirect('/mixes/' . strtolower($station), 301);
     }
 }
