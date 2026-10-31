@@ -8,7 +8,7 @@ use Azera\Db\Resolver\MappingResolver;
 use Azera\Db\Resolver\ModelResolver;
 
 /**
- * Current-track and queue reads for a station.
+ * Current-track, queue and history reads for a station.
  *
  * All three channels run RadioDJ, so there is one code path. The service hides
  * the schema-qualified table names and the query builder behind plain arrays,
@@ -19,15 +19,28 @@ use Azera\Db\Resolver\ModelResolver;
  */
 class TrackService
 {
+    /**
+     * Hours back that a song request still marks its queued entry.
+     *
+     * The legacy `init_station_playlist()` used `SUBDATE(NOW(), INTERVAL 12
+     * HOUR)`; kept verbatim.
+     */
+    private const REQUEST_WINDOW_HOURS = 12;
+
     public function __construct(
         private readonly StationService $stations,
+        private readonly ?\Azera\Db\Database $db = null,
     ) {
     }
 
     /**
      * The track currently playing.
      *
-     * @return array{artist: string, title: string, playedAt: ?string, duration: int}|null
+     * `duration` is returned as a float, not an int: RadioDJ stores fractional
+     * seconds (e.g. 4340.98 for a 72-minute DJ set). Truncating it to int lost
+     * almost a full second per track, which is visible in the countdown.
+     *
+     * @return array{artist: string, title: string, playedAt: ?string, duration: float}|null
      */
     public function current(array $station): ?array
     {
@@ -46,47 +59,75 @@ class TrackService
         return [
             'artist'   => (string) ($row['artist'] ?? ''),
             'title'    => (string) ($row['title'] ?? ''),
-            'playedAt' => $row['date_played'] ?? null,
-            'duration' => (int) ($row['duration'] ?? 0),
+            'playedAt' => isset($row['date_played']) ? (string) $row['date_played'] : null,
+            'duration' => (float) ($row['duration'] ?? 0),
         ];
     }
 
     /**
      * The upcoming queue, in play order.
      *
-     * RadioDJ denormalises artist and title onto `queuelist`, so no join is
-     * needed.
+     * Four behaviours come straight from the legacy `init_station_playlist()`:
      *
-     * @return array<int, array{artist: string, title: string}>
+     *  - only songs the station may play are listed (`songs.song_type = 0`).
+     *    Type 1 rows are jingles and station IDs; the first port listed them
+     *    as if they were tracks.
+     *  - rows whose `title` is blank are skipped afterwards, because RadioDJ
+     *    leaves empty placeholder rows in `queuelist` (they pass the join).
+     *  - a song requested in the last {@see REQUEST_WINDOW_HOURS} hours is
+     *    flagged so the page can mark it.
+     *  - the join to `requests` is by `songID` and is many-to-many, so a song
+     *    requested twice would appear twice. The legacy query had that bug and
+     *    the page could repeat a line; it is deduplicated here.
+     *
+     * Written as one prepared statement rather than through the builder: it
+     * needs a two-table join plus a time-window predicate, which is the shape
+     * plan §5.2 keeps out of the ORM.
+     *
+     * @return array<int, array{artist: string, title: string, requested: bool}>
      */
     public function queue(array $station, int $limit = 8): array
     {
-        $rows = $this->query($station, 'RadioDjQueue')
-            ->columns(['artist', 'title'])
-            ->orderBy('ID')
-            ->limit($limit)
-            ->select();
+        $schema = MusicDatabaseMapping::schemaFor($station['id']);
+
+        $sql = "SELECT q.`ID`, q.`artist`, q.`title`,
+                       MAX(CASE WHEN r.`ID` IS NULL THEN 0 ELSE 1 END) AS `requested`
+                  FROM `{$schema}`.`queuelist` q
+                  JOIN `{$schema}`.`songs` s ON s.`ID` = q.`songID`
+             LEFT JOIN `{$schema}`.`requests` r
+                    ON r.`songID` = q.`songID`
+                   AND r.`requested` >= SUBDATE(NOW(), INTERVAL ? HOUR)
+                 WHERE s.`song_type` = 0
+              GROUP BY q.`ID`, q.`artist`, q.`title`
+              ORDER BY q.`ID`";
+
+        $rows = $this->database()
+            ->query($sql, [self::REQUEST_WINDOW_HOURS])
+            ->fetchAll(\PDO::FETCH_ASSOC);
 
         $out = [];
 
         foreach ($rows as $row) {
-            $row = (array) $row;
-
             if (trim((string) ($row['title'] ?? '')) === '') {
                 continue;
             }
 
             $out[] = [
-                'artist' => (string) ($row['artist'] ?? ''),
-                'title'  => (string) ($row['title'] ?? ''),
+                'artist'    => (string) ($row['artist'] ?? ''),
+                'title'     => (string) ($row['title'] ?? ''),
+                'requested' => (int) ($row['requested'] ?? 0) > 0,
             ];
+
+            if (count($out) >= $limit) {
+                break;
+            }
         }
 
         return $out;
     }
 
     /**
-     * The playlist page: the current track followed by the queue.
+     * The playlist page: what is playing now, then the queue.
      *
      * @return array<int, string> display lines, HTML-free
      */
@@ -114,5 +155,10 @@ class TrackService
                 new MappingResolver(MusicDatabaseMapping::forStation($station['id'])),
             ]))
             ->from($logicalPrefix . '_' . $station['id']);
+    }
+
+    private function database(): \Azera\Db\Database
+    {
+        return $this->db ?? \App\AppContext::instance()->dbManager()->getDefault();
     }
 }

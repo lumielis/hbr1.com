@@ -5,30 +5,57 @@
  *
  * Cheaper than a full test run and catches the class of breakage that took
  * the legacy site down (syntax that only a newer PHP rejects).
+ *
+ * Usage:
+ *   php tools/lint.php            quiet; prints only the summary and failures
+ *   php tools/lint.php -v         also list every directory as it is entered
  */
 
-$root = dirname(__DIR__);
+$root    = dirname(__DIR__);
+$verbose = in_array('-v', $argv, true) || in_array('--verbose', $argv, true);
 
-$skip = [
-    $root . '/vendor',
-    $root . '/temp',
-    $root . '/var',
-    $root . '/legacy',
-    $root . '/.git',
-];
+/**
+ * Directories to leave unvisited, relative to the project root.
+ *
+ * `legacy/` holds the frozen Perl tree and `vendor/` third-party code; neither
+ * is ours to fix. `var/`, `temp/` and `.git/` hold generated or internal files.
+ */
+$skipRelative = ['vendor', 'temp', 'var', 'legacy', '.git', '.vscode', 'node_modules'];
+
+/**
+ * Normalise a path for comparison: forward slashes, no trailing separator.
+ *
+ * Required on Windows, where `getPathname()` returns backslashes. Building the
+ * skip list with forward slashes and comparing it raw meant no exclusion ever
+ * matched, so the walk descended into `vendor/` and `.git/objects/`.
+ */
+$normalise = static fn(string $path): string => rtrim(str_replace('\\', '/', $path), '/');
+
+$skipAbsolute = array_map(
+    static fn(string $dir): string => $normalise($root . '/' . $dir),
+    $skipRelative
+);
 
 $iterator = new RecursiveIteratorIterator(
     new RecursiveCallbackFilterIterator(
         new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS),
-        function (SplFileInfo $file) use ($skip) {
+        static function (SplFileInfo $file) use ($skipAbsolute, $normalise, $verbose): bool {
             if (!$file->isDir()) {
                 return true;
             }
 
-            foreach ($skip as $dir) {
-                if (str_starts_with($file->getPathname(), $dir)) {
+            $path = $normalise($file->getPathname());
+
+            foreach ($skipAbsolute as $skip) {
+                // A bare prefix match would let `/var` swallow `/variable`, so
+                // the separator is part of the test.
+                if ($path === $skip || str_starts_with($path, $skip . '/')) {
                     return false;
                 }
+            }
+
+            if ($verbose) {
+                echo 'Checking directory: ', $file->getPathname(), PHP_EOL;
             }
 
             return true;

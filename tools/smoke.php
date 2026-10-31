@@ -31,7 +31,13 @@ $checks = [
     ['/listen/trance', 200],
     ['/listen/Trance', 200],
     ['/listen/nope', 404],
+    ['/playlist', 200],
     ['/playlist/tronic', 200],
+    ['/playlist/nope', 404],
+    // The Muses popup is linked from the "Tune In:" row on both pages above;
+    // before this route existed that link was a 404.
+    ['/muses/trance', 200],
+    ['/muses/nope', 404],
     ['/tracklist', 200],
     ['/tracklist/ambient', 200],
     ['/topframe', 200],

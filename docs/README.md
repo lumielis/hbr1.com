@@ -31,8 +31,11 @@ What works against the live server right now:
 
 ```
 /                       frameset front page
-/listen/{station}       current track + queue (live RadioDJ data)
-/playlist/{station}     current track + queue, legacy layout
+/listen                 all three station panels (the legacy page)
+/listen/{station}       the same page, that station first
+/playlist               all three panels, "now and soon" list
+/playlist/{station}     the same page, that station first
+/muses/{station}        Muses HTML player popup (linked from "Tune In:")
 /tracklist/{station}    paginated catalogue (?offset=)
 /request/{station}/{id} song request form (CSRF, per-IP limits)
 /topframe               clock/header frame
@@ -43,6 +46,12 @@ What works against the live server right now:
 /stream/{station}.m3u   playlist files (these 500 in production)
 /stream/{station}.asx
 ```
+
+Content pages all inherit [`views/layouts/page.clarity.html`](../views/layouts/page.clarity.html),
+which carries the 583 px header/title/body/footer chrome
+(`header_*.gif`, `title_*.gif`, `body_bg.jpg`, `footer_*.gif`). The first pass
+had dropped it, so every page rendered as a bare table floating on black.
+
 
 W6 community pages:
 
@@ -119,6 +128,21 @@ to `/chat/<room>.txt` at the filesystem root, where it had no permission. The
 real chat is the `chat` table (25,029 rows). Ported against the table; the
 `jsm*` scripts are unrecoverable as designed. See `deploy/CHAT-STATE.md`.
 
+**`/listen` and `/playlist` were never single-station pages.** Both legacy
+scripts loop over *all* of `$Stations` and ignore `?station=` entirely - only
+`tracklist` ever read it. The first port invented a one-station view, so the
+pages could never match production. Both routes now render the full set of
+panels and a scoped request just promotes that station to the top (an unknown
+one is still a 404, so the route does not become an indexable 200).
+
+**Inside `<script>`, Clarity auto-escapes to a *quoted* JS string literal.**
+`{{ station:title }}` inside a `<script>` block already emits
+`"I.D.M. Tranceponder"`, with quotes and `\u`-hex escaping for `"`, `<`, `/`.
+Writing `"{{ station:title }}"` therefore produces `""I.D.M. …""` and the
+browser fails with "missing ) after argument list" - which silently blanked the
+station names in the header. Emit the bare expression; add no quotes and no
+`|json` filter.
+
 ## ⚠️ Do not submission-test the request endpoint
 
 `POST /request/{station}` calls RadioDJ's `LoadTrackToTop` command. That command
@@ -173,12 +197,18 @@ database**, services own all data access.
 
 ```bash
 composer install
-php tools/lint.php          # parse-check every PHP file
+php tools/lint.php          # parse-check every PHP file (-v lists directories)
 php tools/smoke.php         # route + dispatch smoke test
 php tools/check-redirects.php
 bash tools/serve-probe.sh   # HTTP probe against the built-in server
 composer test
 ```
+
+`tools/lint.php` skips `vendor/`, `var/`, `temp/`, `legacy/`, `.git/` and
+`.vscode/`. It compares normalised paths, because on Windows
+`getPathname()` returns backslashes and a forward-slash skip list silently
+matched nothing - which is why the walk used to descend into
+`.git/objects/` and `vendor/nikic/php-parser/lib/...`.
 
 Serve locally:
 

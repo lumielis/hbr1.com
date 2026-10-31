@@ -1,0 +1,26 @@
+{#
+  The player advert, shared by /listen and /playlist.
+
+  `images/player/station_player.png` is a 435x71 strip of player logos with a
+  hard-coded image map. Kept exactly as the legacy templates had it, geometry
+  included: the hotspot coordinates are pixel-tuned against the artwork.
+#}
+<div>
+  <font color="#7799CC">To listen in our streams you need a player that supports
+    the <a href="http://www.vorbis.com/" target="_blank">Ogg Vorbis</a>
+    or the <a href="http://www.iis.fraunhofer.de/en/bf/amm/produkte/audiocodec/audiocodecs/heaac/index.jsp" target="_blank">AAC+</a>
+    streaming format.
+    The most popular players are listed below.
+  </font>
+</div>
+
+<div style="margin-top: 3px; margin-bottom: 5px;">
+  <img src="/images/player/station_player.png" usemap="#map_station_player" border="0" alt="Players">
+</div>
+
+<map name="map_station_player">
+  <area shape="rect" coords="3,0,432,37" href="http://tunein.com/" target="_blank" alt="TuneIn Radio" title="TuneIn Radio">
+  <area shape="rect" coords="3,40,125,70" href="http://www.apple.com/itunes/" target="_blank" alt="iTunes" title="iTunes">
+  <area shape="rect" coords="145,40,265,70" href="http://www.winamp.com/" target="_blank" alt="Winamp" title="Winamp">
+  <area shape="rect" coords="280,40,430,70" href="http://gstreamer.freedesktop.org/" target="_blank" alt="GStreamer" title="GStreamer">
+</map>

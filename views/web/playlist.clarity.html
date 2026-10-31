@@ -1,57 +1,118 @@
-{% extends "layouts/main" %}
+{# A straight port of `template/playlist.phtml`, one panel per station.
 
-{% block title %}{{ title }}{% endblock %}
+   Differs from /listen only in the body of each panel: instead of a queue
+   table it renders `template/playlist.phtml`'s eight-item ordered list, with
+   the first line highlighted via `#current` and short queues padded with
+   "[play another mix]" links. #}
+{% extends "layouts/page" %}
+
+{% block title %}HBR1 Station Playlist{% endblock %}
+{% block heading %}PLAYING NOW AND SOON{% endblock %}
+{% block pageid %}PageID = 'playlist';{% endblock %}
 
 {% block content %}
-<table cellspacing="0" cellpadding="0" border="0" width="583">
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img src="/images/title_left.gif" alt=""></td>
-    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
-      <font color="#9999ff"><b>PLAYLIST</b></font></td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img src="/images/title_right.gif" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
-    <td align="center" background="/images/body_bg.jpg" valign="top">
-      <div style="margin-top: 15px; margin-bottom: 15px;">
+{% if stationList is defined and stationList %}
+  {% for station in stationList %}
+  <table border="0" cellspacing="0" cellpadding="0" width="95%">
+    <tr>
+      <td align="center"><img src="/images/spacer.gif" width="1" height="10" alt=""></td>
+    </tr>
+  </table>
+  <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
+    <tr>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
+          <tr>
+            <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17" alt=""></td>
+            <td class="station">
+              <b>
+              {# Inside <script> Clarity auto-encodes to a quoted, hex-escaped JS
+                 string literal, so `station:title` needs no surrounding quotes. #}
+              <script language="JavaScript">
+              <!--
+              document.write( '&nbsp;' + TextLight( {{ station:title }}, "33AA00", "DDFF99" ) );
+              //-->
+              </script>
+              <noscript>
+                <font color="#DDFF99">&nbsp;{{ station:title }}</font>
+              </noscript>
+              </b>
+            </td>
+            <td class="genre" align="right">
+              <script language="JavaScript">
+              <!--
+              document.write( TextFade( {{ station:genre }}, "FFFF88", "FF9966" ) + "&nbsp;" );
+              //-->
+              </script>
+              <noscript>
+                <font color="#FFFFFF">{{ station:genre }}&nbsp;</font>
+              </noscript>
+            </td>
+            <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17" alt=""></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="1">
+          <tr>
+            <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
+            <td class="txt">
+              {% if station:running %}
+                {% if station:running:late %}
+                <font color="ff9955">Last Played: </font>
+                {% else %}
+                <font color="FFFFAA">Running: </font>
+                <font color="#999999">[-{{ station:running:text }}] </font>
+                {% endif %}
+                {{ station:running:caption }}
+                {% if station:mixId %}
+                <font color="#6666AA"> (<a href="/mixes/playlist/{{ station:mixId }}">tracklist</a>)</font>
+                {% endif %}
+              {% endif %}
+              <ol id="playlist">
+                {# The first line is "now" and carries the #current highlight,
+                   exactly as `playlist.phtml` did. No whitespace after the tag:
+                   an <ol> item that starts with a newline renders a stray gap
+                   under the bold highlight. #}
+                {% for idx, line in station:lines %}
+                {% if idx == 0 %}
+                <li id="current">{% if line:link %}<a href="{{ line:href }}"><font color="#999999">{{ line:text }}</font></a>{% elseif line:requested %}<font color="#9999cc"><b>*</b></font> {{ line:text }}{% else %}{{ line:text }}{% endif %}</li>
+                {% else %}
+                <li>{% if line:link %}<a href="{{ line:href }}"><font color="#999999">{{ line:text }}</font></a>{% elseif line:requested %}<font color="#9999cc"><b>*</b></font> {{ line:text }}{% else %}{{ line:text }}{% endif %}</li>
+                {% endif %}
+                {% endfor %}
+              </ol>
 
-        {% if current is defined and current %}
-          <p><b>{{ current:title }}</b></p>
+              {% for seg in station:stream %}
+                {% if seg:type == "link" %}
+                  <a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>
+                {% elseif seg:type == "bracket" %}
+                  <font color="#66dd99">{{ seg:text }}</font>
+                {% else %}
+                  {{ seg:text }}
+                {% endif %}
+              {% endfor %}
+            </td>
+            <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  {% endfor %}
+{% else %}
+  <p><font color="#999999">[no stations configured]</font></p>
+{% endif %}
 
-          {% if lines is defined and lines %}
-          <table cellspacing="0" cellpadding="2">
-            {% for idx, line in lines %}
-            <tr>
-              <td class="station" align="right"><font color="#666666">{{ idx + 1 }}</font></td>
-              <td class="station">{{ line }}</td>
-            </tr>
-            {% endfor %}
-          </table>
-          {% else %}
-          <p><font color="#999999">[playlist unavailable]</font></p>
-          {% endif %}
+  <table border="0" cellspacing="0" cellpadding="0" width="95%">
+    <tr>
+      <td align="center"><img src="/images/spacer.gif" width="1" height="20" alt=""></td>
+    </tr>
+  </table>
+{% endblock %}
 
-          <p style="margin-top: 14px;"><a href="/playlist">[choose another station]</a></p>
-
-        {% else %}
-          <p><font color="#999999">Choose a station</font></p>
-          <table cellspacing="0" cellpadding="4">
-            {% for station in stationList %}
-            <tr>
-              <td align="center">
-                <a href="/playlist/{{ station:slug }}"><b>{{ station:title }}</b></a>
-                <div class="genre">{{ station:genre }}</div>
-              </td>
-            </tr>
-            {% endfor %}
-          </table>
-        {% endif %}
-
-      </div>
-    </td>
-    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
-  </tr>
-</table>
+{% block aside %}
+  {% include "web/_player_advert" %}
 {% endblock %}

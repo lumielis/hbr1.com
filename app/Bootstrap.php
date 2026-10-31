@@ -105,6 +105,11 @@ class Bootstrap implements BootstrapProvider
         );
 
         $ctx->set(
+            \App\Services\StationViewService::class,
+            fn() => new \App\Services\StationViewService()
+        );
+
+        $ctx->set(
             \App\Services\RequestService::class,
             fn() => new \App\Services\RequestService(
                 AppContext::instance()->get(\App\Services\StationService::class)
@@ -179,6 +184,8 @@ class Bootstrap implements BootstrapProvider
         $router->add('GET', '/listen/{station:alpha}', 'Web\\ListenController::stationAction');
         $router->add('GET', '/playlist', 'Web\\PlaylistController::indexAction');
         $router->add('GET', '/playlist/{station:alpha}', 'Web\\PlaylistController::stationAction');
+        $router->add('GET', '/muses', 'Web\\MusesController::indexAction');
+        $router->add('GET', '/muses/{station:alpha}', 'Web\\MusesController::stationAction');
         $router->add('GET', '/topframe', 'Web\\TopframeController::indexAction');
 
         // Stream playlist files. A single path segment carries both the

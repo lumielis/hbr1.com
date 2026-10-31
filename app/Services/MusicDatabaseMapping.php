@@ -65,6 +65,16 @@ final class MusicDatabaseMapping
         return $mapping;
     }
 
+    /**
+     * The RadioDJ schema for a station, for the few places that must write the
+     * statement by hand (the queue join in {@see TrackService::queue()}).
+     */
+    public static function schemaFor(string $stationId): string
+    {
+        return self::SCHEMAS[$stationId]
+            ?? throw new \InvalidArgumentException("Unknown station: {$stationId}");
+    }
+
     /** @return array<int, string> */
     public static function stationIds(): array
     {

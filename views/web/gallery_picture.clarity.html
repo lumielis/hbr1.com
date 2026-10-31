@@ -1,22 +1,11 @@
-{% extends "layouts/main" %}
+{% extends "layouts/page" %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Galleries on HBR1{% endblock %}
+{% block heading %}GALLERY{% endblock %}
+{% block pageid %}PageID = 'gallery';{% endblock %}
 
 {% block content %}
-<table cellspacing="0" cellpadding="0" border="0" width="583">
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img src="/images/title_left.gif" alt=""></td>
-    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
-      <font color="#9999ff"><b>GALLERY</b></font></td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img src="/images/title_right.gif" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
-    <td align="center" background="/images/body_bg.jpg" valign="top">
-      <div style="margin-top: 15px; margin-bottom: 15px;">
-        <p style="text-align: center;">
+<p style="text-align: center;">
           <img src="/gp/pv/{{ picture:file }}" alt="{{ picture:title }}">
         </p>
 
@@ -43,9 +32,4 @@
             <font color="#444444">next &raquo;</font>
           {% endif %}
         </p>
-      </div>
-    </td>
-    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
-  </tr>
-</table>
 {% endblock %}

@@ -1,30 +1,20 @@
-{% extends "layouts/main" %}
+{% extends "layouts/page" %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}HBR1 Inventory{% endblock %}
+{% block heading %}INVENTORY{% endblock %}
+{% block pageid %}PageID = 'inventory';{% endblock %}
 
-{% block content %}
+{% block styles %}
 <style>
 .current { font-weight: bold; color: #FFFF88; }
 .pager a { margin: 0 3px; }
 .genre { font-size: 10px; font-family: Arial, Helvetica, sans-serif; }
 .station { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
 </style>
+{% endblock %}
 
-<table cellspacing="0" cellpadding="0" border="0" width="583">
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img src="/images/title_left.gif" alt=""></td>
-    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
-      <font color="#9999ff"><b>INVENTORY</b></font></td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img src="/images/title_right.gif" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
-    <td align="center" background="/images/body_bg.jpg" valign="top">
-      <div style="margin-top: 15px; margin-bottom: 15px;">
-
-        {% if current is defined and current %}
+{% block content %}
+{% if current is defined and current %}
           <p><b>{{ current:title }}</b></p>
 
           {% if page is defined and page and page:rows %}
@@ -76,10 +66,4 @@
             {% endfor %}
           </table>
         {% endif %}
-
-      </div>
-    </td>
-    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
-  </tr>
-</table>
 {% endblock %}

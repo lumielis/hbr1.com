@@ -1,8 +1,10 @@
-{% extends "layouts/main" %}
+{% extends "layouts/page" %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}HBR1 Party Calendar{% endblock %}
+{% block heading %}PARTY{% endblock %}
+{% block pageid %}PageID = 'party';{% endblock %}
 
-{% block content %}
+{% block styles %}
 <style>
 .party-title { font-size: 14px; font-family: Verdana, Arial, sans-serif; color: #9999FF; font-weight: bold; }
 .party-meta { font-size: 11px; font-family: Verdana, Arial, sans-serif; color: #999999; }
@@ -10,20 +12,10 @@
 .party-field { color: #666666; font-size: 10px; font-family: Arial, sans-serif; }
 .flyer { border: 1px solid #333366; margin: 10px 0; }
 </style>
+{% endblock %}
 
-<table cellspacing="0" cellpadding="0" border="0" width="583">
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img src="/images/title_left.gif" alt=""></td>
-    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
-      <font color="#9999ff"><b>PARTY</b></font></td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img src="/images/title_right.gif" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
-    <td align="left" background="/images/body_bg.jpg" valign="top">
-      <div style="margin: 15px;">
+{% block content %}
+<div style="margin: 15px;">
 
         <div class="party-title">{{ party:title }}</div>
         <div class="party-meta">
@@ -57,8 +49,4 @@
         </p>
 
       </div>
-    </td>
-    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
-  </tr>
-</table>
 {% endblock %}

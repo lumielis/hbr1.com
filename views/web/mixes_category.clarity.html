@@ -1,26 +1,18 @@
-{% extends "layouts/main" %}
+{% extends "layouts/page" %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}HBR1 Mixes{% endblock %}
+{% block heading %}{{ category:name|upper }}{% endblock %}
+{% block pageid %}PageID = 'playlist';{% endblock %}
 
-{% block content %}
+{% block styles %}
 <style>
 .mix-row { font-size: 11px; font-family: Verdana, Arial, sans-serif; border-bottom: 1px solid #222244; }
 .mix-dj { color: #666666; font-size: 10px; }
 </style>
+{% endblock %}
 
-<table cellspacing="0" cellpadding="0" border="0" width="583">
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img src="/images/title_left.gif" alt=""></td>
-    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
-      <font color="#9999ff"><b>{{ category:name|upper }}</b></font></td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img src="/images/title_right.gif" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">&nbsp;</td>
-    <td align="left" background="/images/body_bg.jpg" valign="top">
-      <div style="margin: 15px;">
+{% block content %}
+<div style="margin: 15px;">
 
         {% if mixes %}
           {% for mix in mixes %}
@@ -36,8 +28,4 @@
         <p style="margin-top: 20px;"><a href="/mixes">&laquo; all styles</a></p>
 
       </div>
-    </td>
-    <td align="right" width="1%" background="/images/body_right.gif">&nbsp;</td>
-  </tr>
-</table>
 {% endblock %}

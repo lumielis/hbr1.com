@@ -1,0 +1,179 @@
+{#
+  The classic HBR1 page frame.
+
+  Every content page of the site - listen, playlist, tracklist, gallery, mixes -
+  used the same 583 px three-column chrome: a `header_*.gif` cap, a
+  `title_*.gif` band holding the section name, a `body_bg.jpg` well with
+  `body_left/right.gif` gutters, a `title_*.gif` band with the site signature,
+  and a `footer_*.gif` foot.
+
+  The first pass of the port dropped all of it and rendered only the inner
+  583 px table, on a bare black body. That is what looked broken: no frame, no
+  section band, no "HBR1 - Music on Futurenet" signature, no player advert.
+  This layout restores the chrome for every page at once.
+
+  Pages fill three blocks: `heading` (the band text), `styles` (per-page CSS,
+  emitted inside <head> so it is not a stray <style> in <body>), and `content`
+  (the well). `aside` is for the rare page that wants something under the
+  well, above the signature band - listen and playlist put the player advert
+  there.
+#}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>{% block title %}HBR1{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="/style/client.css">
+
+<style type="text/css">
+.genre {
+	font-size: 10px;
+	font-family: Arial, Adobe Helvetica;
+}
+.station {
+	font-size: 11px;
+	font-family: Verdana, Arial, Sans Serif, Adobe Helvetica;
+}
+.sl1 {
+	font-weight: normal;
+}
+#current {
+	font-weight: bold;
+	color: #FFFF88;
+}
+#playlist {
+	line-height: 13px;
+}
+</style>
+
+{% block styles %}{% endblock %}
+
+<script language="JavaScript">
+<!--
+
+{# The legacy pages refuse to render outside the frameset. That guard is kept
+   but neutered, exactly as production has it: `redirect()` returns before it
+   assigns `location`, so a page loaded directly still renders. It is kept so
+   the `PageID` contract below behaves identically. #}
+if( !top.frames.length ) {
+	redirect();
+}
+else if( top.location.hostname != 'www.hbr1.com' ) {
+	redirect();
+}
+
+function redirect() {
+	return;
+	var redirect = 'http://' + location.hostname + '?' + location.pathname + location.search;
+	location.href = redirect;
+}
+
+{# The bottom navigation frame asks its sibling for its PageID to decide which
+   button to light. Dropping this breaks the highlight. #}
+{% block pageid %}{% endblock %}
+
+if( parent && parent.frames && parent.frames['bottom'] ) {
+	if( parent.frames['bottom'].updatePage )
+		parent.frames['bottom'].updatePage( PageID );
+}
+
+//-->
+</script>
+
+<script language="JavaScript" src="/cgi-htm/jscript/color.js"></script>
+<script language="JavaScript">
+<!--
+
+{# `color.js` builds the per-character colour ramps used for the station name
+   and genre headings. The ported views call these, so they must be present. #}
+function TextLight( text, color, light ) {
+  var c_max = new Color( light );
+  var c_inp = new Color( color );
+  var c_out = new Color( color );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    var angle = Math.sin( ( 180 / size * i ) * Math.PI / 180 );
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) * angle );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) * angle );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) * angle );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function TextFade( text, col_from, col_to ) {
+  var c_max = new Color( col_to );
+  var c_inp = new Color( col_from );
+  var c_out = new Color( col_from );
+  var size = text.length + 1;
+  var out = '';
+  for( var i = 1; i < size; i ++ ) {
+    c_out.R = parseInt( c_inp.R + ( c_max.R - c_inp.R ) / size * i );
+    c_out.G = parseInt( c_inp.G + ( c_max.G - c_inp.G ) / size * i );
+    c_out.B = parseInt( c_inp.B + ( c_max.B - c_inp.B ) / size * i );
+    out += '<font color="#' + c_out.AsString() + '">' + text.substr( i - 1, 1 ) + '</font>';
+  }
+  return out;
+}
+
+function openMuses( url )
+{
+	url = location.protocol + "//" + location.host + url;
+	window.open( url, "muses", "width=310,height=170" );
+	return false;
+}
+
+//-->
+</script>
+
+</head>
+<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#9944AA" vlink="#5588FF" leftMargin="0" topMargin="3" marginheight="3" marginwidth="0">
+
+<table cellspacing="0" cellpadding="0" border="0" width="583">
+  <tr>
+    <td align="left" width="1%" background="/images/header_left.gif"><img height="8" src="/images/spacer.gif" width="64" alt=""></td>
+    <td align="middle" background="/images/header_bg.gif"><img height="1" src="/images/spacer.gif" width="1" alt=""></td>
+    <td align="right" width="1%" background="/images/header_right.gif"><img height="8" src="/images/spacer.gif" width="64" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif" alt=""></td>
+    <td align="center" background="/images/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td class="head" align="center"><font color="#9999ff"><b>{% block heading %}HBR1{% endblock %}</b></font></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="55" alt=""></td>
+    <td align="center" background="/images/body_bg.jpg" valign="top">
+
+    <br>
+{% block content %}{% endblock %}
+{% block aside %}{% endblock %}
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="55" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/body_left.gif"><img src="/images/title_left.gif" alt=""></td>
+    <td align="middle" background="/images/title_bg.gif" height="1%">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td align="center" class="footer"><i><a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> - Music on Futurenet</i></td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img src="/images/title_right.gif" alt=""></td>
+  </tr>
+  <tr>
+    <td align="left" width="1%" background="/images/footer_left.gif"><img height="8" src="/images/spacer.gif" width="64" alt=""></td>
+    <td align="middle" background="/images/footer_bg.gif"><img height="1" src="/images/spacer.gif" width="1" alt=""></td>
+    <td align="right" width="1%" background="/images/footer_right.gif"><img height="8" src="/images/spacer.gif" width="64" alt=""></td>
+  </tr>
+</table>
+
+</body>
+</html>
