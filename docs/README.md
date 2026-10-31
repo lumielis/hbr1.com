@@ -14,7 +14,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | Phase 0 — security cleanup | runbook ready (`deploy/PHASE-0-RUNBOOK.md`), **needs execution on the server** |
 | W1 — foundation | **done** — bootstrap, routing, views, legacy redirects, tests, deploy configs |
 | W2 — data layer | **done** — 46-table schema baseline, 46 models, `ModelMapping` for the music schemas |
-| W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files, `/muses`; `vimg`/`earthcam`/`jsm*` open |
+| W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files, `/muses`, `/viewer`; `earthcam`/`jsm*` open |
 | W4 — catalogue | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
 | W6 — community | **mostly done** — guestbook, party calendar, chat, navigation frame; party submission is W8 |
@@ -46,6 +46,7 @@ What works against the live server right now:
 /gallery/{category}     galleries in a category
 /gallery/{cat}/{gal}    pictures in a gallery
 /gallery/pic/{id}       single picture, prev/next
+/viewer/{path}          the `vimg.cgi` image viewer behind every thumbnail
 /stream/{station}.m3u   playlist files (these 500 in production)
 /stream/{station}.asx
 ```
@@ -191,6 +192,17 @@ and never clears the loop variable, so a request without `?station=` keeps
 whatever the loop ended on - Ambient, hence "HBR1 - Dream Factory" in
 production. `StationService::fallback()` makes that explicit and
 `?module=muses&station=X` now carries the station through to `/muses/x`.
+
+**Every thumbnail on the legacy pages is a `vimg.cgi` link.** There are about
+1,300 of them (`/djs.htm` alone has 56 on a page, `/artists.html` 176 links
+across the page, the front page 43), and the port had no route for the viewer,
+so all of them were 404s. The legacy script interpolates `$ENV{'QUERY_STRING'}`
+straight into an `<img src>`, which means it would also render any URL it was
+handed; the new `/viewer/{path}` resolves the target through `LegacyStatic`
+instead, so only files that exist in the document root are ever shown, and the
+legacy query string is rejected unless it is a plain relative path with an
+extension. Verified by clicking a thumbnail on `/djs.htm` through to the
+lightbox.
 
 ## ⚠️ Do not submission-test the request endpoint
 

@@ -28,6 +28,8 @@ $cases = [
     '/run/main.xp?action=party',
     '/cgi-bin/asx.cgi?trance',
     '/cgi-bin/m3u.cgi?tronic',
+    '/perl/vimg.cgi?../images/djs/maya.jpg',
+    '/cgi-bin/vimg.cgi?http://evil.example/x.jpg',
     '/run/mixes.cgi',
     '/cgi-bin/admin.cgi',
 ];

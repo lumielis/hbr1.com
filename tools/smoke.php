@@ -48,6 +48,9 @@ $checks = [
     ["/gallery/{$categoryId}/{$galleryId}", 200],
     ["/gallery/pic/{$pictureId}", 200],
     ['/gallery/9999', 404],
+    // The `vimg.cgi` viewer behind every DJ/artist/flyer thumbnail.
+    ['/viewer/images/djs/maya.jpg', 200],
+    ['/viewer/images/djs/nope.jpg', 404],
     ['/stream/trance.m3u', 200],
     ['/stream/trance.asx', 200],
     ['/stream/trance.pls', 200],

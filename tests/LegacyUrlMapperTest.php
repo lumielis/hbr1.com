@@ -78,6 +78,59 @@ class LegacyUrlMapperTest extends TestCase
         self::assertSame('/', LegacyUrlMapper::resolve('/cgi-bin/main.php', ['module' => 'nope']));
     }
 
+    /**
+     * `vimg.cgi` takes the image path as a bare query string with no
+     * parameter name (`?../images/djs/maya.jpg`), so it cannot go through the
+     * data provider - `$_SERVER['QUERY_STRING']` is what is actually read.
+     */
+    public function testViewerTakesTheBareQueryString(): void
+    {
+        $previous = $_SERVER['QUERY_STRING'] ?? null;
+
+        $_SERVER['QUERY_STRING'] = '../images/djs/maya.jpg';
+        self::assertSame('/viewer/images/djs/maya.jpg', LegacyUrlMapper::resolve('/perl/vimg.cgi', []));
+        self::assertSame('/viewer/images/djs/maya.jpg', LegacyUrlMapper::resolve('/cgi-bin/vimg.cgi', []));
+
+        $_SERVER['QUERY_STRING'] = '';
+        self::assertSame('/', LegacyUrlMapper::resolve('/perl/vimg.cgi', []));
+
+        if ($previous === null) {
+            unset($_SERVER['QUERY_STRING']);
+        } else {
+            $_SERVER['QUERY_STRING'] = $previous;
+        }
+    }
+
+    /**
+     * The legacy script interpolated the query string into the page, so it
+     * would render any URL. The mapper must refuse anything that is not a
+     * plain path with a file extension.
+     */
+    public static function viewerRejections(): array
+    {
+        return [
+            'absolute URL'      => ['http://evil.example/x.jpg'],
+            'traversal'         => ['../../cgi-bin/include/config.php'],
+            'dotfile'           => ['.git/config'],
+            'no extension'      => ['images/djs'],
+        ];
+    }
+
+    #[DataProvider('viewerRejections')]
+    public function testViewerRejectsAnythingButAPlainPath(string $query): void
+    {
+        $previous = $_SERVER['QUERY_STRING'] ?? null;
+        $_SERVER['QUERY_STRING'] = $query;
+
+        self::assertSame('/', LegacyUrlMapper::resolve('/perl/vimg.cgi', []));
+
+        if ($previous === null) {
+            unset($_SERVER['QUERY_STRING']);
+        } else {
+            $_SERVER['QUERY_STRING'] = $previous;
+        }
+    }
+
     public function testNonLegacyPathIsNotMapped(): void
     {
         self::assertNull(LegacyUrlMapper::resolve('/listen/trance', []));

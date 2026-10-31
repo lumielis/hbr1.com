@@ -209,6 +209,11 @@ class Bootstrap implements BootstrapProvider
         $router->add('GET', '/tracklist', 'Web\\TracklistController::indexAction');
         $router->add('GET', '/tracklist/{station:alpha}', 'Web\\TracklistController::stationAction');
 
+        // The `vimg.cgi` image viewer. About 1,300 legacy links point at it
+        // with the image path as a bare query string (`?../images/djs/x.jpg`),
+        // so the parameter is a multi-segment path, not a slug.
+        $router->add('GET', '/viewer/{path:*}', 'Web\\ViewerController::imageAction');
+
         // Song requests.
         $router->add('GET', '/request/{station:alpha}/{song:int}', 'Web\\RequestController::formAction');
         $router->add('POST', '/request/{station:alpha}', 'Web\\RequestController::submitAction');

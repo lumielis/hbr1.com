@@ -81,6 +81,7 @@ final class LegacyUrlMapper
             '/cgi-bin/party.cgi' => '/party',
             '/cgi-bin/chat.cgi', '/perl/chat.cgi' => '/chat',
             '/cgi-bin/gallery.cgi', '/perl/gallery.cgi' => '/gallery',
+            '/cgi-bin/vimg.cgi', '/perl/vimg.cgi', '/cgi-pab/vimg.cgi' => self::fromViewer(),
             '/cgi-bin/admin.cgi' => '/admin',
             default => null,
         };
@@ -172,5 +173,35 @@ final class LegacyUrlMapper
         }
 
         return '/';
+    }
+
+    /**
+     * `vimg.cgi?../images/djs/maya.jpg` - the image path is the whole query
+     * string, unencoded and unnamed, which is why the parameter cannot be a
+     * normal slug. `./` and `../` prefixes simply resolve from the root.
+     */
+    private static function fromViewer(): string
+    {
+        $raw = (string) ($_SERVER['QUERY_STRING'] ?? '');
+
+        if ($raw === '') {
+            return '/';
+        }
+
+        $path = preg_replace('#^\.{1,2}/#', '', rawurldecode(trim($raw))) ?? '';
+
+        // A plain relative path only: no scheme, no host, no traversal, no
+        // dotfile, and it has to look like a file.
+        if ($path === ''
+            || preg_match('#^[a-z][a-z0-9+.-]*:#i', $path) === 1
+            || str_contains($path, '//')
+            || preg_match('#(^|/)\.\.?(/|$)#', $path) === 1
+            || preg_match('#(^|/)\.#', $path) === 1
+            || !str_contains($path, '.')
+        ) {
+            return '/';
+        }
+
+        return '/viewer/' . ltrim($path, '/');
     }
 }
