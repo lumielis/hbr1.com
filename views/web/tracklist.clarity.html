@@ -36,6 +36,11 @@
               <td class="station" width="1%">&ndash;</td>
               <td class="station">{{ row:title }}</td>
               <td class="station" align="right" width="1%"><font color="#666666">{{ row:durationLabel }}</font></td>
+              <td class="station" align="right" width="1%">
+                {% if row:title %}
+                <a href="/request/{{ current:slug }}/{{ row:id }}" title="request this track">+</a>
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </table>
