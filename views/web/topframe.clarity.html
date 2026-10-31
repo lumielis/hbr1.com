@@ -1,8 +1,17 @@
 {#
-  The clock/header frame. The legacy version emitted a table of digit images
-  and drove them from JavaScript. The geometry is preserved so the frameset
-  looks unchanged; the values are now computed in PHP instead of by a MySQL
-  CONVERT_TZ() round-trip.
+  The clock/header frame. A straight port of `template/client/topframe.phtml`.
+
+  Left: the four `images/top_*.jpg` banner tiles, with the "Alien Heads"
+  hotspot on the last one. Right: five staggered clock rows over
+  `images/clock/*.gif` chrome.
+
+  The time is still drawn with the original `images/courier11/_cNN.gif` digit
+  glyphs (7x10 px, one per character, named after the character's code point).
+  That is not nostalgia: the glyphs give every row an exact pixel width, so the
+  five rows stay staggered in a 600 px frame without the browser compressing
+  the label cells. Only the JavaScript changed - it now swaps `src` on a
+  once-per-second tick instead of a 10 s interval, which could let a whole
+  minute pass without the header moving.
 #}
 <!DOCTYPE html>
 <html>
@@ -10,69 +19,151 @@
 <meta charset="utf-8">
 <title>{{ title }}</title>
 <link rel="stylesheet" href="/style/client.css">
+<style>
+  /* The legacy frame did not load client.css, so it never inherited a
+     line-height. Loading it here (for the shared palette) reintroduced one,
+     which added a descender gap under every inline image: the 4 px spacer rows
+     became 12 px and the 17 px clock rows became 20 px, pushing the last clock
+     out of the 136 px frame. Making the images block-level pins every row to
+     its artwork height, which is what makes the five rows total 101 px. */
+  img { display: block; }
+  .time {
+    font-family: Arial, Helvetica, sans-serif, mono;
+    font-size: 7pt;
+    line-height: 17px;
+    color: #99AAFF;
+  }
+</style>
 </head>
-<body bgcolor="#000000" text="#fffaf0" link="#5588FF" leftMargin="0" topMargin="0" marginheight="0" marginwidth="0">
+<body bgcolor="#000000" text="#999999" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<map name="Map">
+  <area alt="Alien Heads" title="Alien Heads" shape="RECT" target="_blank" coords="5,35,100,129" href="http://www.alien-heads.com">
+</map>
+
 <table cellspacing="0" cellpadding="0" border="0">
   <tr>
-    <td align="left" width="1%" background="/images/header_left.gif">
-      <img height="8" src="/images/spacer.gif" width="64" alt=""></td>
-    <td align="middle" background="/images/header_bg.gif">
-      <img height="1" src="/images/spacer.gif" width="1" alt=""></td>
-    <td align="right" width="1%" background="/images/header_right.gif">
-      <img height="8" src="/images/spacer.gif" width="64" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img src="/images/title_left.gif" alt=""></td>
-    <td align="center" class="head" background="/images/title_bg.gif" height="1%">
-      <font color="#9999ff"><b>HBR1 - MUSIC ON FUTURENET</b></font></td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img src="/images/title_right.gif" alt=""></td>
-  </tr>
-  <tr>
-    <td align="left" width="1%" background="/images/body_left.gif">
-      <img height="1" src="/images/spacer.gif" width="55" alt=""></td>
-    <td align="center" background="/images/body_bg.jpg" valign="top">
-      <table cellspacing="8" cellpadding="0" border="0">
+    <td>
+      <table cellspacing="0" cellpadding="0" border="0">
         <tr>
-          {% for idx, zone in zones %}
-          <td align="center">
-            <div class="station">{{ zone:name }}</div>
-            <div class="head" id="clock-{{ idx }}">{{ zone:time }}</div>
-          </td>
-          {% endfor %}
+          <td><img src="/images/top_1.jpg?7" width="116" height="134" alt=""></td>
+          <td><img src="/images/top_2.jpg?7" width="106" height="134" alt=""></td>
+          <td><img src="/images/top_3.jpg?7" width="107" height="134" alt=""></td>
+          <td><img src="/images/top_4.jpg?7" width="117" height="134" usemap="#Map" border="0" alt=""></td>
         </tr>
       </table>
     </td>
-    <td align="right" width="1%" background="/images/body_right.gif">
-      <img height="1" src="/images/spacer.gif" width="55" alt=""></td>
+    <td valign="middle">
+      <table cellspacing="0" cellpadding="0" border="0">
+        {% for zone in zones %}
+        <tr>
+          <td align="right">
+            <table cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td><img src="/images/spacer.gif" width="{{ zone:spacer }}" height="1" alt=""></td>
+                <td>
+                  <table cellspacing="0" cellpadding="0" border="0" background="/images/clock/background.gif">
+                    <tr>
+                      <td><img src="/images/clock/left.gif" width="10" height="17" alt=""></td>
+                      <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+                      <td width="{{ zone:labelWidth }}"><span class="time">{{ zone:label }}</span></td>
+                      <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+                      <td><img src="/images/clock/middle.gif" width="5" height="17" alt=""></td>
+                      <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+                      <td><img src="/images/courier11/_c{{ zone:hour1 }}.gif" name="{{ zone:key }}_hour_1" width="7" height="10" alt="{{ zone:hour }}"></td>
+                      <td><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+                      <td><img src="/images/courier11/_c{{ zone:hour2 }}.gif" name="{{ zone:key }}_hour_2" width="7" height="10" alt=""></td>
+                      <td><img src="/images/clock/dpoint1.gif" name="{{ zone:key }}_dp1" width="5" height="10" alt=":"></td>
+                      <td><img src="/images/courier11/_c{{ zone:minute1 }}.gif" name="{{ zone:key }}_minute_1" width="7" height="10" alt="{{ zone:minute }}"></td>
+                      <td><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+                      <td><img src="/images/courier11/_c{{ zone:minute2 }}.gif" name="{{ zone:key }}_minute_2" width="7" height="10" alt=""></td>
+                      <td><img src="/images/clock/dpoint1.gif" name="{{ zone:key }}_dp2" width="5" height="10" alt=":"></td>
+                      <td><img src="/images/courier11/_c{{ zone:second1 }}.gif" name="{{ zone:key }}_second_1" width="7" height="10" alt="{{ zone:second }}"></td>
+                      <td><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+                      <td><img src="/images/courier11/_c{{ zone:second2 }}.gif" name="{{ zone:key }}_second_2" width="7" height="10" alt=""></td>
+                      <td><img src="/images/spacer.gif" width="4" height="1" alt=""></td>
+                      <td><img src="/images/courier11/_c{{ zone:dt1 }}.gif" name="{{ zone:key }}_dt_1" width="7" height="10" alt="{{ zone:meridiem }}"></td>
+                      <td><img src="/images/courier11/_c{{ zone:dt2 }}.gif" name="{{ zone:key }}_dt_2" width="7" height="10" alt="m"></td>
+                      <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
+                      <td><img src="/images/clock/right.gif" width="4" height="17" alt=""></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        {% if zone:separator %}
+        <tr>
+          <td><img src="/images/spacer.gif" width="1" height="{{ zone:separator }}" alt=""></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </table>
+    </td>
   </tr>
 </table>
+
 <script>
 (function () {
-    // The legacy frame ticked the clock client-side; keep that behaviour so
-    // the header does not freeze between page loads.
+    // The legacy frame re-drew these glyphs once a second. Keep that, but drive
+    // it from the clock rather than a fixed interval: the previous 10 s timer
+    // was slower than a minute, so a whole minute could pass with the header
+    // frozen, and every cell showed NaN:NaN when the offsets failed to parse.
     //
-    // The offsets must be emitted as a JS *array*. Rendering them as a bare
-    // string ("0,3600,...") made `offsets[i]` index characters and produced
-    // NaN:NaN in every cell.
+    // Offsets are emitted as a JSON *object* keyed by zone, so a row lookup can
+    // never miss because two lists drifted out of order.
+    var imagePath = '/images/courier11/';
     var utc = {{ utc }};
     var offsets = {{ offsets|raw }};
-    var cells = document.querySelectorAll('[id^="clock-"]');
+    var clockStart = Date.now();
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
+    function glyph(name, text) {
+        var img = document.images[name];
+        if (!img) { return; }
+        img.src = imagePath + '_c' + text.charCodeAt(0) + '.gif';
+    }
+
+    function render(key, secondsSinceLoad) {
+        var d = new Date((utc + secondsSinceLoad + offsets[key]) * 1000);
+        if (isNaN(d.getTime())) { return; }
+
+        var hours = d.getUTCHours();
+        var suffix = hours < 12 ? 'a' : 'p';
+        var hour = pad(hours % 12 || 12);
+        var minute = pad(d.getUTCMinutes());
+        var second = pad(d.getUTCSeconds());
+
+        glyph(key + '_hour_1', hour[0]);
+        glyph(key + '_hour_2', hour[1]);
+        glyph(key + '_minute_1', minute[0]);
+        glyph(key + '_minute_2', minute[1]);
+        glyph(key + '_second_1', second[0]);
+        glyph(key + '_second_2', second[1]);
+        glyph(key + '_dt_1', suffix);
+    }
+
     function tick() {
-        var now = Math.floor(Date.now() / 1000) - utc;
-        for (var i = 0; i < cells.length; i++) {
-            var d = new Date((utc + now + offsets[i]) * 1000);
-            cells[i].textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+        // Measure elapsed wall time rather than counting ticks, so a throttled
+        // background tab cannot drift the clock.
+        var elapsed = Math.floor((Date.now() - clockStart) / 1000);
+
+        for (var key in offsets) {
+            if (Object.prototype.hasOwnProperty.call(offsets, key)) {
+                render(key, elapsed);
+            }
         }
+
+        // Re-align to the next second boundary.
+        setTimeout(tick, 1000 - (Date.now() % 1000));
     }
 
     tick();
-    setInterval(tick, 10000);
 })();
 </script>
 </body>
 </html>
+
+

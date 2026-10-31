@@ -144,6 +144,19 @@ class Bootstrap implements BootstrapProvider
                 AppContext::instance()->dbManager()->getDefault()
             )
         );
+
+        // Stateless: the header clock is pure computation, no connection.
+        $ctx->set(
+            \App\Services\ClockService::class,
+            fn() => new \App\Services\ClockService()
+        );
+
+        $ctx->set(
+            \App\Services\TickerService::class,
+            fn() => new \App\Services\TickerService(
+                AppContext::instance()->dbManager()->getDefault()
+            )
+        );
     }
 
     private function configureDispatcher(AppContext $ctx): void
@@ -206,5 +219,16 @@ class Bootstrap implements BootstrapProvider
 
         $router->add('GET', '/chat', 'Web\\ChatController::indexAction');
         $router->add('POST', '/chat', 'Web\\ChatController::submitAction');
+
+        // WebTV ticker (W7). The left camera frame loads /webtv/ticker/, whose
+        // frameset asks for content.htm and then follows the meta-refresh ring.
+        // These must win over the /webtv/ static alias, which is why the alias
+        // uses try_files and these are real routes.
+        $router->add(
+            'GET',
+            '/webtv/ticker/{file:regex(content[0-9]*\\.htm)}',
+            'Web\\TickerController::pageAction'
+        );
+        $router->add('GET', '/webtv/ticker', 'Web\\TickerController::startAction');
     }
 }

@@ -50,6 +50,12 @@ $checks = [
     ['/mixes', 200],
     ['/mixes/9999', 404],
     ['/chat', 200],
+    // W7 webtv ticker. The left frame loads the frameset, which then walks the
+    // meta-refresh ring of content pages.
+    ['/webtv/ticker', 200],
+    ['/webtv/ticker/content.htm', 200],
+    ['/webtv/ticker/content1.htm', 200],
+    ['/webtv/ticker/content999.htm', 404],
     // Legacy static pages still reached by the frameset.
     ['/ltop.htm', 200],
     ['/djs.htm', 200],

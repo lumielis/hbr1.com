@@ -1,0 +1,21 @@
+{#
+  The WebTV ticker frameset. Replaces the static `htdocs/webtv/ticker/index.html`.
+
+  Three frames: the camera chrome on the left, the rotating page in the middle,
+  more chrome on the right - the original 10 / 160 / 24 px columns. The middle
+  frame now points at a route that renders from the database, so the "content"
+  pane is never empty and never depends on a file that `write_ticker()` had to
+  generate.
+#}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+</head>
+<frameset cols="10,160,24" frameborder="0" border="0" framespacing="0">
+  <frame src="/webtv/ticker/index_left.html" frameborder="0" marginwidth="0" marginheight="0" scrolling="NO" noresize>
+  <frame name="content" src="/webtv/ticker/content.htm" frameborder="0" marginwidth="0" marginheight="0" scrolling="NO" noresize>
+  <frame src="/webtv/ticker/index_right.html" frameborder="0" marginwidth="0" marginheight="0" scrolling="NO" noresize>
+</frameset>
+</html>

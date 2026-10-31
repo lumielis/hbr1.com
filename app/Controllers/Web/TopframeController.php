@@ -3,54 +3,38 @@
 namespace App\Controllers\Web;
 
 use App\Controllers\BaseController;
+use App\Services\ClockService;
 
 /**
  * The clock/header frame (replaces `main.php?module=topframe`).
  *
- * The legacy version asked MySQL to do the timezone conversion with a
- * `CONVERT_TZ()` round-trip. PHP owns timezones natively, so this is now a
- * pure computation with no database access at all.
+ * The visual layout is a port of `template/client/topframe.phtml`: four banner
+ * images on the left, five staggered clock rows on the right. The legacy
+ * clocks were `<img>` digit glyphs driven by JavaScript; they are now plain
+ * text over the same `images/clock/*.gif` chrome, which keeps the look and
+ * removes ~40 image requests per header load.
+ *
+ * The legacy page asked MySQL to convert one timestamp into five zones with
+ * `CONVERT_TZ()`. That is not just slower, it is broken on this server: the
+ * `mysql.time_zone*` tables are empty, so every call returned NULL. PHP owns
+ * the IANA database, so the conversion now happens in ClockService and the
+ * page needs no database at all.
  */
 class TopframeController extends BaseController
 {
-    /** Zones shown in the header, in display order. */
-    private const ZONES = [
-        'UTC'            => 'UTC',
-        'Europe/Berlin'  => 'Berlin',
-        'America/New_York' => 'New York',
-        'Europe/Moscow'  => 'Moscow',
-        'Asia/Tokyo'     => 'Tokyo',
-    ];
-
     public function indexAction(): string
     {
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        /** @var ClockService $clock */
+        $clock = $this->service(ClockService::class);
 
-        $zones = [];
-        foreach (self::ZONES as $tzName => $label) {
-            $zones[] = [
-                'name'    => $label,
-                'offset'  => $now->setTimezone(new \DateTimeZone($tzName))->getOffset(),
-                'time'    => $now->setTimezone(new \DateTimeZone($tzName))->format('H:i'),
-                'hours'   => $now->setTimezone(new \DateTimeZone($tzName))->format('H'),
-                'minutes' => $now->setTimezone(new \DateTimeZone($tzName))->format('i'),
-            ];
-        }
-
-        $offsets = array_map(
-            static fn(array $zone): int => $zone['offset'],
-            $zones
-        );
+        $now = new \DateTimeImmutable('now');
 
         return $this->fragment('web/topframe', [
-            'title'    => 'HBR1',
-            'utc'      => $now->getTimestamp(),
-            'zones'    => $zones,
-            // Rendered into a JS literal, so it must be a real JSON array and
-            // must not be escaped. Passing a comma-joined string produced
-            // ["0,3600,..."] - one string element, hence NaN:NaN.
-            'offsets'  => json_encode($offsets, JSON_THROW_ON_ERROR),
-            'timezone' => $this->config()['app']['timezone'],
+            'title'   => 'HBR1',
+            'utc'     => $now->getTimestamp(),
+            'zones'   => $clock->rows($now),
+            // Rendered into a JS literal: a real JSON object, unescaped.
+            'offsets' => json_encode($clock->offsets($now), JSON_THROW_ON_ERROR),
         ]);
     }
 }

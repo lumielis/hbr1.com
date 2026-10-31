@@ -31,8 +31,10 @@ class LegacyStaticTest extends TestCase
 
     public function testDirectoryResolvesToItsIndex(): void
     {
-        // The frameset loads /webtv/ticker/ and expects index.html there.
-        $hit = $this->handler()->resolve('/webtv/ticker/');
+        // The frameset still loads static directory pages like /chat/, and
+        // /broadcast/ is a plain file page. The ticker used to be the example
+        // here, but its index.html is gone: /webtv/ticker/ is now a route.
+        $hit = $this->handler()->resolve('/broadcast/');
 
         self::assertNotNull($hit);
         self::assertStringEndsWith('index.html', str_replace('\\', '/', $hit['file']));

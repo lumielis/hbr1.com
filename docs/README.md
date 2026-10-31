@@ -18,7 +18,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W4 — tracklist | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
 | W6 — community | **mostly done** — guestbook, party calendar, mixes, chat, navigation frame; party submission is W8 |
-| W7 — webtv / ticker / broadcast | not started |
+| W7 — webtv / ticker / broadcast | **mostly done** — ticker renders live from the `ticker` table (no more generated `content*.htm`); `broadcast`, `streamstats`, `jsm*`/CamTV upload open |
 | W8 — admin | not started |
 | W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |
 
@@ -57,8 +57,26 @@ W6 community pages:
 /chat                   chat room (database-backed, not the jsm* file transport)
 ```
 
+W7 WebTV ticker:
+
+```
+/webtv/ticker           frameset (camera chrome + rotating page)
+/webtv/ticker/content{N}.htm   one ticker page; meta-refresh walks the ring
+```
+
+The ticker is rendered from the `ticker` table on every request. The legacy
+pipeline instead had `write_ticker()` rewrite `htdocs/webtv/ticker/content*.htm`
+from disk on every admin save, and those generated files were committed to the
+repository — so the site showed whatever had last been published, not what the
+admin contained. See [`deploy/WEBTV-TICKER.md`](deploy/WEBTV-TICKER.md).
+
+The header clock (`/topframe`) is computed in PHP from the IANA timezone
+database. The legacy page used MySQL `CONVERT_TZ()`, which returns **NULL** on
+this server because the `mysql.time_zone*` tables are empty — so the old header
+had no offsets at all.
+
 The frameset also loads plain files from the old document root
-(`/ltop.htm`, `/djs.htm`, `/webtv/ticker/`, ...). Those are served by
+(`/ltop.htm`, `/djs.htm`, `/html/lbot.html`, ...). Those are served by
 `App\Http\LegacyStatic`, which only ever returns files with a static extension
 inside `htdocs` - it never serves `.php`, `.pl` or `.inc`, so the Perl
 configuration stays unreachable.
