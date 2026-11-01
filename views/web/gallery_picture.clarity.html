@@ -1,35 +1,53 @@
+{# One picture - production `main.php?module=gallery&show=pic`.
+
+   LEVEL_UP bands return to the gallery, the 400x300 preview sits inside the
+   four `gallery/layout/border_*.gif` pieces, the title is #88EE00 above its
+   credit line, and the previous/next arrows are the medium icons in a 400 px
+   table. The framed picture itself links back to the gallery, as production
+   did; there is no extra text link. #}
 {% extends "layouts/page" %}
 
+{% set submenu = true %}
+
 {% block title %}Galleries on HBR1{% endblock %}
-{% block heading %}GALLERY{% endblock %}
+{% block heading %}GALLERY PICTURE{% endblock %}
 {% block pageid %}PageID = 'gallery';{% endblock %}
 
+{% block content_bg %}/images/body_bg2.gif{% endblock %}
+{% block band_bg_top %}/images/body_bg2.gif{% endblock %}
+{% block band_bg_bottom %}/images/body_bg2.gif{% endblock %}
+
 {% block content %}
-<p style="text-align: center;">
-          <img src="/gp/pv/{{ picture:file }}" alt="{{ picture:title }}">
-        </p>
-
-        {% if picture:title %}
-        <p style="text-align: center;"><b>{{ picture:title }}</b></p>
-        {% endif %}
-
-        {% if picture:copyright %}
-        <p style="text-align: center;"><font color="#666666" size="1">{{ picture:copyright }}</font></p>
-        {% endif %}
-
-        <p style="text-align: center; margin-top: 14px;">
-          {% if picture:previous %}
-            <a href="/gallery/pic/{{ picture:previous }}">&laquo; previous</a>
-          {% else %}
-            <font color="#444444">&laquo; previous</font>
-          {% endif %}
-          &middot;
-          <a href="/gallery/{{ picture:gallery }}">[back to the gallery]</a>
-          &middot;
-          {% if picture:next %}
-            <a href="/gallery/pic/{{ picture:next }}">next &raquo;</a>
-          {% else %}
-            <font color="#444444">next &raquo;</font>
-          {% endif %}
-        </p>
+<table class="picture-wrap">
+  <tr class="picture-spacer"><td><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+  <tr>
+    <td>
+      <a id="photo"></a>
+      <table class="picture-frame">
+        <tr><td colspan="3"><img src="/images/gallery/layout/border_top.gif" alt=""></td></tr>
+        <tr>
+          <td><img src="/images/gallery/layout/border_left.gif" alt=""></td>
+          <td><a href="/gallery/{{ picture:category }}/{{ picture:gallery }}"><img src="/gp/pv/{{ picture:file }}" alt="{{ picture:title }}" width="400" height="300"></a></td>
+          <td><img src="/images/gallery/layout/border_right.gif" alt=""></td>
+        </tr>
+        <tr><td colspan="3"><img src="/images/gallery/layout/border_bottom.gif" alt=""></td></tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="picture-spacer"><td><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+  <tr>
+    <td>
+      <table class="picture-caption">
+        <tr>
+          <td class="picture-prev">{% if picture:previous %}<a href="/gallery/pic/{{ picture:previous }}"><img src="/images/icons/arrow_left_medium.gif" alt="Previous"></a>{% else %}&nbsp;{% endif %}</td>
+          <td>
+            <span class="txt picture-title">{{ picture:title }}</span>{% if picture:creditHtml %}<br><span class="copyright">&copy; {{ picture:creditHtml|raw }}</span>{% else %}<br><span class="copyright">&nbsp;</span>{% endif %}
+          </td>
+          <td class="picture-next">{% if picture:next %}<a href="/gallery/pic/{{ picture:next }}"><img src="/images/icons/arrow_right_medium.gif" alt="Next"></a>{% else %}&nbsp;{% endif %}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="picture-spacer"><td><img src="/images/spacer.gif" width="1" height="5" alt=""></td></tr>
+</table>
 {% endblock %}

@@ -1,54 +1,66 @@
+{# One gallery category - production `main.php?module=gallery&show=cat`.
+
+   Production: "GALLERIES ON HBR1", an ENTRANCE band above and below the well,
+   the category name in #99FF00, gallery titles cut to twenty characters in
+   #88CCAA, 142x110 `gallery_select_border.gif` frames and a 350 px icon pager.
+   The edit icon targets /admin until the W8 gallery editor exists; production
+   pointed it at the legacy editor. See docs/PARITY.md. #}
 {% extends "layouts/page" %}
 
+{% set submenu = true %}
+
 {% block title %}Galleries on HBR1{% endblock %}
-{% block heading %}GALLERY{% endblock %}
+{% block heading %}GALLERIES ON HBR1{% endblock %}
 {% block pageid %}PageID = 'gallery';{% endblock %}
 
-{% block styles %}
-<style>
-.gallery-thumb { border: 1px solid #333366; }
-.gallery-cell { padding: 10px; text-align: center; }
-.gallery-name { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-</style>
-{% endblock %}
+{% block content_bg %}/images/body_bg2.gif{% endblock %}
+{% block band_bg_top %}/images/body_bg.jpg{% endblock %}
+{% block band_bg_bottom %}/images/body_bg2.gif{% endblock %}
 
 {% block content %}
-<p><b>{{ category:name }}</b></p>
+<br>
+<p class="head"><span class="gallery-title">{{ category:name }}</span><br><span class="copyright gallery-intro">Browse through the galleries</span></p>
 
-        {% if galleries is defined and galleries %}
-        <table cellspacing="0" cellpadding="0" border="0">
-          {% for idx, item in galleries %}
-            {% if idx % 3 == 0 %}<tr>{% endif %}
-            <td class="gallery-cell">
-              <a href="/gallery/{{ category:id }}/{{ item:id }}">
-                {% if item:thumb %}
-                  <img class="gallery-thumb" src="/gp/tn/{{ item:thumb:file }}" width="120" alt="{{ item:title }}">
-                {% else %}
-                  <font color="#666666">[no image]</font>
-                {% endif %}
-                <div class="gallery-name">
-                  {{ item:title }}
-                  {% if item:locked %}<font color="#666666">[locked]</font>{% endif %}
-                  <br><font color="#666666">{{ item:count }} pictures</font>
-                </div>
-              </a>
-            </td>
-            {% if idx % 3 == 2 or idx + 1 == galleries|length %}</tr>{% endif %}
-          {% endfor %}
-        </table>
+{% if rows %}
+<table class="gallery-grid">
+  {% for rowIndex, row in rows %}
+  {% if rowIndex > 0 %}
+  <tr class="gallery-gap"><td colspan="3"></td></tr>
+  {% endif %}
+  <tr>
+    {% for item in row %}
+    <td class="gallery-cell">
+      <table class="gallery-card">
+        <tr>
+          <td class="gallery-card-gallery-title">
+            <a href="/gallery/{{ category:id }}/{{ item:id }}"><span class="gallery-gallery-name">{{ item:titleShort }}</span></a>
+          </td>
+        </tr>
+        <tr>
+          <td class="gallery-frame gallery-frame-gallery">
+            <a href="/gallery/{{ category:id }}/{{ item:id }}">{% if item:thumb %}<img src="/gp/tn/{{ item:thumb:file }}" width="110" height="82" alt="{{ item:title }}">{% else %}<span class="gallery-missing">[no image]</span>{% endif %}</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="copyright gallery-credit">{% if item:thumb and item:thumb:creditHtml %}&copy; {{ item:thumb:creditHtml|raw }}{% else %}&nbsp;{% endif %}</td>
+        </tr>
+      </table>
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="copyright gallery-intro">[no galleries in this category]</p>
+{% endif %}
 
-        <p style="margin-top: 14px;">
-          {% if pager:hasPrev %}
-            <a href="/gallery/{{ category:id }}?offset={{ pager:prevOff }}">&laquo; prev</a>
-          {% endif %}
-          <font color="#999999">page {{ pager:current }} of {{ pager:last }}</font>
-          {% if pager:hasNext %}
-            <a href="/gallery/{{ category:id }}?offset={{ pager:nextOff }}">next &raquo;</a>
-          {% endif %}
-        </p>
-        {% else %}
-        <p><font color="#999999">[no galleries in this category]</font></p>
-        {% endif %}
-
-        <p style="margin-top: 14px;"><a href="/gallery">&laquo; all categories</a></p>
+<table class="gallery-pager gallery-pager-category">
+  <tr class="gallery-pager-spacer-category"><td colspan="3"></td></tr>
+  <tr>
+    <td class="gallery-pager-prev">{% if pager:hasPrev %}<a href="/gallery/{{ category:id }}?offset={{ pager:prevOff }}"><img src="/images/icons/arrow_left_small.gif" alt="Previous Page"></a>{% else %}&nbsp;{% endif %}</td>
+    <td><a href="/admin"><img src="/images/icons/edit_small_dark.gif" alt="New Gallery"></a></td>
+    <td class="gallery-pager-next">{% if pager:hasNext %}<a href="/gallery/{{ category:id }}?offset={{ pager:nextOff }}"><img src="/images/icons/arrow_right_small.gif" alt="Next Page"></a>{% else %}&nbsp;{% endif %}</td>
+  </tr>
+</table>
+<br>
 {% endblock %}

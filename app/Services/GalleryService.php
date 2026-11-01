@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\GALGallery;
 use App\Models\GAPGalleryPicture;
 use App\Models\MCGMediaCategory;
+use App\Support\LegacyMarkup;
 
 /**
  * The public gallery.
@@ -75,13 +76,18 @@ class GalleryService
         foreach ($query->entities() as $gallery) {
             $id = (int) $gallery->GAL_Index;
 
+            $title = (string) $gallery->GAL_Title;
+
             $out[] = [
-                'id'      => $id,
-                'title'   => (string) $gallery->GAL_Title,
-                'info'    => (string) $gallery->GAL_Info,
-                'thumb'   => $this->randomPictureForGallery($id),
-                'count'   => GAPGalleryPicture::count(['GAP_GAL_Index' => $id]),
-                'locked'  => trim((string) $gallery->GAL_Password) !== '',
+                'id'         => $id,
+                'title'      => $title,
+                // Production cuts the listing title to 20 characters with
+                // `cut_string()`, breaking at the last space when it can.
+                'titleShort' => LegacyMarkup::cut($title, 20, '..'),
+                'info'       => (string) $gallery->GAL_Info,
+                'thumb'      => $this->randomPictureForGallery($id),
+                'count'      => GAPGalleryPicture::count(['GAP_GAL_Index' => $id]),
+                'locked'     => trim((string) $gallery->GAL_Password) !== '',
             ];
         }
 
@@ -148,7 +154,10 @@ class GalleryService
 
         $galleryId = (int) $picture->GAP_GAL_Index;
 
+        $gallery = GALGallery::findOne(['GAL_Index' => $galleryId]);
+
         $row['gallery']  = $galleryId;
+        $row['category'] = $gallery === null ? 0 : (int) $gallery->GAL_MCG_Index;
         $row['previous'] = $this->neighbour($galleryId, $id, '<');
         $row['next']     = $this->neighbour($galleryId, $id, '>');
 
@@ -174,12 +183,12 @@ class GalleryService
 
     private function pictureRow(GAPGalleryPicture $picture): array
     {
-        return [
-            'id'        => (int) $picture->GAP_Index,
-            'file'      => (string) $picture->GAP_File,
-            'title'     => (string) $picture->GAP_Title,
-            'copyright' => (string) $picture->GAP_Copyright,
-        ];
+        return $this->pictureRowFromArray([
+            'GAP_Index'     => $picture->GAP_Index,
+            'GAP_File'      => $picture->GAP_File,
+            'GAP_Title'     => $picture->GAP_Title,
+            'GAP_Copyright' => $picture->GAP_Copyright,
+        ]);
     }
 
     private function randomPictureForCategory(int $categoryId): ?array
@@ -225,11 +234,17 @@ class GalleryService
 
     private function pictureRowFromArray(array $row): array
     {
+        $copyright = (string) ($row['GAP_Copyright'] ?? '');
+
         return [
-            'id'        => (int) ($row['GAP_Index'] ?? 0),
-            'file'      => (string) ($row['GAP_File'] ?? ''),
-            'title'     => (string) ($row['GAP_Title'] ?? ''),
-            'copyright' => (string) ($row['GAP_Copyright'] ?? ''),
+            'id'          => (int) ($row['GAP_Index'] ?? 0),
+            'file'        => (string) ($row['GAP_File'] ?? ''),
+            'title'       => (string) ($row['GAP_Title'] ?? ''),
+            'copyright'   => $copyright,
+            // The legacy pages printed the credit through `bbc_to_html()`.
+            // The port renders working links; the plain form is for `alt`.
+            'creditHtml'  => LegacyMarkup::bbcToHtml($copyright),
+            'creditPlain' => LegacyMarkup::bbcToPlain($copyright),
         ];
     }
 }

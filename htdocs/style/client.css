@@ -160,3 +160,198 @@ table#MessageLog td {
 	padding-left: 5px;
 	padding-right: 5px;
 }
+
+/* ---------------------------------------------------------------------------
+   Gallery pages
+
+   These reproduce htdocs/cgi-htm/client/gallery_*.htm without their obsolete
+   presentational attributes. The geometry is the legacy geometry: three 33 %
+   columns, 142x110 border art, 110x82 thumbnails, a 13 px gap between rows,
+   and the 330/350 px icon pagers. The colours are the production colours.
+--------------------------------------------------------------------------- */
+.page-heading {
+	color: #9999FF;
+}
+.gallery-grid {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+.gallery-cell {
+	width: 33.3333%;
+	padding: 0;
+	text-align: center;
+	vertical-align: top;
+}
+.gallery-gap td {
+	height: 13px;
+	line-height: 0;
+	font-size: 0;
+}
+.gallery-card {
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+.gallery-card td {
+	padding: 0;
+	text-align: center;
+}
+.gallery-card-title {
+	height: 15px;
+	vertical-align: top;
+}
+.gallery-card-gallery-title {
+	height: 20px;
+	vertical-align: top;
+}
+.gallery-title {
+	color: #99FF00;
+}
+.gallery-intro {
+	color: #999999;
+}
+.gallery-name {
+	color: #6699FF;
+	font-weight: bold;
+}
+.gallery-gallery-name {
+	color: #88CCAA;
+	font-weight: bold;
+}
+.gallery-credit {
+	color: #99DDFF;
+}
+.gallery-frame {
+	width: 142px;
+	height: 110px;
+	text-align: center;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.gallery-frame-category {
+	background-image: url(/images/gallery/layout/category_select_border.gif);
+}
+.gallery-frame-gallery {
+	background-image: url(/images/gallery/layout/gallery_select_border.gif);
+}
+.gallery-frame-photo {
+	background-image: url(/images/gallery/layout/photo_select_border.gif);
+}
+.gallery-missing {
+	color: #666666;
+}
+.gallery-pager {
+	margin: 0;
+	border-collapse: collapse;
+}
+.gallery-pager-category {
+	width: 350px;
+}
+.gallery-pager-photo {
+	width: 330px;
+}
+.gallery-pager td {
+	text-align: center;
+	padding: 0;
+	/* The icons are bare <img> elements. Without this the cell inherits the
+	   13 px line box and every pager row is taller than production's
+	   quirks-mode rendering. The legacy tables also carried cellpadding="0";
+	   without an explicit padding the UA's 1 px inset adds 2 px per row. */
+	line-height: 0;
+	font-size: 0;
+}
+.gallery-pager img {
+	display: block;
+	margin: 0 auto;
+}
+.gallery-pager-prev img {
+	margin-left: 0;
+	margin-right: auto;
+}
+.gallery-pager-next img {
+	margin-left: auto;
+	margin-right: 0;
+}
+.gallery-pager .gallery-pager-prev {
+	width: 20%;
+	text-align: left;
+}
+.gallery-pager .gallery-pager-next {
+	width: 20%;
+	text-align: right;
+}
+.gallery-pager-spacer td {
+	height: 5px;
+	line-height: 0;
+	font-size: 0;
+}
+.gallery-pager-spacer-category td {
+	height: 15px;
+	line-height: 0;
+	font-size: 0;
+}
+.picture-frame {
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+.picture-frame td {
+	padding: 0;
+}
+.picture-wrap {
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+.picture-wrap td {
+	padding: 0;
+}
+.picture-caption {
+	width: 400px;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+.picture-caption td {
+	text-align: center;
+	padding: 0;
+}
+.picture-caption .picture-prev {
+	width: 20%;
+	text-align: left;
+	line-height: 0;
+	font-size: 0;
+}
+.picture-caption .picture-next {
+	width: 20%;
+	text-align: right;
+	line-height: 0;
+	font-size: 0;
+}
+/* `img:only-child { display:block }` is there for the band art, but it also
+   matches an arrow inside its <a>, which makes the arrow ignore the cell's
+   alignment. Keep the arrows inline so left/right alignment applies. */
+.picture-caption a img {
+	display: inline;
+	vertical-align: middle;
+}
+.picture-title {
+	color: #88EE00;
+	font-weight: bold;
+}
+.picture-spacer td,
+.picture-caption td {
+	padding: 0;
+}
+.picture-spacer td {
+	height: 5px;
+	line-height: 0;
+	font-size: 0;
+}
+.gallery-card-gap td {
+	height: 10px;
+	line-height: 0;
+	font-size: 0;
+}
+.picture-wrap {
+	margin: 0 auto;
+	border-collapse: collapse;
+}

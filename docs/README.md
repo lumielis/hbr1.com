@@ -16,7 +16,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W2 — data layer | **done** — 46-table schema baseline, 46 models, `ModelMapping` for the music schemas |
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files, `/muses`, `/viewer`; `earthcam`/`jsm*` open |
 | W4 — catalogue | **done** — pagination, request endpoint, request rules + tests |
-| W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
+| W5 — gallery | **done** — public pages on the live `GAL_` schema; visual parity with production verified for all four levels, see [`PARITY.md`](PARITY.md); admin upload is W8 |
 | W6 — community | **mostly done** — guestbook, party calendar, party submission + edit, chat, navigation frame |
 | W7 — webtv / ticker / broadcast | **mostly done** — ticker renders live from the `ticker` table (no more generated `content*.htm`); `broadcast`, `streamstats`, `jsm*`/CamTV upload open |
 | W8 — admin | not started |

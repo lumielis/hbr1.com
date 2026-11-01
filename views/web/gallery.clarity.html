@@ -1,38 +1,55 @@
+{# The gallery entrance - production `main.php?module=gallery`.
+
+   Production is the reference, not `htdocs/cgi-htm/client/galleries.htm`: the
+   deployed page says "GALLERY ENTRANCE" and leads with the welcome line. Three
+   columns, 142x110 border art, 110x82 thumbnails and a 13 px gap between rows
+   are the legacy geometry; the colours are the legacy colours. The markup is
+   valid HTML5 (no <font>, no presentational attributes), and every link goes
+   to the canonical /gallery/{id} route. #}
 {% extends "layouts/page" %}
 
 {% block title %}Galleries on HBR1{% endblock %}
-{% block heading %}GALLERY{% endblock %}
+{% block heading %}GALLERY ENTRANCE{% endblock %}
 {% block pageid %}PageID = 'gallery';{% endblock %}
 
-{% block styles %}
-<style>
-.gallery-thumb { border: 1px solid #333366; }
-.gallery-cell { padding: 10px; text-align: center; }
-.gallery-name { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-</style>
-{% endblock %}
+{# All four gallery levels use `body_bg2.gif` for the content well. #}
+{% block content_bg %}/images/body_bg2.gif{% endblock %}
 
 {% block content %}
-<p><font color="#999999">Categories</font></p>
+<p class="head"><span class="gallery-title">Welcome to the progressive gallery on futurenet</span><br><span class="copyright gallery-intro">Select one of the styles below</span></p>
 
-        {% if categories is defined and categories %}
-        <table cellspacing="0" cellpadding="0" border="0">
-          {% for idx, category in categories %}
-            {% if idx % 3 == 0 %}<tr>{% endif %}
-            <td class="gallery-cell">
-              <a href="/gallery/{{ category:id }}">
-                {% if category:thumb %}
-                  <img class="gallery-thumb" src="/gp/tn/{{ category:thumb:file }}" width="120" alt="{{ category:name }}">
-                {% else %}
-                  <font color="#666666">[no image]</font>
-                {% endif %}
-                <div class="gallery-name">{{ category:name }}</div>
-              </a>
-            </td>
-            {% if idx % 3 == 2 or idx + 1 == categories|length %}</tr>{% endif %}
-          {% endfor %}
-        </table>
-        {% else %}
-        <p><font color="#999999">[no galleries]</font></p>
-        {% endif %}
+{% if rows %}
+<table class="gallery-grid">
+  {% for rowIndex, row in rows %}
+  {% if rowIndex > 0 %}
+  <tr class="gallery-gap"><td colspan="3"></td></tr>
+  {% endif %}
+  <tr>
+    {% for category in row %}
+    <td class="gallery-cell">
+      <table class="gallery-card">
+        <tr>
+          <td class="gallery-card-title">
+            <a href="/gallery/{{ category:id }}"><span class="gallery-name">{{ category:name }}</span></a>
+          </td>
+        </tr>
+        <tr>
+          <td class="gallery-frame gallery-frame-category">
+            <a href="/gallery/{{ category:id }}">{% if category:thumb %}<img src="/gp/tn/{{ category:thumb:file }}" width="110" height="82" alt="{{ category:name }}">{% else %}<span class="gallery-missing">[no image]</span>{% endif %}</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="copyright gallery-credit">{% if category:thumb and category:thumb:creditHtml %}&copy; {{ category:thumb:creditHtml|raw }}{% else %}&nbsp;{% endif %}</td>
+        </tr>
+      </table>
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<br>
+<br>
+{% else %}
+<p class="copyright gallery-intro">[no galleries]</p>
+{% endif %}
 {% endblock %}

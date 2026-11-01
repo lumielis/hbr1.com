@@ -78,7 +78,9 @@ class LegacyMarkupTest extends TestCase
 
     public function testLongTitlesBreakAtTheLastSpaceWhenThereIsOne(): void
     {
-        self::assertSame('Pleasure..', LegacyMarkup::cut('Pleasure Addicted (Spiralbooking)', 20, '..'));
+        // `cut_string()` walks backwards from character 19 to 4 and stops at
+        // the first space it meets, so the break is after "Addicted".
+        self::assertSame('Pleasure Addicted..', LegacyMarkup::cut('Pleasure Addicted (Spiralbooking)', 20, '..'));
     }
 
     public function testCutWithoutAppendSuffixStillClips(): void

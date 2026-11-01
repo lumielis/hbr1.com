@@ -183,7 +183,7 @@ function openMuses( url )
     <td align="center" background="/images/title_bg.gif" height="1%">
       <table cellspacing="0" cellpadding="0" border="0">
         <tr>
-          <td class="head" align="center"><font color="#9999ff"><b>{% block heading %}HBR1{% endblock %}</b></font></td>
+          <td class="head" align="center"><span class="page-heading"><b>{% block heading %}HBR1{% endblock %}</b></span></td>
         </tr>
       </table>
     </td>
@@ -192,7 +192,7 @@ function openMuses( url )
   {% if submenu %}
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
-    <td align="center" background="/images/body_bg.jpg" height="1%">
+    <td align="center" background="{% block band_bg_top %}/images/body_bg.jpg{% endblock %}" height="1%">
       {% if bands is defined and bands %}
       <table cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -202,7 +202,7 @@ function openMuses( url )
               <tr>
                 <td align="left"><img src="/images/submenu_left.gif" alt=""></td>
                 <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
-                <td class="txt"><b><a href="{{ item:href }}"><font color="{{ item:colour }}">{{ item:label }}</font></a></b></td>
+                <td class="txt"><b><a href="{{ item:href }}"><span class="band-label" style="color: {{ item:colour }}">{{ item:label }}</span></a></b></td>
                 <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
                 <td align="left"><img src="/images/submenu_right.gif" alt=""></td>
               </tr>
@@ -216,7 +216,7 @@ function openMuses( url )
         <tr>
           <td align="left"><img src="/images/submenu_left.gif" alt=""></td>
           <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
-          <td><b><a href="{% block submenu_href %}/mixes{% endblock %}"><font color="{% block submenu_colour %}#AACC33{% endblock %}">{% block submenu_label %}CHANGE_STATION{% endblock %}</font></a></b></td>
+          <td><b><a href="{% block submenu_href %}/mixes{% endblock %}"><span class="band-label" style="color: {% block submenu_colour %}#AACC33{% endblock %}">{% block submenu_label %}CHANGE_STATION{% endblock %}</span></a></b></td>
           <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
           <td align="left"><img src="/images/submenu_right.gif" alt=""></td>
         </tr>
@@ -228,7 +228,7 @@ function openMuses( url )
   {% endif %}
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="{% block content_gutter %}55{% endblock %}" alt=""></td>
-    <td align="center" background="/images/body_bg.jpg" valign="top"{% block content_attributes %}{% endblock %}>
+    <td align="center" background="{% block content_bg %}/images/body_bg.jpg{% endblock %}" valign="top"{% block content_attributes %}{% endblock %}>
 
     {% if not submenu %}<br>{% endif %}
 {% block content %}{% endblock %}
@@ -239,7 +239,7 @@ function openMuses( url )
   {% if submenu %}
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
-    <td align="center" background="/images/body_bg.jpg" height="1%">
+    <td align="center" background="{% block band_bg_bottom %}/images/body_bg.jpg{% endblock %}" height="1%">
       {% if bands is defined and bands %}
       <table cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -249,7 +249,7 @@ function openMuses( url )
               <tr>
                 <td align="left"><img src="/images/submenu_bot_left.gif" alt=""></td>
                 <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
-                <td class="txt"><b><a href="{{ item:href }}"><font color="{{ item:colour }}">{{ item:label }}</font></a></b></td>
+                <td class="txt"><b><a href="{{ item:href }}"><span class="band-label" style="color: {{ item:colour }}">{{ item:label }}</span></a></b></td>
                 <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
                 <td align="left"><img src="/images/submenu_bot_right.gif" alt=""></td>
               </tr>
@@ -263,7 +263,7 @@ function openMuses( url )
         <tr>
           <td align="left"><img src="/images/submenu_bot_left.gif" alt=""></td>
           <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
-          <td><b><a href="{% block submenu_bottom_href %}/mixes{% endblock %}"><font color="{% block submenu_colour_bottom %}#AACC33{% endblock %}">{% block submenu_bottom_label %}CHANGE_STATION{% endblock %}</font></a></b></td>
+          <td><b><a href="{% block submenu_bottom_href %}/mixes{% endblock %}"><span class="band-label" style="color: {% block submenu_colour_bottom %}#AACC33{% endblock %}">{% block submenu_bottom_label %}CHANGE_STATION{% endblock %}</span></a></b></td>
           <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
           <td align="left"><img src="/images/submenu_bot_right.gif" alt=""></td>
         </tr>

@@ -96,7 +96,7 @@ class GalleryPageTest extends TestCase
 
         self::assertStringContainsString('<b>GALLERIES ON HBR1</b>', $body);
         self::assertStringContainsString('Browse through the galleries', $body);
-        self::assertGreaterThanOrEqual(2, substr_count($body, '>ENTRANCE</a>'), 'the band appears above and below');
+        self::assertGreaterThanOrEqual(2, substr_count($body, '>ENTRANCE<'), 'the band appears above and below');
         self::assertStringContainsString('href="/gallery"', $body);
         self::assertSame(count($galleries), substr_count($body, 'gallery-frame-gallery'));
         self::assertStringContainsString('/images/icons/edit_small_dark.gif', $body);
@@ -105,14 +105,17 @@ class GalleryPageTest extends TestCase
         self::assertStringContainsString($expected, $body);
     }
 
-    public function testCategoryPagerUsesTheLegacyArrowIcons(): void
+    public function testCategoryPagerUsesTheLegacyIconPager(): void
     {
-        // The first category has two galleries, so only the forward arrow can
-        // show. The pager must still be the icon pager, not text links.
+        // The first category has two galleries, so production shows neither
+        // arrow - only the edit icon. The point of the check is that the
+        // pager is the icon pager, not the port's old text pager.
         $body = $this->page('/gallery/' . $this->category['id']);
 
-        self::assertStringContainsString('/images/icons/arrow_right_small.gif', $body);
+        self::assertStringContainsString('/images/icons/edit_small_dark.gif', $body);
+        self::assertStringContainsString('gallery-pager-category', $body);
         self::assertStringNotContainsString('next &raquo;', $body);
+        self::assertStringNotContainsString('prev &laquo;', $body);
     }
 
     public function testGalleryPageUsesTheLegacyHeadingBandsAndTiles(): void
@@ -122,10 +125,14 @@ class GalleryPageTest extends TestCase
 
         self::assertStringContainsString('<b>GALLERY MAIN</b>', $body);
         self::assertStringContainsString('id="gallery"', $body);
-        self::assertGreaterThanOrEqual(2, substr_count($body, '>LEVEL_UP</a>'), 'the band appears above and below');
+        self::assertGreaterThanOrEqual(2, substr_count($body, '>LEVEL_UP<'), 'the band appears above and below');
         self::assertStringContainsString('href="/gallery/' . $this->category['id'] . '"', $body);
         self::assertSame(count($pictures), substr_count($body, 'gallery-frame-photo'));
-        self::assertStringContainsString('/images/icons/arrow_right_small.gif', $body);
+        self::assertStringContainsString('/images/icons/edit_small_dark.gif', $body);
+
+        if ($this->gallery->countPicturesFor($this->galleryRow['id']) > GalleryService::PICTURES_PER_PAGE) {
+            self::assertStringContainsString('/images/icons/arrow_right_small.gif', $body);
+        }
     }
 
     public function testPicturePageUsesTheLegacyFramingAndMediumArrows(): void
@@ -199,7 +206,10 @@ class GalleryPageTest extends TestCase
         $banned = ['<font', ' bgcolor=', ' align=', ' background=', ' cellspacing=', ' cellpadding=', ' border='];
 
         foreach ($views as $view) {
-            $source = strtolower((string) file_get_contents($view));
+            // Twig comments explain the rule and never reach the browser, so
+            // they are not part of the markup under test.
+            $source = (string) preg_replace('!\{#.*?#\}!s', '', (string) file_get_contents($view));
+            $source = strtolower($source);
 
             foreach ($banned as $needle) {
                 self::assertStringNotContainsString(

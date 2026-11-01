@@ -18,9 +18,14 @@ class GalleryController extends BaseController
     /** Entrance: the public categories. */
     public function indexAction(): string
     {
+        $categories = $this->service(GalleryService::class)->categories();
+
         return $this->page('web/gallery', [
-            'title'      => 'Gallery - HBR1',
-            'categories' => $this->service(GalleryService::class)->categories(),
+            'title'      => 'Galleries on HBR1',
+            'categories' => $categories,
+            // The legacy grid is three columns with a 13 px gap between rows.
+            // Grouping here keeps the view free of index arithmetic.
+            'rows'       => array_chunk($categories, 3),
         ]);
     }
 
@@ -35,13 +40,17 @@ class GalleryController extends BaseController
             return Response::status(404);
         }
 
-        $offset = $this->offset();
+        $offset    = $this->offset();
+        $galleries = $service->galleriesFor($category, $offset);
 
         return Response::html($this->page('web/gallery_category', [
-            'title'     => $data['name'] . ' - Gallery - HBR1',
+            'title'     => 'Galleries on HBR1',
             'category'  => $data,
-            'galleries' => $service->galleriesFor($category, $offset),
+            'galleries' => $galleries,
+            'rows'      => array_chunk($galleries, 3),
             'pager'     => $this->pager($service->countGalleriesFor($category), $offset),
+            // Both bands return to the entrance, as the legacy page did.
+            'bands'     => [['href' => '/gallery', 'label' => 'ENTRANCE', 'colour' => '#77AA00']],
         ]));
     }
 
@@ -58,14 +67,17 @@ class GalleryController extends BaseController
             return Response::status(404);
         }
 
-        $offset = $this->offset();
+        $offset   = $this->offset();
+        $pictures = $service->picturesFor($gallery, $offset);
 
         return Response::html($this->page('web/gallery_gallery', [
-            'title'    => $data['title'] . ' - Gallery - HBR1',
+            'title'    => 'Galleries on HBR1',
             'category' => $service->category($category),
             'gallery'  => $data,
-            'pictures' => $service->picturesFor($gallery, $offset),
+            'pictures' => $pictures,
+            'rows'     => array_chunk($pictures, 3),
             'pager'    => $this->pager($service->countPicturesFor($gallery), $offset),
+            'bands'    => [['href' => '/gallery/' . $category, 'label' => 'LEVEL_UP', 'colour' => '#77AA00']],
         ]));
     }
 
@@ -78,9 +90,18 @@ class GalleryController extends BaseController
             return Response::status(404);
         }
 
+        // The picture page has no category in its URL, so the band goes back to
+        // the gallery it came from.
+        $bands = [[
+            'href'   => '/gallery/' . $picture['category'] . '/' . $picture['gallery'],
+            'label'  => 'LEVEL_UP',
+            'colour' => '#77AA00',
+        ]];
+
         return Response::html($this->page('web/gallery_picture', [
-            'title'   => ($picture['title'] !== '' ? $picture['title'] : 'Picture') . ' - Gallery - HBR1',
+            'title'   => 'Galleries on HBR1',
             'picture' => $picture,
+            'bands'   => $bands,
         ]));
     }
 
