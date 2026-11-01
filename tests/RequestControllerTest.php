@@ -111,7 +111,7 @@ class RequestControllerTest extends TestCase
         self::assertStringContainsString('GO_BACK', $body);
         self::assertStringContainsString('#AAAA22', $body, 'the legacy GO_BACK band colour');
         self::assertStringContainsString('src="/request/code.png?t=', $body);
-        self::assertStringContainsString('To verify your input please enter the code schown above', $body);
+        self::assertStringContainsString('To verify your input please enter the code shown above', $body);
         self::assertStringContainsString('name="code"', $body);
         self::assertStringContainsString('href="/mixes/trance"', $body);
     }

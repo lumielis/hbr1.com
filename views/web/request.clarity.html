@@ -10,9 +10,10 @@
    Both SUBMENU bands read GO_BACK and are coloured #AAAA22, not the #AACC33
    `CHANGE_STATION` of the catalogue.
 
-   The captcha message really does say "schown". That typo is in production, and
-   the image, the wording and the layout are all part of what the page looks like
-   to a listener, so it is reproduced rather than corrected.
+   The captcha message is deliberately spelled "shown", not "schown". The legacy
+   template misspelled it, and the typo survived in production for years; it is
+   corrected here, so the wording on this page differs from the archived page by
+   that one letter.
 
    The GO_BACK target uses `backUrl`, which the controller builds from the
    station slug plus the `?from=` offset the catalogue passed in. The legacy page
@@ -61,7 +62,7 @@
             <img width="100" height="30" src="{{ captcha }}" style="border: 1px solid #0055cc;" alt="security code">
           </p>
 
-          <font color="#6666ff">To verify your input please enter the code schown above</font>
+          <font color="#6666ff">To verify your input please enter the code shown above</font>
 
           <p>
           <form action="/request/{{ station:slug }}" method="post">

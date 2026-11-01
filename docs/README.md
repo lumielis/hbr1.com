@@ -324,6 +324,11 @@ Captcha failures answer **400** with a fresh image, not 429: a wrong code is a
 typo, while the per-IP rules in `RequestService` remain the control that bounds
 abuse. The captcha stops scripted bulk submission; the limits bound it.
 
+One deliberate wording change: the legacy template asked the listener to enter
+"the code **schown** above". The port says "shown". Everything else on the page
+is reproduced verbatim, but a misspelling is a defect rather than a feature, and
+the archived `template/tracklist.req.phtml` keeps the original for reference.
+
 ## Layout
 
 ```
