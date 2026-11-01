@@ -94,9 +94,17 @@ php tools/smoke.php               # 43 checks, 0 failed
 
 ## Coverage and known gaps
 
-- **Coverage tool:** no Xdebug or PCOV driver is installed, so a coverage
-  percentage could not be produced. The tests are behavioural (rendered
-  output and measured geometry), not line-coverage driven.
+- **Coverage (Xdebug 3.3.2):**
+  `XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-text` reports
+  **overall 67.95 % lines (1624/2390)** and 50.35 % methods. The global figure
+  is pulled down by pre-existing controller/service gaps outside this slice.
+  The code changed here is above the 80 % line target:
+  `App\Support\LegacyMarkup` 95.74 % (45/47),
+  `App\Services\GalleryService` 97.35 % (110/113),
+  `App\Controllers\Web\GalleryController` 95.16 % (59/62).
+  The suite still does not cover the two review findings (attribute-bearing
+  tags and BBC in gallery info); see
+  `.claude/reviews/gallery-parity-review.md`.
 - **Parity CLI:** the planned `tools/parity.php` / screenshot-diff harness is
   not built yet; this slice used direct browser measurements and the captured
   production pages. It is the next TDD cycle.
