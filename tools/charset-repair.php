@@ -15,13 +15,25 @@
  *             change, and the legacy site keeps working: a latin1 reader still
  *             receives exactly the cp1252 bytes it received before.
  *   --convert runs ALTER TABLE ... CONVERT TO utf8mb4, which is what makes
- *             non-cp1252 text possible at all. It must run *after* the repair,
- *             because afterwards the damage is no longer recognisable.
+ *             non-cp1252 text possible at all. It must run *after* the repair
+ *             that the scan can still recognise; converting first re-encodes
+ *             damaged bytes into a second layer that looks like valid text and
+ *             is no longer detectable as damage.
  *
- * Both steps are idempotent, and neither touches a value it cannot improve.
+ * Neither step touches a value it cannot improve, and a second run after
+ * --convert changes nothing: the scan only reads `latin1` columns, and after
+ * conversion there are none.
+ *
+ * `--repair` is one-way. The bytes it replaces are not recoverable afterwards,
+ * so back the database up first.
  *
  * Values whose correct text needs a character cp1252 cannot hold are reported
- * as deferred and left alone; --convert is what makes them fixable.
+ * as deferred and left alone. `--convert` lets them be stored, but it does not
+ * itself repair them: once converted they sit at a second encoding layer that
+ * this scan cannot see. They are the 14 Cyrillic-spam rows in
+ * `party_comment_1`, which nothing renders, plus one `chat.name` and one
+ * `party.memo`. Fixing them means editing those rows by hand after conversion;
+ * leaving them costs nothing visible.
  */
 
 require __DIR__ . '/../env.php';

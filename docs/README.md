@@ -491,10 +491,34 @@ legacy code did, and why it rewrote bytes in exactly those cases.
   harmless while everything was cp1252 and splits multi-byte characters now
   that pages are UTF-8. It counts characters.
 
+### What the result is: three distinct states
+
+This is the part that is easy to get wrong. Repairing **does not** make the
+database `utf8mb4`. They are two separate steps, and each stops somewhere
+specific.
+
+| | schema | `MÃ¼nchen` renders as | can store `张浩 😀`? |
+|---|---|---|---|
+| **now** | `latin1` | `MÃ¼nchen` | no — silently becomes `??` |
+| **after `--repair`** | still `latin1` | **`München`** | **no** — still silently `??` |
+| **after `--convert`** | `utf8mb4` | `München` | **yes** |
+
+Measured on clones of `party`, `guestbook` and `party_comment_1`:
+
+- after `--repair`, the stored bytes for `München` are `4D FC 6E …` — the single
+  cp1252 byte `FC`. Correct text, narrow column.
+- after `--convert`, the same value is stored as `4D C3 BC 6E …`. Correct text,
+  wide column.
+
+So if the goal is *"the site displays the right characters"*, `--repair` alone
+achieves it. If the goal is *"the database stops losing characters it cannot
+represent"*, only `--convert` achieves it — and the party form will keep turning
+an emoji into `?` until it runs.
+
 ### Repairing now, and what it does to the live site
 
-The repair needs **no schema change**. The column still holds latin1 bytes, and
-after the repair it holds the *correct* latin1 bytes, so:
+The repair needs **no schema change**, which is why it is safe to run while the
+legacy site is still serving:
 
 - the **port** renders correctly — it reads through `utf8mb4` and `MÃ¼nchen`
   becomes `München`;
@@ -502,22 +526,19 @@ after the repair it holds the *correct* latin1 bytes, so:
   default `latin1`, and receives the same cp1252 bytes it received before the
   repair;
 - **legacy PHP** (`main.php`, `$DB_Charset = 'utf8'`) improves. It used to
-  receive `MÃƒÂ¼nchen` for these rows and now receives `MÃ¼nchen` — still
-  mojibake, because that client is permanently mis-configured, but no longer
-  double.
+  receive one mojibake layer more for these rows.
 
 Verified by writing the repair to a clone and reading it back through each of
-the three connection charsets. **This makes repairing before the cutover safe**,
-which matters because the legacy site will keep serving for a while yet.
+the three connection charsets.
 
 ### The conversion, in order
 
 `php tools/charset-repair.php` reports; `--repair` writes; `--convert` migrates
 the schema. `php tools/charset-rehearse.php` does the whole thing against `zz_`
 copies of the affected tables and drops them, so the outcome can be inspected
-before anything is touched. Both are idempotent.
+before anything is touched.
 
-1. **Back up** `hbr1`. The repair is not reversible by inspection.
+1. **Back up** `hbr1`. The repair is one-way.
 2. **Rehearse:** `php tools/charset-rehearse.php`. Expect `161` repaired,
    `16` deferred, `9` lost, and `verified: 161/161 exact`.
 3. **Repair:** `php tools/charset-repair.php --repair`. Safe to run while the
@@ -526,9 +547,14 @@ before anything is touched. Both are idempotent.
    fits `MyISAM`'s 1,000-byte key limit. Before the change it was `varchar(255)`
    and the `ALTER` failed with `1071 Specified key was too long` — verified. The
    7 other "over 767 byte" keys are all `FULLTEXT`, which has no such limit.
-5. **Convert:** `php tools/charset-repair.php --convert`. This is what makes the
-   `16` deferred values fixable; re-run `--repair` afterwards to take them.
+5. **Convert:** `php tools/charset-repair.php --convert`.
 6. **Regenerate `db/schema.sql`** from the converted schema.
+
+Both steps are idempotent, and that matters specifically after step 5: the scan
+only reads `latin1` columns, and after conversion there are none, so re-running
+`--repair` writes nothing. The same bytes look "double-encoded" again at the new
+layer, and a scan that chased them would double-apply — which is why it is
+scoped by column charset rather than by pattern.
 
 `utf8mb4_general_ci` matches what `hbr1`'s default already is and what the
 `GAL_` tables use. It is a deliberate choice over `utf8mb4_unicode_ci`: the
@@ -539,14 +565,36 @@ changing that would change what the request rules consider a repeat.
 
 `ALTER TABLE … CONVERT TO CHARACTER SET utf8mb4` reads the stored bytes as
 cp1252 and re-encodes them as UTF-8. That is right for the 1,374 clean values
-and **wrong** for the 161: `SVEN VÃ„TH` would become `SVEN VÃƒâ€žTH`, and the
-damage would no longer be recognisable as damage. Verified on clones of all 46
-tables.
+and **wrong** for the 161: `SVEN VÃ„TH` would become `SVEN VÃƒâ€žTH`. Verified on
+clones of all 46 tables.
+
+It is not that the damage becomes invisible — the mojibake is still there and
+still wrong. It is that it moves to a second layer which is *valid text*, so a
+scan for malformed bytes no longer finds it.
 
 There is a way to convert first if that ever becomes necessary — snapshot the
 raw values, convert, then write the repaired text back from the snapshot — but
-it is strictly more work and needs a scratch store. Repairing first is cheaper
+it needs a scratch store and is strictly more work. Repairing first is cheaper
 and safer.
+
+### The 16 deferred values are not fixed by `--convert`
+
+`--convert` lets them be *stored*; it does not repair them. Once converted they
+sit at that second layer, and the inverse rule that would undo it is not safe:
+
+- applied to the whole database it wrongly matched **9 of 1,535** already-correct
+  values — and those 9 are exactly the 9 rows that already hold a literal U+FFFD
+  (verified: 9 rows contain U+FFFD, and all 9 are the false positives). The byte
+  string `C3 BD` really does decode to `ý`, so the rule cannot tell them apart;
+- it fixed only **2 of the 16** deferred values. The other 14 are Cyrillic spam
+  in `party_comment_1` whose encoding was scrambled too badly to invert.
+
+So the honest position is: those 16 stay mojibake. 14 of them are `party_comment`
+spam that nothing renders (the comment thread is W8 work), one is a `chat.name`
+full of fullwidth punctuation, one is a language list in a `party.memo`. The
+cost of leaving them is zero visible characters; the cost of a clever
+auto-fixer is damaging nine correct rows. Leave them, and edit by hand if that
+never sits right.
 
 ### The playout schemas are not ours
 

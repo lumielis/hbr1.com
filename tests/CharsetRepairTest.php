@@ -176,6 +176,43 @@ final class CharsetRepairTest extends TestCase
 
     // ------------------------------------------------------- cp1252 fitness
 
+    /**
+     * The repair is scoped by column charset, not by pattern, and this is why.
+     *
+     * After `CONVERT TO utf8mb4` the same characters sit one layer deeper:
+     * "München" becomes "MÃ¼nchen" again, and its bytes match the very same
+     * regex the repair looks for. A repair that ran on converted columns would
+     * double-apply. `tools/charset-repair.php` only reads `latin1` columns, so
+     * it finds none and writes nothing - which is what makes it idempotent
+     * across the conversion.
+     */
+    public function testAConvertedValueLooksSuspectAgain(): void
+    {
+        // Correct text in a wide column, byte for byte.
+        $wide = "M\xC3\xBCnchen";
+
+        // The library sees it as repaired already.
+        self::assertSame($wide, $this->repair()->repair($wide));
+
+        // But once it has been through cp1252 it is indistinguishable from
+        // damage - which is exactly why the scan cannot be pattern-only.
+        $relayered = mb_convert_encoding($wide, 'UTF-8', 'WINDOWS-1252');
+
+        self::assertSame("M\xC3\x83\xC2\xBCnchen", $relayered);
+        self::assertTrue($this->repair()->isSuspect($relayered));
+    }
+
+    /**
+     * And a `utf8mb4` column can hold what a `latin1` one silently discards.
+     * This is the reason to run --convert at all; --repair alone cannot help.
+     */
+    public function testCp1252CannotHoldCjkOrEmoji(): void
+    {
+        foreach (['张浩', '😀', 'Электро'] as $text) {
+            self::assertFalse($this->repair()->fitsCp1252($text));
+        }
+    }
+
     public function testCp1252FitnessAcceptsTheGermanRepertoire(): void
     {
         // "Ł" is cp1252 0x9A, "Ø" is 0xD8, "š" is 0x9A - all representable.
