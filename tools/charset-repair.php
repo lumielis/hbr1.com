@@ -210,36 +210,38 @@ if ($totals['wide'] > 0) {
 }
 
 // -------------------------------------------------------------------- apply
-if (!isset($options['repair'])) {
-    if ($convert) {
-        echo "\n--convert implies --repair; nothing was written. Re-run with both.\n";
-    } else {
-        echo "\nReport only. Re-run with --repair to write, --convert to also migrate the schema.\n";
-    }
-    exit(0);
-}
+// --convert on its own is meaningful: once the repair has been done there is
+// nothing left to rewrite, and the conversion is a separate step. Refusing it
+// would force `--repair --convert` for no reason.
+if (isset($options['repair'])) {
+    $updated = 0;
 
-$updated = 0;
+    foreach ($plan as $table => $changes) {
+        $key = $keys[$table];
 
-foreach ($plan as $table => $changes) {
-    $key    = $keys[$table];
-    $byColumn = [];
+        $byColumn = [];
+        foreach ($changes as $change) {
+            $byColumn[$change['column']][] = $change;
+        }
 
-    foreach ($changes as $change) {
-        $byColumn[$change['column']][] = $change;
-    }
+        foreach ($byColumn as $column => $rows) {
+            $statement = $db->prepare("UPDATE `{$schema}`.`{$table}` SET `{$column}` = ? WHERE `{$key}` = ?");
 
-    foreach ($byColumn as $column => $rows) {
-        $statement = $db->prepare("UPDATE `{$schema}`.`{$table}` SET `{$column}` = ? WHERE `{$key}` = ?");
-
-        foreach ($rows as $row) {
-            $statement->execute([$row['value'], $row['key']]);
-            $updated++;
+            foreach ($rows as $row) {
+                $statement->execute([$row['value'], $row['key']]);
+                $updated++;
+            }
         }
     }
+
+    printf("\nrepaired %d value(s) in %d table(s)\n", $updated, count($plan));
 }
 
-printf("\nrepaired %d value(s) in %d table(s)\n", $updated, count($plan));
+if (!$apply) {
+    echo "\nReport only. Re-run with --repair to write, --convert to also migrate the schema,\n";
+    echo "or --repair --convert to do both in one pass.\n";
+    exit(0);
+}
 
 // ------------------------------------------------------------------ convert
 if ($convert) {
@@ -259,5 +261,15 @@ if ($convert) {
     }
 
     printf("  %d/%d table(s) converted\n", $done, count($tables));
+
+    if ($totals['deferred'] > 0) {
+        printf(
+            "\n%d value(s) in the scanned columns are still double-encoded at a level\n"
+            . "this tool cannot see. They stay mojibake; see docs/README.md,\n"
+            . "\"The 16 deferred values are not fixed by --convert\".\n",
+            $totals['deferred']
+        );
+    }
+
     echo "\nRegenerate the baseline now:  php tools/schema-dump.php > db/schema.sql\n";
 }
