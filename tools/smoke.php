@@ -58,6 +58,9 @@ $checks = [
     ['/navigation', 200],
     ['/guestbook', 200],
     ['/party', 200],
+    // The submission form that `ENTER_A_PARTY` links to. Before the port it
+    // 404'd - the band pointed at a route that was never registered.
+    ['/party/new', 200],
     ['/mixes', 200],
     ['/mixes/ambient', 200],
     ['/mixes/nope', 404],

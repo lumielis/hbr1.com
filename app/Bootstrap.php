@@ -132,7 +132,11 @@ class Bootstrap implements BootstrapProvider
             \App\Services\PartyService::class,
             fn() => new \App\Services\PartyService(
                 AppContext::instance()->dbManager()->getDefault(),
-                AppContext::instance()->Config['app']['timezone'] ?? 'Europe/Berlin'
+                AppContext::instance()->Config['app']['timezone'] ?? 'Europe/Berlin',
+                // `path['images'] . '/party/flyer'` in the legacy settings: the
+                // one place the party form writes a file.
+                (AppContext::instance()->Config['paths']['legacy'] ?? BASE_DIR . '/htdocs')
+                    . '/images/party/flyer'
             )
         );
 
@@ -256,6 +260,13 @@ class Bootstrap implements BootstrapProvider
         $router->add('POST', '/guestbook', 'Web\\GuestbookController::submitAction');
 
         $router->add('GET', '/party', 'Web\\PartyController::indexAction');
+        // `/party/new` must be registered before `{id:int}`; the router scores
+        // static segments higher, but keeping the pair adjacent documents the
+        // order. The legacy link was `?part=edit&party_id=new`.
+        $router->add('GET', '/party/new', 'Web\\PartyController::newAction');
+        $router->add('POST', '/party/new', 'Web\\PartyController::createAction');
+        $router->add('GET', '/party/{id:int}/edit', 'Web\\PartyController::editAction');
+        $router->add('POST', '/party/{id:int}/edit', 'Web\\PartyController::updateAction');
         $router->add('GET', '/party/{id:int}', 'Web\\PartyController::detailAction');
 
         $router->add('GET', '/chat', 'Web\\ChatController::indexAction');

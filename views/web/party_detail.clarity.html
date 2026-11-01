@@ -1,52 +1,198 @@
+{# One party - `htdocs/cgi-htm/client/party_details.htm`.
+
+   Reached from every event title on `/party`. The port had redesigned this too
+   (a `PARTY` band, a definition-list table, a "back to the calendar" link);
+   production has a `PARTY DETAILS` band, three SUBMENU buttons above and below
+   the well, and a `#100040` city/type header above the title.
+
+   What the legacy template actually emitted, and what is reproduced here:
+
+   - three bands, not one: `COMMENTS` (#AAAA22), `CALENDAR` (#77AA00) and
+     `EDIT_PARTY` (#AAAA22). `COMMENTS` is the party_comment thread, which is
+     W8 work; it is kept and points at this page until then, so the button
+     count and the colours match. They are passed in as `bands`.
+   - a two-cell `#100040` row with `city / country` left and `type` right, then
+     a centred `#99ff00` title on the row below.
+   - a centred Start/Finish table with the `id="info"` (`#cccc66`) headings and
+     the `date - time` pairs.
+   - a two-column label/value table for Flyer, Live, DJs, Chillout, Deco, Infos,
+     Location, Organizer, Home, E-Mail, Hotline, Thanks to and Update, each
+     label `id="info"` and each followed by a blank spacer row. The free-text
+     values go through `ANT_HYPERLINKS`, i.e. bare URLs and addresses inside
+     them became links; the ported site turns those into links when the row is
+     saved instead (see `PartyService::tagout()`), so they arrive as markup.
+   - `Home` is suppressed when the stored URL is the column default `http://`,
+     which the template tested for explicitly.
+   - the `this party comes from ...` footer for imported rows, between two
+     `blue1.gif` hairlines.
+   - `PARTY DETAILS` as the band, and the `(c) HBR1 2001-2003` signature.
+
+   The one thing missing: there is no comment form. It lived in a separate
+   legacy template and is part of W8; the band points back here so the page
+   keeps its three buttons. #}
 {% extends "layouts/page" %}
 
-{% block title %}HBR1 Party Calendar{% endblock %}
-{% block heading %}PARTY{% endblock %}
+{% set submenu = true %}
+
+{% block title %}Party Base{% endblock %}
+{% block heading %}PARTY DETAILS{% endblock %}
 {% block pageid %}PageID = 'party';{% endblock %}
+{% block content_gutter %}64{% endblock %}
+{% block content_gutter_right %}64{% endblock %}
+{% block signature %}<td class="txt" align="center"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>{% endblock %}
 
 {% block styles %}
-<style>
-.party-title { font-size: 14px; font-family: Verdana, Arial, sans-serif; color: #9999FF; font-weight: bold; }
-.party-meta { font-size: 11px; font-family: Verdana, Arial, sans-serif; color: #999999; }
-.party-body { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-.party-field { color: #666666; font-size: 10px; font-family: Arial, sans-serif; }
-.flyer { border: 1px solid #333366; margin: 10px 0; }
+<style type="text/css">
+#title { letter-spacing: 1px }
+#info { color: #cccc66 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div style="margin: 15px;">
-
-        <div class="party-title">{{ party:title }}</div>
-        <div class="party-meta">
-          {{ party:startDate }}{% if party:endDate and party:endDate != party:startDate %} &ndash; {{ party:endDate }}{% endif %}
-          {% if party:city %}<br>{{ party:city }}{% if party:countryName %}, {{ party:countryName }}{% endif %}{% endif %}
-        </div>
-
-        {% if party:flyerUrl %}
-          <img class="flyer" src="{{ party:flyerUrl }}" alt="flyer">
+      <br>
+      <table border="0" cellspacing="0" cellpadding="2" width="100%">
+        <tr>
+          <td class="txt">
+            <table border="0" cellspacing="0" cellpadding="2" width="100%">
+              <tr>
+                <td class="txt" bgcolor="#100040">{{ party:city }}{% if party:countryName %} / {{ party:countryName }}{% endif %}</td>
+                <td class="txt" bgcolor="#100040" align="right">{{ party:type }}</td>
+              </tr>
+              <tr>
+                <td class="head" colspan="2" bgcolor="#000000" align="center"><font color="#99ff00"><b>{{ party:title }}</b></font></td>
+              </tr>
+            </table>
+            <br>
+            <center>
+            <table border="0" cellspacing="1" cellpadding="2">
+              <tr>
+                <td class="txt" colspan="2" align="center" id="info">Start</td>
+                <td class="txt" width="10">&nbsp;</td>
+                <td class="txt" colspan="2" align="center" id="info">Finish</td>
+              </tr>
+              <tr>
+                <td class="txt">{{ party:startDate }}</td>
+                <td class="txt">- {{ party:startTime }}</td>
+                <td class="txt">&nbsp;</td>
+                <td class="txt">{{ party:endDate }}</td>
+                <td class="txt">- {{ party:endTime }}</td>
+              </tr>
+            </table>
+            </center>
+            <br>
+            <table border="0" cellspacing="0" cellpadding="0">
+              {% if party:flyerUrl %}
+              <tr>
+                <td class="txt" valign="top" id="info">Flyer</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><a href="{{ party:flyerUrl }}"><img src="{{ party:flyerUrl }}" width="250" border="0" alt="flyer"></a></td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:live %}
+              <tr>
+                <td class="txt" valign="top" id="info">Live Performance</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:live|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:djs %}
+              <tr>
+                <td class="txt" valign="top" id="info">DJs</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:djs|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:chillout %}
+              <tr>
+                <td class="txt" valign="top" id="info">Chillout</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:chillout|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:deco %}
+              <tr>
+                <td class="txt" valign="top" id="info">Deco</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:deco|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:memo %}
+              <tr>
+                <td class="txt" valign="top" id="info">Infos</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:memo|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:location %}
+              <tr>
+                <td class="txt" valign="top" id="info">Location</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:location|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:organizer %}
+              <tr>
+                <td class="txt" valign="top" id="info">Organizer</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:organizer|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:url and party:url != 'http://' %}
+              <tr>
+                <td class="txt" valign="top" id="info">Home</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><a href="{{ party:url }}" target="_blank">{{ party:url }}</a></td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:email %}
+              <tr>
+                <td class="txt" valign="top" id="info">E-Mail</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt"><a href="mailto:{{ party:email }}">{{ party:email }}</a></td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:hotline %}
+              <tr>
+                <td class="txt" valign="top" id="info">Hotline</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:hotline|raw }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              {% if party:submitter %}
+              <tr>
+                <td class="txt" valign="top" id="info">Thanks to</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:submitter }}</td>
+              </tr>
+              <tr><td class="txt" colspan="3">&nbsp;</td></tr>
+              {% endif %}
+              <tr>
+                <td class="txt" valign="top" id="info">Update</td>
+                <td class="txt">&nbsp;&nbsp;</td>
+                <td class="txt">{{ party:editDate }}, {{ party:editTime }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        {% if party:sourceId %}
+        <tr><td class="txt">&nbsp;</td></tr>
+        <tr><td class="txt"><img src="/images/color/blue1.gif" width="100%" height="1" alt=""></td></tr>
+        <tr>
+          <td class="txt" align="center"><font color="#999999">this party comes from <a href="{{ party:sourceUrl }}" target="_blank">{{ party:sourceName }}</a></font></td>
+        </tr>
+        <tr><td class="txt"><img src="/images/color/blue1.gif" width="100%" height="1" alt=""></td></tr>
         {% endif %}
-
-        <table cellspacing="0" cellpadding="4" border="0" class="party-body">
-          {% if party:type %}<tr><td class="party-field">Type</td><td>{{ party:type }}</td></tr>{% endif %}
-          {% if party:location %}<tr><td class="party-field" valign="top">Location</td><td>{{ party:location|raw }}</td></tr>{% endif %}
-          {% if party:djs %}<tr><td class="party-field" valign="top">DJs</td><td>{{ party:djs|raw }}</td></tr>{% endif %}
-          {% if party:live %}<tr><td class="party-field" valign="top">Live</td><td>{{ party:live|raw }}</td></tr>{% endif %}
-          {% if party:chillout %}<tr><td class="party-field" valign="top">Chillout</td><td>{{ party:chillout|raw }}</td></tr>{% endif %}
-          {% if party:deco %}<tr><td class="party-field" valign="top">Decoration</td><td>{{ party:deco|raw }}</td></tr>{% endif %}
-          {% if party:organizer %}<tr><td class="party-field">Organizer</td><td>{{ party:organizer }}</td></tr>{% endif %}
-          {% if party:hotline %}<tr><td class="party-field">Hotline</td><td>{{ party:hotline }}</td></tr>{% endif %}
-          {% if party:email %}<tr><td class="party-field">E-mail</td><td>{{ party:email }}</td></tr>{% endif %}
-          {% if party:url %}<tr><td class="party-field">URL</td><td>{{ party:url }}</td></tr>{% endif %}
-        </table>
-
-        {% if party:memo %}
-          <div class="party-body" style="margin-top: 10px;">{{ party:memo|raw }}</div>
-        {% endif %}
-
-        <p style="margin-top: 20px;">
-          <a href="/party">&laquo; back to the calendar</a>
-        </p>
-
-      </div>
+      </table>
+      <br>
 {% endblock %}

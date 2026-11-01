@@ -43,6 +43,16 @@ class LegacyUrlMapperTest extends TestCase
             'admin.cgi'               => ['/cgi-bin/admin.cgi', [], '/admin'],
             'listen.cgi'              => ['/cgi-bin/listen.cgi', [], '/listen'],
             'party.cgi'               => ['/cgi-bin/party.cgi', [], '/party'],
+            // The party calendar's `?part=` views. `ENTER_A_PARTY` was
+            // `?action=party&part=edit&party_id=new`; every event title and
+            // "EDIT_PARTY" band carried the other two shapes.
+            'party new form'          => ['/run/main.xp', ['action' => 'party', 'part' => 'edit', 'party_id' => 'new'], '/party/new'],
+            'party edit'              => ['/run/main.xp', ['action' => 'party', 'part' => 'edit', 'party_id' => '3534'], '/party/3534/edit'],
+            'party view'              => ['/run/main.xp', ['action' => 'party', 'part' => 'view', 'party_id' => '3534'], '/party/3534'],
+            // No comment UI yet (W8); the detail page keeps the reader on the event.
+            'party comment'           => ['/run/main.xp', ['action' => 'party', 'part' => 'comment', 'party_id' => '3534'], '/party/3534'],
+            'party edit, no id'       => ['/run/main.xp', ['action' => 'party', 'part' => 'edit'], '/party'],
+            'party edit, non-numeric' => ['/run/main.xp', ['action' => 'party', 'part' => 'edit', 'party_id' => 'abc'], '/party'],
         ];
     }
 

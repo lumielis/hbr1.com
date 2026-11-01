@@ -1,0 +1,250 @@
+{# The party submission form - `htdocs/cgi-htm/client/party_edit.htm`.
+
+   Reached from the `ENTER_A_PARTY` band on `/party` and from the `EDIT_PARTY`
+   band on a party's detail page. Both bands pointed at the same legacy URL
+   (`?part=edit&party_id=new` and `?part=edit&party_id=N`); here they are two
+   routes over one template, `/party/new` and `/party/{id}/edit`.
+
+   The layout is the legacy one, section by section, because the page has to sit
+   in the same 583 px frame as the calendar:
+
+   - one SUBMENU band above and below the well, both reading GO_BACK. The
+     legacy link was `javascript:history.back();`, which is kept: the form is
+     reached from two different pages and neither is the "right" one to return
+     to.
+   - the well starts with a `<br>` and then, on a rejected submission, the red
+     `PAGE_MESSAGE` line. That line is the legacy wording, including its
+     grammar.
+   - the form is a `cellspacing="1" cellpadding="2"` table whose rows are the
+     label/control pairs, with a `#000050` section banner every few fields.
+   - the signature is `(c) HBR1 2001-2003`, not the newer
+     `- Music on Futurenet` line. It is the one page that never got updated.
+
+   Two notes on the controls themselves:
+
+   *Nothing is preselected on a new form.* The legacy `<SELECT_PARTY_TYPE>` and
+   `<SELECT_PARTY_COUNTRY>` marked an option `selected` only when the stored row
+   already held that value, so a fresh form left the browser to pick - "Indoor"
+   for the type, and **Afghanistan** for the country, because that select is
+   ordered by name. Reproduced rather than repaired: it is what the page has
+   always done, and correcting it silently would make the two look different.
+
+   *The date fields are `n/j/yy`.* `ssms::time::set_format('H:m', 'm/d/y')` -
+   where `m` in the *time* format is minutes - produced `11/1/26` and `03:07`.
+   A two-digit year is read back as 20xx.
+
+   The password confirmation is shown on both forms. The legacy template
+   printed it only while `PARTY_STATUS` was 0, so once a party was published its
+   password could never be changed; the field is harmless on an edit because
+   the stored password is only replaced when a new one is typed. #}
+{% extends "layouts/page" %}
+
+{% set submenu = true %}
+
+{% block title %}Party Base{% endblock %}
+{% block heading %}{% if partyId %}EDIT PARTY{% else %}ENTER A PARTY{% endif %}{% endblock %}
+{% block pageid %}PageID = 'party';{% endblock %}
+{% block content_gutter %}64{% endblock %}
+{% block content_gutter_right %}64{% endblock %}
+{% block submenu_href %}javascript:history.back();{% endblock %}
+{% block submenu_label %}GO_BACK{% endblock %}
+{% block submenu_colour %}#77AA00{% endblock %}
+{% block submenu_bottom_href %}javascript:history.back();{% endblock %}
+{% block submenu_bottom_label %}GO_BACK{% endblock %}
+{% block submenu_colour_bottom %}#77AA00{% endblock %}
+{% block signature %}<td class="txt" align="center"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>{% endblock %}
+
+{% block content %}
+      <br>
+      {% if message %}
+      <font color="#FF0000" class="txt">{{ message }}</font><br>&nbsp;
+      {% endif %}
+      <table border="0" cellspacing="1" cellpadding="2">
+      <form action="{{ action }}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf_token" value="{{ csrf }}">
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">General Info</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt"><b>Type</b></td>
+          <td><select name="type" class="blue">
+{% for type in types %}<option value="{{ type }}"{% if values:type == type %} selected{% endif %}>{{ type }}</option>
+{% endfor %}</select></td>
+        </tr>
+        <tr>
+          <td class="txt"><b>{% if errors:title %}<font color="#ff0000">{% endif %}Title</b></td>
+          <td><input type="text" name="title" value="{{ values:title }}" class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:start_timestamp %}<font color="#ff0000">{% endif %}Start</b></td>
+          <td class="txt"><font color="#999999">Please enter the date in a format like mm/dd/yy.</font></td>
+        </tr>
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="2">
+              <tr>
+                <td class="txt">{% if errors:start_timestamp %}<font color="#ff0000">{% endif %}Date</td>
+                <td><input type="text" name="start_timestamp_date" value="{{ values:start_timestamp_date }}" class="blue" maxlength="10" size="12"></td>
+                <td class="txt">{% if errors:start_timestamp %}<font color="#ff0000">{% endif %}Time</td>
+                <td><input type="text" name="start_timestamp_time" value="{{ values:start_timestamp_time }}" class="blue" maxlength="8" size="12"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:end_timestamp %}<font color="#ff0000">{% endif %}End</b></td>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="2">
+              <tr>
+                <td class="txt">{% if errors:end_timestamp %}<font color="#ff0000">{% endif %}Date</td>
+                <td><input type="text" name="end_timestamp_date" value="{{ values:end_timestamp_date }}" class="blue" maxlength="10" size="12"></td>
+                <td class="txt">{% if errors:end_timestamp %}<font color="#ff0000">{% endif %}Time</td>
+                <td><input type="text" name="end_timestamp_time" value="{{ values:end_timestamp_time }}" class="blue" maxlength="8" size="12"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt"><font color="#999999">If you don't know the end of the party, so estimate it :-)</font></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">The Place</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:country %}<font color="#ff0000">{% endif %}Country</b></td>
+          <td class="txt"><font color="#999999">In which country is your party located?</font></td>
+        </tr>
+        <tr>
+          <td><select name="country" class="blue">
+{% for country in countries %}<option value="{{ country:id }}"{% if values:country == country:id %} selected{% endif %}>{{ country:name }}</option>
+{% endfor %}</select></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:city %}<font color="#ff0000">{% endif %}City</b></td>
+          <td class="txt"><font color="#999999">Just the city or town in the near. More details at location please.</font></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="city" value="{{ values:city }}" class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:location %}<font color="#ff0000">{% endif %}Location</b></td>
+          <td class="txt"><font color="#999999">Please enter a short description to find the place:</font></td>
+        </tr>
+        <tr>
+          <td><textarea name="location" class="blue" cols="50" rows="5">{{ values:location }}</textarea></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Inside</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>DJ Lineup</b></td>
+          <td class="txt"><font color="#999999">The DJs:</font></td>
+        </tr>
+        <tr>
+          <td><textarea name="djs" class="blue" cols="50" rows="5">{{ values:djs }}</textarea></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Live Act's</b></td>
+          <td class="txt"><font color="#999999">(Only if there are live act's on the party)</font></td>
+        </tr>
+        <tr>
+          <td><textarea name="live" class="blue" cols="50" rows="5">{{ values:live }}</textarea></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Ambient / Chillout</b></td>
+          <td class="txt"><font color="#999999">Artists in the chillout zone:</font></td>
+        </tr>
+        <tr>
+          <td><textarea name="chillout" class="blue" cols="50" rows="5">{{ values:chillout }}</textarea></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Decosign</b></td>
+          <td class="txt"><font color="#999999">Who is making the deco?</font></td>
+        </tr>
+        <tr>
+          <td><textarea name="deco" class="blue" cols="50" rows="5">{{ values:deco }}</textarea></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>More Info</b></td>
+          <td class="txt"><font color="#999999">If there is something important to know..</font></td>
+        </tr>
+        <tr>
+          <td><textarea name="memo" class="blue" cols="50" rows="5">{{ values:memo }}</textarea></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:flyer %}<font color="#ff0000">{% endif %}Flyer</b></td>
+          <td class="txt"><font color="#999999">If you have one..</font></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="file" name="flyer" size="30" class="blue">{% if flyer %}<br><a href="{{ flyer }}" target="_blank"><img src="{{ flyer }}" border="0" alt="flyer" hspace="0" vspace="2"></a>{% endif %}
+            {% if errors:flyer %}<br><font color="#ff0000" class="txt">{{ errors:flyer }}</font>{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Contact</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Organizer</b></td>
+          <td class="txt"><font color="#999999">Who is the organizer?</font></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="organizer" value="{{ values:organizer }}" class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>E-Mail</b></td>
+          <td class="txt"><font color="#999999">Contact E-Mail:</font></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="email" value="{{ values:email }}" class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Home</b></td>
+          <td class="txt"><font color="#999999">The webpage for more information:</font></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="url" value="{{ values:url }}" class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>Hotline</b></td>
+          <td class="txt"><font color="#999999">The hotline, very important:</font></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="hotline" value="{{ values:hotline }}" class="blue" maxlength="100" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2" bgcolor="#000050" align="center"><b><font color="#6666CC">Administration</font></b></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:submitter %}<font color="#ff0000">{% endif %}Your Name</b></td>
+          <td class="txt"><font color="#999999">This is also your login to edit the party</font></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="submitter" value="{{ values:submitter }}" class="blue" maxlength="32" size="50"></td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:password %}<font color="#ff0000">{% endif %}Password</b></td>
+          <td class="txt"><font color="#999999">{% if partyId %}Your Password:{% else %}The password to edit the party later again.{% endif %}</font></td>
+        </tr>
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><input type="password" name="password" value="" class="blue" maxlength="32" size="20"></td>
+                <td class="txt">&nbsp;&nbsp;Re:&nbsp;</td>
+                <td><input type="password" name="password2" value="" class="blue" maxlength="32" size="20"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="txt">&nbsp;</td>
+          <td><input type="submit" value="Save" class="blue2"></td>
+        </tr>
+      </form>
+      </table>
+      <br>
+{% endblock %}

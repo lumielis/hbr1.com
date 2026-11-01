@@ -26,15 +26,14 @@
      share a day, a `class="head"` title cut to 30 characters, then a
      three-column row of city / type / comments and country / flags.
 
-   The page also has **two SUBMENU bands, each holding two buttons**, and a
+   The page also has **two SUBMENU bands, each holding one button**, and a
    `(c) HBR1 2001-2003` signature band rather than the `- Music on Futurenet`
    one the newer pages carry. Those are passed in as `bands` and reproduced by
    the layout's multi-band support.
 
-   One thing is not reproduced: the legacy `ENTER_A_PARTY` link opened an edit
-   form that is `W8` admin work. The button is kept, pointing at `/party/new`,
-   which currently 404s - a dangling button is more honest than one that
-   silently does nothing. #}
+   `ENTER_A_PARTY` now goes to `/party/new`, which is the ported submission form.
+   Before this it 404'd: the band pointed at a route nobody had registered, so
+   the one entry point into the feature did nothing. #}
 {% extends "layouts/page" %}
 
 {% set submenu = true %}

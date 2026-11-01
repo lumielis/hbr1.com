@@ -17,7 +17,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files, `/muses`, `/viewer`; `earthcam`/`jsm*` open |
 | W4 — catalogue | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; admin upload is W8 |
-| W6 — community | **mostly done** — guestbook, party calendar, chat, navigation frame; party submission is W8 |
+| W6 — community | **mostly done** — guestbook, party calendar, party submission + edit, chat, navigation frame |
 | W7 — webtv / ticker / broadcast | **mostly done** — ticker renders live from the `ticker` table (no more generated `content*.htm`); `broadcast`, `streamstats`, `jsm*`/CamTV upload open |
 | W8 — admin | not started |
 | W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |
@@ -68,6 +68,8 @@ W6 community pages:
 /guestbook              guestbook (33/page, spam filter, CSRF posting)
 /party                  party calendar (year/month/day grid)
 /party/{id}             single party
+/party/new              submit a party (was `?part=edit&party_id=new`)
+/party/{id}/edit        edit a party you submitted
 /chat                   chat room (database-backed, not the jsm* file transport)
 ```
 
@@ -102,16 +104,56 @@ Three details are easy to get wrong and are now pinned by
   port does not delete on GET (`PartyService::pruneDrafts()` is a console task),
   so the behaviour is reachable and is reproduced rather than "fixed".
 
-The frame differs from the newer pages too: two SUBMENU bands of two buttons
+The frame differs from the newer pages too: two SUBMENU bands of one button
 each (`ENTER_A_PARTY`, `RESET_CALENDAR`, both `#AAAA22`), a 64 px content gutter
 instead of 55, `text-align: left` on the well, and the `(c) HBR1 2001-2003`
 signature instead of `- Music on Futurenet`. The layout exposes `bands`,
 `content_gutter` and `signature` for that; the catalogue and the request form
 keep their defaults.
 
-`ENTER_A_PARTY` points at `/party/new`, which is `W8` admin work and currently
-404s. Keeping the button and letting it fail is more honest than a button that
-silently does nothing.
+### The party submission form
+
+`/party/new` and `/party/{id}/edit` reproduce
+`htdocs/cgi-htm/client/party_edit.htm`. Two legacy behaviours are deliberately
+**not** reproduced, and both were defects rather than features:
+
+- **The row was created on page view.** `?part=edit&party_id=new` ran
+  `INSERT INTO party …` before the visitor had typed anything, and only a 24 h
+  sweep cleaned up what was left. Three consecutive GETs to production during
+  this port produced drafts 7469, 7470 and 7471 — one orphaned row per view.
+  The ported form is a plain GET; the row is created on POST. The 19 blank
+  drafts still in the table are that bug's residue and are left alone.
+- **The password was stored in clear.** `party.password` is `varchar(32)`, so it
+  could hold `secret123` but never a hash. New parties store Argon2id; the 800
+  clear-text rows keep working, and `PartyService::verifyPassword()` rewrites
+  each one on its first successful edit. The column was widened to
+  `varchar(255)` for that.
+
+Smaller things that are reproduced faithfully, because the page has to look the
+same:
+
+- `n/j/yy` dates (`11/1/26`) and `H:i` times, from
+  `ssms::time::set_format('H:m', 'm/d/y')` — the `m` in the time half means
+  minutes. A two-digit year is read as 20xx.
+- Nothing is preselected on a new form except by the browser, so the country
+  select shows **Afghanistan**: it is ordered by name. That is what production
+  does and it is left alone.
+- `tagout` columns go through `ssms::system::to_sql()`, which escaped `<`, `>`
+  and `"`, **left `&` alone** (hence the `M&uuml;nchen` in the table), and wrote
+  `<br />` for a newline. `PartyService::tagout()` does the same, which is also
+  what makes storing `<script>` safe on a page that prints the value with
+  `|raw`.
+- A flyer is stored as `<id>.<extension>`, the extension taken from the image
+  rather than from the client's file name. The legacy check trusted the suffix,
+  so `evil.php` renamed to `evil.jpg` landed in a directory the web server
+  serves. The upload is staged, inspected, and only renamed into place once a
+  row exists to name it after — and it is checked *before* the party is
+  inserted, which is the order `party.pl` used.
+
+One consequence worth knowing: the edit form shows `München` where the column
+holds `M&uuml;nchen`, so saving an old row normalises its entities once. The
+rendered output is identical either way — the detail page decodes on read — and
+the columns are cp1252, so the German repertoire stores losslessly.
 
 
 W7 WebTV ticker:
@@ -335,6 +377,14 @@ The endpoint is therefore covered like this:
   the leading one, exactly one `calendar_current` per strip, `found` following
   the year rather than the visible month, and the leap-day clamp (11 cases).
   These are read-only queries against `party`.
+- `PartyFormTest` — the submission form (29 cases). The date format, the field
+  rules, that a past start is only allowed when it is the row's own, that the
+  password confirmation is only required on create, that `tagout` columns are
+  stored escaped with `<br />` and that a pre-existing `&uuml;` is not
+  double-escaped, that a new party publishes with an Argon2id hash, that a
+  clear-text legacy password still verifies and is upgraded, that an update
+  keeps the stored submitter and password, and that a rejected flyer leaves no
+  row behind. Rows it creates are deleted in a `finally`.
 - The accept path is verified against `evaluate()` returning `STATUS_OK`, and
   the real submission is left untested by design.
 

@@ -144,10 +144,63 @@ final class LegacyUrlMapper
         $action = $query['action'] ?? null;
 
         if (is_string($action) && $action !== '') {
+            // The party calendar also served the edit form and the detail page
+            // through `?part=`. Both are still linked from bookmarks and from
+            // the search results that indexed them.
+            if (strtolower($action) === 'party') {
+                return self::toParty($query);
+            }
+
             return self::RUN_ROUTES[strtolower($action)] ?? '/';
         }
 
         return '/';
+    }
+
+    /**
+     * `?action=party&part=edit&party_id=new` -> `/party/new`, and
+     * `?action=party&part=edit&party_id=N` -> `/party/N/edit`.
+     *
+     * `part=view` is the detail page. `part=comment` is a discussion thread the
+     * port does not have yet (W8); it lands on the detail page, which at least
+     * keeps the reader on the event they clicked.
+     *
+     * A `party_id` that is neither `new` nor a number falls back to the
+     * calendar, so a hand-crafted value cannot ask the database for row 0.
+     */
+    private static function toParty(array $query): string
+    {
+        $part = $query['part'] ?? null;
+
+        if (!is_string($part) || $part === '') {
+            return '/party';
+        }
+
+        $id = $query['party_id'] ?? null;
+
+        switch (strtolower($part)) {
+            case 'edit':
+                if (is_scalar($id) && strtolower((string) $id) === 'new') {
+                    return '/party/new';
+                }
+
+                if (is_scalar($id) && preg_match('/^\d{1,10}$/', (string) $id) === 1) {
+                    return '/party/' . (int) $id . '/edit';
+                }
+
+                return '/party';
+
+            case 'view':
+            case 'comment':
+                if (is_scalar($id) && preg_match('/^\d{1,10}$/', (string) $id) === 1) {
+                    return '/party/' . (int) $id;
+                }
+
+                return '/party';
+
+            default:
+                return '/party';
+        }
     }
 
     /**
