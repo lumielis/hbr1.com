@@ -21,7 +21,7 @@ body {
 		then 26.6 px tall against a 26 px frame row, which is why the frameset's
 		fixed rows use `calc()` - see `views/web/chat_frameset.clarity.html`.
 	*/
-	zoom: 1.333;
+	zoom: 1.2;
 }
 body, td, th {
 	font-family: Tahoma, Arial, Helvetica, Sans-Serif, Mono;

@@ -21,7 +21,6 @@
 <script language="JavaScript" src="/cgi-htm/jscript/zoom.js"></script>
   
 <script language="JavaScript">
-<!--
 
 function redirect() {
 	var query = location.search;
@@ -37,24 +36,23 @@ if( navigator.userAgent.indexOf( "iPhone" ) >= 0 )
 </script>
 </head>
   
-<frameset cols="*,794,*" frameborder="NO" border="0" framespacing="0" onload="redirect()">
-  <frame noresize src="empty.htm" marginwidth="0" marginheight="0" scrolling="NO">
-  <frameset rows="*,64" frameborder="0" border="0" framespacing="0"> 
-    <frameset cols="194,*" frameborder="NO" border="0" framespacing="0"> 
-      <frameset rows="189,120,1*" frameborder="NO" border="0" framespacing="0"> 
-        <frame name="ltop" scrolling="NO" noresize src="ltop.htm" marginwidth="0" marginheight="0">
-        <frame name="lcam" scrolling="NO" noresize src="/webtv/ticker/" marginwidth="0" marginheight="0">
-        <frame name="lbot" scrolling="NO" noresize src="/html/lbot.html" marginwidth="0" marginheight="0">
+<frameset frameborder="NO" border="0" framespacing="0" cols="*,952.8,*">
+  <frame noresize="" src="/empty.htm" marginwidth="0" marginheight="0" scrolling="NO">
+  <frameset frameborder="0" border="0" framespacing="0" rows="*,76.8">
+    <frameset frameborder="NO" border="0" framespacing="0" cols="232.8,*">
+      <frameset frameborder="NO" border="0" framespacing="0" rows="226.8,144,1*">
+        <frame name="ltop" scrolling="NO" noresize="" src="/ltop.htm" marginwidth="0" marginheight="0">
+        <frame name="lcam" scrolling="NO" noresize="" src="/webtv/ticker/" marginwidth="0" marginheight="0">
+        <frame name="lbot" scrolling="NO" noresize="" src="/html/lbot.html" marginwidth="0" marginheight="0">
       </frameset>
-      <frameset rows="136,*" frameborder="NO" border="0" framespacing="0"> 
-        <frame noresize name="top" scrolling="NO" src="/cgi-bin/main.php?module=topframe" marginwidth="0" marginheight="0">
-        <frame name="main" src="/cgi-bin/main.php?module=listen" bgcolor="#000000">
+      <frameset frameborder="NO" border="0" framespacing="0" rows="163.2,*">
+        <frame noresize="" name="top" scrolling="NO" src="/topframe" marginwidth="0" marginheight="0">
+        <frame name="main" src="/listen" bgcolor="#000000">
       </frameset>
     </frameset>
-    <frame noresize name="bottom" scrolling="NO" noresize src="/perl/apax.cgi?run=navigation" marginwidth="0" marginheight="0">
+    <frame noresize="" name="bottom" scrolling="NO" src="/navigation" marginwidth="0" marginheight="0">
   </frameset>
-  <frame noresize src="empty.htm" marginwidth="0" marginheight="0" scrolling="NO">
-   
+  <frame noresize="" src="/empty.htm" marginwidth="0" marginheight="0" scrolling="NO">
 </frameset>
 
 <noframes>

@@ -31,13 +31,13 @@
 		The tracks are production's 26/29 px and 64/100 px chrome sizes. Two
 		things are deliberate:
 
-		* No `client.css` link. It sets `body { zoom: 1.333 }`, and this document
+		* No `client.css` link. It sets `body { zoom: 1.2 }`, and this document
 		  is the one body that must not scale or the tracks would be multiplied
 		  a second time.
 		* The panes carry that zoom themselves, so the tracks scale with them.
 		  `/chat/left.htm` and `/chat/right.htm` do not link `client.css` either,
 		  so `.pane-left`/`.pane-right` set the zoom in their own document (see
-		  the `zoom` declarations on `.terminal > iframe` below).
+		  the `zoom` declarations on `.terminal > iframe` below). The zoom value is 1.2.
 	*/
 	html, body {
 		height: 100%;
@@ -50,7 +50,7 @@
 	.terminal {
 		display: grid;
 		grid-template-rows: auto 1fr auto auto;
-		grid-template-columns: 85px 1fr 133px 85px;
+		grid-template-columns: 77px 1fr 100px 77px;
 		grid-template-areas:
 			"top    top    top    top"
 			"left   main   users  right"
@@ -69,19 +69,19 @@
 
 	/* 26 / 29 raw pixels at 1.333. `auto` on the grid rows already lets the
 	   zoomed content size these, so these are the floor, not the cap. */
-	.pane-top    { grid-area: top;    height: 35px; }
+	.pane-top    { grid-area: top;    height: 31px; }
 	.pane-left   { grid-area: left;   height: 100%; }
 	.pane-main   { grid-area: main;   height: 100%; }
 	.pane-users  { grid-area: users;  height: 100%; }
 	.pane-right  { grid-area: right;  height: 100%; }
-	.pane-bottom { grid-area: bottom; height: 35px; }
-	.pane-submit { grid-area: submit; height: 39px; }
+	.pane-bottom { grid-area: bottom; height: 31px; }
+	.pane-submit { grid-area: submit; height: 35px; }
 
 	/* left.htm and right.htm are bare <body> documents with no stylesheet, so
 	   they do not pick up client.css's zoom. Scale their content to match the
 	   scaled tracks rather than editing the legacy files. */
 	.pane-left, .pane-right {
-		zoom: 1.333;
+		zoom: 1.2;
 	}
 </style>
 </head>

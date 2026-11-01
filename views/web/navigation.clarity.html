@@ -34,9 +34,9 @@
 /* A frame document inherits nothing from its frameset, and this one does not
    link client.css (its global `td { font-size }` rules would fight the button
    geometry below). Without the zoom the bar renders at 1x inside a row that
-   zoom.js has already scaled to 1.333, so the buttons come out a quarter too
+   zoom.js has already scaled to 1.2, so the buttons come out a quarter too
    small and the bar stops filling the frame. */
-body { background-color: #000000; margin: 0; zoom: 1.333; }
+body { background-color: #000000; margin: 0; zoom: 1.2; }
 /* The legacy buttons are butted together with no whitespace between them.
    Inline images cannot be butted without this - the newlines in the template
    would each become a space. */

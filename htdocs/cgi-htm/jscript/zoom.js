@@ -18,7 +18,7 @@
 	converted to a CSS grid precisely so it would not.
 */
 ( function() {
-	var PAGE_ZOOM = 1.333;
+	var PAGE_ZOOM = 1.2;
 
 	function scaleTrack( track ) {
 		track = track.trim();
