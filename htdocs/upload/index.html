@@ -1,186 +1,204 @@
 <html>
+
 <head>
-<title>Sound Attack</title>
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<style type="text/css">
-<!--
-body {
-  scrollbar-base-color: #170040;
-  scrollbar-track-color: #000000;
-  scrollbar-face-color: #100030;
-  scrollbar-highlight-color: #000050;
-  scrollbar-3d-light-color: #000000;
-  scrollbar-dark-shadow-color: #000000;
-  scrollbar-shadow-color: #002060;
-  scrollbar-arrow-color: #002060;
-}
-td, th {
-  font-family: Verdana, Arial, Helvetica, sans-serif, Mono;
-  font-size: 10px;
-}
-.head {
-  font-size: 11px
-}
-.big {
-  font-size: 12px
-}
-.blue {
-  BORDER-LEFT: #000088 1px solid;
-  BORDER-TOP: #000088 1px solid;
-  BORDER-RIGHT: #0000CC 1px solid;
-  BORDER-BOTTOM: #0000CC 1px solid;
-  FONT: 8pt verdana, mono;
-  MARGIN-LEFT: 2px;
-  COLOR: #00FFFF;
-  BACKGROUND-COLOR: #000060;
-  scrollbar-base-color: #000000;
-  scrollbar-track-color: #000066;
-  scrollbar-face-color: #000088;
-  scrollbar-highlight-color: #0000CC;
-  scrollbar-3d-light-color: #0000CC;
-  scrollbar-dark-shadow-color: #000088;
-  scrollbar-shadow-color: #000088;
-  scrollbar-arrow-color: #6666FF;
-}
-.blue2 {
-  BORDER-LEFT: #0000CC 1px solid;
-  BORDER-TOP: #0000CC 1px solid;
-  BORDER-RIGHT: #000088 1px solid;
-  BORDER-BOTTOM: #000088 1px solid;
-  FONT: 8pt verdana, mono;
-  COLOR: #FFFFFF;
-  BACKGROUND-COLOR: #000060;
-}
-a {
-  text-decoration: none;
-}
-a:link {
-  color: #5588FF;
-}
-a:visited {
-  color: #5588FF;
-}
-a:hover {
-  color: #FF0055;
-}
--->
-</style>
+  <title>Sound Attack</title>
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <style type="text/css">
+    body {
+      scrollbar-base-color:        #170040;
+      scrollbar-track-color:       #000000;
+      scrollbar-face-color:        #100030;
+      scrollbar-highlight-color:   #000050;
+      scrollbar-3d-light-color:    #000000;
+      scrollbar-dark-shadow-color: #000000;
+      scrollbar-shadow-color:      #002060;
+      scrollbar-arrow-color:       #002060;
+      zoom: 1.2;
+    }
 
-<script language="JavaScript" src="../cgi-htm/jscript/crypt.js"></script>
-<script language="JavaScript">
-<!--
+    td,
+    th {
+      font-family: Verdana, Arial, Helvetica, sans-serif, Mono;
+      font-size:   10px;
+    }
 
-PageID = 'upload';
-if( parent && parent.frames && parent.frames['bottom'] ) {
-if( parent.frames['bottom'].updatePage )
-	parent.frames['bottom'].updatePage( PageID );
-}
+    .head {
+      font-size: 11px
+    }
 
-email_key = "DFSE3-KX427-A2RRG-BL5XM-CB336";
+    .big {
+      font-size: 12px
+    }
 
-function decrypt_email( anchor, crypt, query ) {
-	location.href = 'mailto:' + xor_decrypt_hex( crypt, email_key ) + query;
-	return false;
-}
+    .blue {
+      BORDER-LEFT:                 #000088 1px solid;
+      BORDER-TOP:                  #000088 1px solid;
+      BORDER-RIGHT:                #0000CC 1px solid;
+      BORDER-BOTTOM:               #0000CC 1px solid;
+      FONT:                        8pt verdana, mono;
+      MARGIN-LEFT:                 2px;
+      COLOR:                       #00FFFF;
+      BACKGROUND-COLOR:            #000060;
+      scrollbar-base-color:        #000000;
+      scrollbar-track-color:       #000066;
+      scrollbar-face-color:        #000088;
+      scrollbar-highlight-color:   #0000CC;
+      scrollbar-3d-light-color:    #0000CC;
+      scrollbar-dark-shadow-color: #000088;
+      scrollbar-shadow-color:      #000088;
+      scrollbar-arrow-color:       #6666FF;
+    }
 
-//-->
-</script>
+    .blue2 {
+      BORDER-LEFT:      #0000CC 1px solid;
+      BORDER-TOP:       #0000CC 1px solid;
+      BORDER-RIGHT:     #000088 1px solid;
+      BORDER-BOTTOM:    #000088 1px solid;
+      FONT:             8pt verdana, mono;
+      COLOR:            #FFFFFF;
+      BACKGROUND-COLOR: #000060;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:link {
+      color: #5588FF;
+    }
+
+    a:visited {
+      color: #5588FF;
+    }
+
+    a:hover {
+      color: #FF0055;
+    }
+  </style>
+
+  <script language="JavaScript" src="../cgi-htm/jscript/crypt.js"></script>
+  <script language="JavaScript">
+
+    PageID = 'upload';
+    if (parent && parent.frames && parent.frames['bottom']) {
+      if (parent.frames['bottom'].updatePage)
+        parent.frames['bottom'].updatePage(PageID);
+    }
+
+    email_key = "DFSE3-KX427-A2RRG-BL5XM-CB336";
+
+    function decrypt_email(anchor, crypt, query) {
+      location.href = 'mailto:' + xor_decrypt_hex(crypt, email_key) + query;
+      return false;
+    }
+
+  </script>
 
 </head>
-<body bgcolor="#000000" text="#fffaf0" link="#5588FF" alink="#FF0055" vlink="#5588FF" leftMargin=0 topMargin=3 marginheight="3" marginwidth="0">
 
-<table cellspacing="0" cellpadding="0" border="0" width="583">
-  <tr> 
-    <td align=left width="1%" background="../images/header_left.gif"><img height=8 src="../images/spacer.gif" width=64></td>
-    <td align=middle background="../images/header_bg.gif"><img height=1 src="../images/spacer.gif" width=1></td>
-    <td align=right width="1%" background="../images/header_right.gif"><img height=8 src="../images/spacer.gif" width=64></td>
-  </tr>
-  <tr> 
-    <td align=left width="1%" background="../images/body_left.gif"><img src="../images/title_left.gif"></td>
-    <td align=center background="../images/title_bg.gif" height="1%"> 
-      <table cellspacing="0" cellpadding="0" border="0">
-        <tr>
-          <td class="head" align=middle><font color=#9999ff><b>SOUND ATTACK</b></font></td>
-        </tr>
-      </table>
-    </td>
-    <td align=right width="1%" background="../images/body_right.gif"><img src="../images/title_right.gif"></td>
-  </tr>
-  <tr>
-    <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=64></td>
-    <td align=center background="bg.jpg" height="1%">
-      <table cellSpacing=0 cellPadding=0 border=0>
-        <tr>
-          <td align=middle background="../images/submenu_bg.gif">
-            <table cellSpacing=0 cellPadding=0 border=0>
-              <tr> 
-                <td align=left><img src="../images/submenu_left.gif"></td>
-                <td><img height=1 src="../images/spacer.gif" width=2></td>
-                <td class=head><b><a href="javascript:history.back();"><font face=Verdana,Geneva color=#AAAA22 size=1>GO_BACK</font></a></b></td>
-                <td><img height=1 src="../images/spacer.gif" width=2></td>
-                <td align=left><img src="../images/submenu_right.gif"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-    <td align=right width="1%" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=64></td>
-  </tr>
-  <tr> 
-    <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=55></td>
-    <td align="center" background="bg.jpg" valign="top"> 
-	  <p><br><font class="head" color="ccff00"><b>Hello DJs, Acts and Musicians.</b></font></p>
-      <p>You mixed some impressions of Psychedelic Trance, Ambient, Downbeat, Chill-Out or House Music and want to publish it here?<br>
-        Nice! ... Lets do it!</p>
-      <p>You only need two things to do:<br>
-        Upload your mixed material to our server and write an email to <a href="mailto:FrancoFunghi [HBR1.com - GOAgemein.de REC]" onclick="return decrypt_email('8ab8b4b3969c91cda2999f96618d9a94995e70afa4c56d5a638982749da9b3b8aea15bafbd54847c709e528e98b98eb0afa49ec29baaaa9c737e86988473969cb896')">FrancoFunghi</a>, who you are,
-        what you uploaded and how we may use your stuff.</p>
-      <p>Everything ok?</p>
-      <p>Send your mix/es as <a href="http://www.iis.fraunhofer.de/en/bf/amm/produkte/audiocodec/audiocodecs/mp3/index.jsp" target="_blank">MP3</a> file with a <b>minimum quality of 192KBit</b> to our upload server at:<br><br><b><a href="ftp://upload.hbr1.com" target="_blank">ftp://upload.hbr1.com</a></b></p>
-      <p>If you have a tracklist, you are welcome to send it too. The listeners would love to know what you are playing.<br><br>&nbsp;</p>
-    </td>
-    <td align=right width="1%" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=55></td>
-  </tr>
-  <tr>
-    <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=64></td>
-    <td align=center background="bg.jpg" height="1%">
-      <table cellSpacing=0 cellPadding=0 border=0>
-        <tr>
-          <td align=middle background="../images/submenu_bg.gif">
-            <table cellSpacing=0 cellPadding=0 border=0>
-              <tr> 
-                <td align=left><img src="../images/submenu_left.gif"></td>
-                <td><img height=1 src="../images/spacer.gif" width=2></td>
-                <td class=head><b><a href="javascript:history.back();"><font face=Verdana,Geneva color=#AAAA22 size=1>GO_BACK</font></a></b></td>
-                <td><img height=1 src="../images/spacer.gif" width=2></td>
-                <td align=left><img src="../images/submenu_right.gif"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-    <td align=right width="1%" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=64></td>
-  </tr>
-  <tr> 
-    <td align=left width="1%" background="../images/body_left.gif"><img src="../images/title_left.gif"></td>
-    <td align=center background="../images/title_bg.gif" height="1%"> 
-      <table cellSpacing=0 cellPadding=0 border=0>
-        <tr> 
-          <td align="middle"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2002</i></font></td>
-        </tr>
-      </table>
-    </td>
-    <td align=right width="1%" background="../images/body_right.gif"><img src="../images/title_right.gif"></td>
-  </tr>
-  <tr> 
-    <td align=left width="1%" background="../images/footer_left.gif"><img height=8 src="../images/spacer.gif" width=64></td>
-    <td align=middle background="../images/footer_bg.gif"><img height=1 src="../images/spacer.gif" width=1></td>
-    <td align=right width="1%" background="../images/footer_right.gif"><img height=8 src="../images/spacer.gif" width=64></td>
-  </tr>
-</table>
+<body bgcolor="#000000"
+  text="#fffaf0"
+  link="#5588FF"
+  alink="#FF0055"
+  vlink="#5588FF"
+  leftMargin=0
+  topMargin=3
+  marginheight="3"
+  marginwidth="0">
+
+  <table cellspacing="0" cellpadding="0" border="0" width="583">
+    <tr>
+      <td align=left width="1%" background="../images/header_left.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+      <td align=middle background="../images/header_bg.gif"><img height=1 src="../images/spacer.gif" width=1></td>
+      <td align=right width="1%" background="../images/header_right.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+    </tr>
+    <tr>
+      <td align=left width="1%" background="../images/body_left.gif"><img src="../images/title_left.gif"></td>
+      <td align=center background="../images/title_bg.gif" height="1%">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td class="head" align=middle><font color=#9999ff><b>SOUND ATTACK</b></font></td>
+          </tr>
+        </table>
+      </td>
+      <td align=right width="1%" background="../images/body_right.gif"><img src="../images/title_right.gif"></td>
+    </tr>
+    <tr>
+      <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=64></td>
+      <td align=center background="bg.jpg" height="1%">
+        <table cellSpacing=0 cellPadding=0 border=0>
+          <tr>
+            <td align=middle background="../images/submenu_bg.gif">
+              <table cellSpacing=0 cellPadding=0 border=0>
+                <tr>
+                  <td align=left><img src="../images/submenu_left.gif"></td>
+                  <td><img height=1 src="../images/spacer.gif" width=2></td>
+                  <td class=head><b><a href="javascript:history.back();"><font face=Verdana,Geneva color=#AAAA22 size=1>GO_BACK</font></a></b></td>
+                  <td><img height=1 src="../images/spacer.gif" width=2></td>
+                  <td align=left><img src="../images/submenu_right.gif"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td align=right width="1%" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=64></td>
+    </tr>
+    <tr>
+      <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=55></td>
+      <td align="center" background="bg.jpg" valign="top">
+        <p><br><font class="head" color="ccff00"><b>Hello DJs, Acts and Musicians.</b></font></p>
+        <p>You mixed some impressions of Psychedelic Trance, Ambient, Downbeat, Chill-Out or House Music and want to publish it here?<br>
+          Nice! ... Lets do it!</p>
+        <p>You only need two things to do:<br>
+          Upload your mixed material to our server and write an email to <a href="mailto:FrancoFunghi [HBR1.com - GOAgemein.de REC]" onclick="return decrypt_email('8ab8b4b3969c91cda2999f96618d9a94995e70afa4c56d5a638982749da9b3b8aea15bafbd54847c709e528e98b98eb0afa49ec29baaaa9c737e86988473969cb896')">FrancoFunghi</a>, who you are,
+          what you uploaded and how we may use your stuff.</p>
+        <p>Everything ok?</p>
+        <p>Send your mix/es as <a href="http://www.iis.fraunhofer.de/en/bf/amm/produkte/audiocodec/audiocodecs/mp3/index.jsp" target="_blank">MP3</a> file with a <b>minimum quality of 192KBit</b> to our upload server at:<br><br><b><a href="ftp://upload.hbr1.com" target="_blank">ftp://upload.hbr1.com</a></b></p>
+        <p>If you have a tracklist, you are welcome to send it too. The listeners would love to know what you are playing.<br><br>&nbsp;</p>
+      </td>
+      <td align=right width="1%" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=55></td>
+    </tr>
+    <tr>
+      <td align=left width="1%" background="../images/body_left.gif"><img height=1 src="../images/spacer.gif" width=64></td>
+      <td align=center background="bg.jpg" height="1%">
+        <table cellSpacing=0 cellPadding=0 border=0>
+          <tr>
+            <td align=middle background="../images/submenu_bg.gif">
+              <table cellSpacing=0 cellPadding=0 border=0>
+                <tr>
+                  <td align=left><img src="../images/submenu_left.gif"></td>
+                  <td><img height=1 src="../images/spacer.gif" width=2></td>
+                  <td class=head><b><a href="javascript:history.back();"><font face=Verdana,Geneva color=#AAAA22 size=1>GO_BACK</font></a></b></td>
+                  <td><img height=1 src="../images/spacer.gif" width=2></td>
+                  <td align=left><img src="../images/submenu_right.gif"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td align=right width="1%" background="../images/body_right.gif"><img height=1 src="../images/spacer.gif" width=64></td>
+    </tr>
+    <tr>
+      <td align=left width="1%" background="../images/body_left.gif"><img src="../images/title_left.gif"></td>
+      <td align=center background="../images/title_bg.gif" height="1%">
+        <table cellSpacing=0 cellPadding=0 border=0>
+          <tr>
+            <td align="middle"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2002</i></font></td>
+          </tr>
+        </table>
+      </td>
+      <td align=right width="1%" background="../images/body_right.gif"><img src="../images/title_right.gif"></td>
+    </tr>
+    <tr>
+      <td align=left width="1%" background="../images/footer_left.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+      <td align=middle background="../images/footer_bg.gif"><img height=1 src="../images/spacer.gif" width=1></td>
+      <td align=right width="1%" background="../images/footer_right.gif"><img height=8 src="../images/spacer.gif" width=64></td>
+    </tr>
+  </table>
 
 </body>
+
 </html>

@@ -1,45 +1,50 @@
 {# The station chooser - `template/tracklist.phtml`.
 
-   Landing page for the "Inventory" button, and where CHANGE_STATION sends you.
-   It has no SUBMENU bands, no title band inside the well and no `<br>` above
-   the list: just a `margin: 15px` block holding "Choose a station" and the
-   three gradient names. Because it is the page you reach *by* changing
-   station, it also has no submenu of its own - the page heading is the only
-   frame around it. #}
+Landing page for the "Inventory" button, and where CHANGE_STATION sends you.
+It has no SUBMENU bands, no title band inside the well and no `<br>` above
+the list: just a `margin: 15px` block holding "Choose a station" and the
+three gradient names. Because it is the page you reach *by* changing
+station, it also has no submenu of its own - the page heading is the only
+frame around it. #}
 {% extends "layouts/page" %}
 
 {% block title %}HBR1 Inventory{% endblock %}
 {% block heading %}INVENTORY{% endblock %}
 
 {# Both nav buttons point at the catalogue, so both are highlighted here too -
-   the chooser is the first half of that page. #}
+the chooser is the first half of that page. #}
 {% block pageid %}PageID = 'inventory'; PageIDs = ['inventory', 'tracklist'];{% endblock %}
 
 {% block styles %}
-<style>
-.genre { font-size: 10px; font-family: Arial, Helvetica, sans-serif; }
-.station { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-</style>
+  <style>
+    .genre { font-size: 10px; font-family: Arial, Helvetica, sans-serif; }
+
+    .station { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
+  </style>
 {% endblock %}
 
 {% block content %}
-          <p><font color="#999999">Choose a station</font></p>
-          <table cellspacing="0" cellpadding="4">
-            {% for station in stationList %}
-            <tr>
-              <td align="center"><a href="/mixes/{{ station:slug }}"><b>
-                <script language="JavaScript">
-                document.write( TextLight( {{ station:title|json|raw }}, '3366cc', '66ccff' ) );
-                </script>                <noscript>
+  <p><font color="#999999">Choose a station</font></p>
+  <table cellspacing="0" cellpadding="4">
+    {% for station in stationList %}
+      <tr>
+        <td align="center">
+          <a href="/mixes/{{ station:slug }}">
+            <b>
+              <script language="JavaScript">
+                document.write(TextLight({{ station:title | json | raw }}, '3366cc', '66ccff'));
+              </script>
+              <noscript>
                 <font color="#3333cc">{{ station:title }}</font>
-                </noscript>
-                </b></a>
-                <!--
-                <div class="genre">{{ station:genre }}</div>
-                -->
-              </td>
-            </tr>
-            {% endfor %}
-          </table>
-          <br>
+              </noscript>
+            </b>
+          </a>
+          <!--
+          <div class="genre">{{ station:genre }}</div>
+          -->
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+  <br>
 {% endblock %}
