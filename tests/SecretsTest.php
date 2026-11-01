@@ -30,11 +30,13 @@ class SecretsTest extends TestCase
     public static function trackedConfigFiles(): array
     {
         return [
-            'legacy php config'  => ['cgi-bin/include/config.php'],
-            'legacy perl config' => ['cgi-bin/include/config.pab.pl'],
-            'env defaults'       => ['env.php'],
-            'app config'         => ['config/config.php'],
-            'env example'        => ['deploy/env.example.php'],
+            'legacy php config'   => ['cgi-bin/include/config.php'],
+            'legacy perl config'  => ['cgi-bin/include/config.pab.pl'],
+            'legacy perl settings' => ['cgi-bin/include/settings.inc'],
+            'env defaults'        => ['env.php'],
+            'app config'          => ['config/config.php'],
+            'env example'         => ['deploy/env.example.php'],
+            'phase 0 runbook'     => ['deploy/PHASE-0-RUNBOOK.md'],
         ];
     }
 
@@ -44,9 +46,10 @@ class SecretsTest extends TestCase
         $source = $this->tracked($path);
 
         // An assignment whose right-hand side is a non-empty quoted literal.
-        // Placeholders and constants are fine; 'hunter2' is not.
+        // Placeholders and constants are fine; 'hunter2' is not. `qq(...)` is
+        // included because the Perl tree writes its values that way.
         preg_match_all(
-            '/(?:DB_PASSWORD|DB_Auth|DB_Music_Auth|ICECAST_STATS_PASSWORD)\s*[\'"]?\s*=>?\s*\'([^\']*)\'/',
+            '/(?:DB_PASSWORD|DB_Auth|DB_Music_Auth|ICECAST_STATS_PASSWORD)\s*[\'"]?\s*=>?\s*(?:qq\()?\'([^\']*)\'/',
             $source,
             $matches
         );
@@ -86,9 +89,11 @@ class SecretsTest extends TestCase
     public static function trackedSources(): array
     {
         return [
-            'perl config'   => ['cgi-bin/include/config.pab.pl'],
-            'php config'    => ['cgi-bin/include/config.php'],
-            'legacy main'   => ['cgi-bin/main.php'],
+            'perl config'    => ['cgi-bin/include/config.pab.pl'],
+            'perl settings'  => ['cgi-bin/include/settings.inc'],
+            'php config'     => ['cgi-bin/include/config.php'],
+            'legacy main'    => ['cgi-bin/main.php'],
+            'phase 0 runbook' => ['deploy/PHASE-0-RUNBOOK.md'],
         ];
     }
 
@@ -99,6 +104,44 @@ class SecretsTest extends TestCase
             '#[a-z][a-z0-9+.-]*://[^/\s\'"]+:[^/\s\'"@]+@#i',
             $this->tracked($path),
             "{$path} embeds a credential in a URL."
+        );
+    }
+
+    /**
+     * The Shoutcast/Icecast admin password reached the repository three ways:
+     * as a `pass=` query parameter on five urls in `settings.inc`, inside the
+     * Icecast userinfo in `config.pab.pl`, and as a literal in the Phase 0
+     * runbook, which is prose and so escaped the config-file checks above.
+     *
+     * A `?pass=` parameter is plaintext by definition, so any value that is not
+     * the environment lookup is a leak.
+     */
+    public static function trackedPasswordParams(): array
+    {
+        return [
+            'perl settings'   => ['cgi-bin/include/settings.inc'],
+            'perl config'     => ['cgi-bin/include/config.pab.pl'],
+            'phase 0 runbook' => ['deploy/PHASE-0-RUNBOOK.md'],
+            'db connections'  => ['deploy/DB-CONNECTIONS.md'],
+        ];
+    }
+
+    #[DataProvider('trackedPasswordParams')]
+    public function testNoTrackedFileHardcodesAPasswordParameter(string $path): void
+    {
+        preg_match_all(
+            '/(?:pass|passwd|password|auth|pwd)=([A-Za-z0-9._-]{4,})/i',
+            $this->tracked($path),
+            $matches
+        );
+
+        // `auth=plain` is a RadioDJ command parameter, not a secret.
+        $offending = array_values(array_diff($matches[1], ['plain']));
+
+        self::assertSame(
+            [],
+            $offending,
+            "{$path} hardcodes a password in a query parameter."
         );
     }
 

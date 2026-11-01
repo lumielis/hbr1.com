@@ -1,3 +1,43 @@
+#!/usr/local/bin/perl
+# Legacy settings - public values only.
+#
+# Authenticating values are read from the shared environment file, the same one
+# the PHP side and config.pab.pl use (env.php -> env.local.php in development,
+# /etc/hbr1/env.php in production). Nothing below may be a literal: this file
+# is in git and the repository is public.
+BEGIN {
+	my ($fh, $line, %env);
+
+	my @candidates = ($ENV{'HBR1_ENV'});
+
+	if (__FILE__ =~ m{^(.*)/cgi-bin/include/settings\.inc$}) {
+		push @candidates, "$1/env.local.php", '/etc/hbr1/env.php';
+	} else {
+		push @candidates, '/etc/hbr1/env.php', '/home/christian/WWWRoot/www.hbr1.com/env.local.php';
+	}
+
+	my ($file) = grep { defined $_ && -f $_ } @candidates;
+
+	if (defined $file && open $fh, '<', $file) {
+		while ($line = <$fh>) {
+			$env{$1} = $2 if $line =~ /'([A-Z0-9_]+)'\s*=>\s*'([^']*)'/;
+		}
+		close $fh;
+	}
+
+	# The Shoutcast admin password. ICECAST_STATS_URL carries the Icecast
+	# credential in its userinfo; this one is a bare query parameter, so it has
+	# its own key. Both are the same secret on hosts that run both servers.
+	$ENV{'HBR1_SHOUTCAST_PASS'} = $env{'SHOUTCAST_STATS_PASSWORD'}
+		|| do { my ($u) = ($env{'ICECAST_STATS_URL'} || '') =~ m{://[^/:]+:([^@]+)@}; $u // '' };
+
+	# The database pair, for the ssms %dbi handle. Set here as well as in
+	# config.pab.pl because a script may require either file first.
+	$ENV{'HBR1_DB_HOST'}     = $env{'DB_HOST'}     || 'localhost';
+	$ENV{'HBR1_DB_USER'}     = $env{'DB_USER'}     || '';
+	$ENV{'HBR1_DB_PASSWORD'} = $env{'DB_PASSWORD'} || '';
+}
+
 $path{'system'} = qq(/home/christian/WWWRoot/www.hbr1.com/cgi-bin);
 $path{'display'} = qq(/home/christian/WWWRoot/www.hbr1.com/htdocs/cgi-htm);
 $path{'ssms'} = qq(/home/christian/WWWRoot/perl-ssms/);
@@ -37,7 +77,7 @@ $setup{'chat_history_copy'} = 50;
     logo => '',
     shout_host => 'radio.hbr1.com',
     shout_port => 19700,
-    shout_stat => 'http://217.64.169.133:19700/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+    shout_stat => qq(http://217.64.169.133:19700/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
     asx_file => 'http://www.hbr1.com/playlist/trance.asx',
     mms_alias => '',
     streams => {
@@ -50,7 +90,7 @@ $setup{'chat_history_copy'} = 50;
 		    title => 'MP3-Stream',
 		    shoutcast_host => 'radio.hbr1.com',
 		    shoutcast_port => 19700,
-		    shoutcast_stats => 'http://217.64.169.133:19700/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+		    shoutcast_stats => qq(http://217.64.169.133:19700/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
 		  },
 		  2 => {
 		  	type => 'title',
@@ -81,7 +121,7 @@ $setup{'chat_history_copy'} = 50;
     logo => '',
     shout_host => 'radio.hbr1.com',
     shout_port => 19710,
-    shout_stat => 'http://217.64.169.133:19710/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+    shout_stat => qq(http://217.64.169.133:19710/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
     asx_file => 'http://www.hbr1.com/playlist/house.asx',
     #mms_alias => 'http://media.hbr1.com/house',
     mms_alias => '',
@@ -95,7 +135,7 @@ $setup{'chat_history_copy'} = 50;
 		    title => 'MP3-Stream',
 		    shoutcast_host => 'radio.hbr1.com',
 		    shoutcast_port => 19710,
-		    shoutcast_stats => 'http://217.64.169.133:19710/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+		    shoutcast_stats => qq(http://217.64.169.133:19710/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
 		  },
 		  2 => {
 		  	type => 'title',
@@ -126,7 +166,7 @@ $setup{'chat_history_copy'} = 50;
     logo => '',
     shout_host => 'radio.hbr1.com',
     shout_port => 19720,
-    shout_stat => 'http://217.64.169.133:19720/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+    shout_stat => qq(http://217.64.169.133:19720/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
     asx_file => 'http://www.hbr1.com/playlist/ambient.asx',
     #mms_alias => 'http://media.hbr1.com/ambient',
     mms_alias => '',
@@ -140,7 +180,7 @@ $setup{'chat_history_copy'} = 50;
 		    title => 'MP3-Stream',
 		    shoutcast_host => 'radio.hbr1.com',
 		    shoutcast_port => 19720,
-		    shoutcast_stats => 'http://217.64.169.133:19720/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+		    shoutcast_stats => qq(http://217.64.169.133:19720/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
 		  },
 		  2 => {
 		  	type => 'title',
@@ -173,7 +213,7 @@ $setup{'chat_history_copy'} = 50;
     logo => '',
     shout_host => 'radio.hbr1.com',
     shout_port => 4989,
-    shout_stat => 'http://127.0.0.1:4989/admin.cgi?mode=viewxml&pass=MilkyWall',
+    shout_stat => qq(http://127.0.0.1:4989/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
     asx_file => '',
     mms_alias => ''
   },
@@ -184,7 +224,7 @@ $setup{'chat_history_copy'} = 50;
     logo => '',
     shout_host => 'radio.hbr1.com',
     shout_port => 19730,
-    shout_stat => 'http://127.0.0.1:19730/admin.cgi?mode=viewxml&pass=RadioHbr1Eurotip',
+    shout_stat => qq(http://127.0.0.1:19730/admin.cgi?mode=viewxml&pass=$ENV{HBR1_SHOUTCAST_PASS}),
     asx_file => 'http://www.hbr1.com/playlist/hiphop.asx',
     mms_alias => ''
   }
@@ -204,8 +244,8 @@ $chat{'syscheck'} = 30000;
 );
 
 $dbi{'dsn'} = qq(database=hbr1;host=sql.alien-heads.net);
-$dbi{'user'} = qq(hbr1);
-$dbi{'auth'} = $dbi{'pass'} = qq(hbr1);
+$dbi{'user'} = $ENV{'HBR1_DB_USER'};
+$dbi{'auth'} = $dbi{'pass'} = $ENV{'HBR1_DB_PASSWORD'};
 $dbi{'driver'} = qq(mysql);
 
 $setup{'dbi'} = $dbi{'driver'};

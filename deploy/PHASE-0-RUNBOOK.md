@@ -55,13 +55,19 @@ Two remote shells are committed to the repository **and** were on the server:
 Assume all of them are public — `config.pab.pl` and `settings.inc` were served
 as plain text.
 
-- [ ] MySQL: `hbr1` and `hbr1-web` (both are in `cgi-bin/include/config.php`
-      and `config.pab.pl`, in cleartext).
-- [ ] Icecast admin password (`RadioHbr1Eurotip`, in `include/config.php` and
-      `include/settings.inc`).
-- [ ] Mail accounts referenced by the mail modules.
-- [ ] Any FTP credentials in `ssms` config.
-- [ ] SSH keys / passwords for `christian` if the shell had file access.
+**This is now its own document: [`CREDENTIAL-ROTATION.md`](CREDENTIAL-ROTATION.md).**
+Work through it before anything else here, in the order it gives — MySQL last,
+because rotating it first locks the site out of its own configuration. It covers:
+
+- MySQL `hbr1-web` (and retiring `hbr1`), including the dead `samdb_%` and
+  `hbr1_trance|tronic|ambient` grants;
+- the Icecast admin password, which also feeds the now-playing panel;
+- the **Shoutcast** admin password, a separate secret on `217.64.169.133`;
+- the four `htdocs/admin/.htpasswd` passwords, rehashed with bcrypt;
+- mail, FTP and SSH, plus an audit for anything scheduled that you did not
+  schedule.
+
+The values must now live in `/etc/hbr1/env.php`; see §4 below.
 
 ## 3. Stop serving internals as text
 
