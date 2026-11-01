@@ -162,6 +162,52 @@ class StationViewServiceTest extends TestCase
         self::assertSame('abc', $this->service()->fit('abc', 0));
     }
 
+    /**
+     * The window is a character count, not a byte count.
+     *
+     * The legacy `fit_string()` counted bytes, which was identical to counting
+     * characters while every string was cp1252. The pages are UTF-8 now, so a
+     * byte cut can land inside a multi-byte sequence and the caption then
+     * renders a replacement glyph. Every result must stay valid UTF-8.
+     */
+    public function testFitCountsCharactersNotBytes(): void
+    {
+        // 45 characters, but 90 bytes once "ü" is encoded.
+        $text = str_repeat('ü', 45);
+
+        self::assertSame(90, strlen($text));
+        self::assertSame($text, $this->service()->fit($text, 45));
+    }
+
+    public function testFitNeverSplitsAMultiByteCharacter(): void
+    {
+        $cases = [
+            'Grüße aus München',
+            'DJ Müller',
+            'Übercool',
+            'Einmal Mond und Zurück',
+            'FreakzOnTour » RIT - SCHI',
+            'Paweł Łódź',
+        ];
+
+        foreach ($cases as $text) {
+            for ($size = 1; $size <= 24; $size++) {
+                $out = $this->service()->fit($text, $size);
+
+                self::assertSame(1, preg_match('//u', $out), "size={$size} produced invalid UTF-8");
+                self::assertLessThanOrEqual($size + 4, mb_strlen($out, 'UTF-8'));
+            }
+        }
+    }
+
+    public function testFitStillCutsAtAWordBoundaryWithAccents(): void
+    {
+        $out = $this->service()->fit('München - Die Bank - 5 Jahre Geburtstag im Club', 20);
+
+        self::assertStringEndsWith(' ...', $out);
+        self::assertSame(1, preg_match('//u', $out));
+    }
+
     // ------------------------------------------------------------ playlistLines
 
     public function testPlaylistLinesPadsToEightWithLinks(): void

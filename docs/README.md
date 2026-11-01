@@ -427,6 +427,119 @@ One deliberate wording change: the legacy template asked the listener to enter
 is reproduced verbatim, but a misspelling is a defect rather than a feature, and
 the archived `template/tracklist.req.phtml` keeps the original for reference.
 
+## Character encoding
+
+The site is old enough to have lived through three encodings, and the data
+still shows it. The short version: **`hbr1` is `latin1` and should become
+`utf8mb4`, but 186 values must be repaired first or the migration will bake the
+damage in permanently.**
+
+### What is declared where
+
+| Layer | Encoding | Note |
+|---|---|---|
+| PHP connection (`DB_CHARSET`) | `utf8mb4` | since W1 |
+| `hbr1` schema default | `utf8mb4` / `utf8mb4_general_ci` | but 200 of its 202 text columns are still `latin1` |
+| `radiodj_*` schema default | `latin1` | 62 of 66 text columns per schema are already `utf8mb4_unicode_ci` |
+| PHP output | `charset=utf-8` | nginx sends it; each view also has `<meta charset>` |
+| Legacy Perl/PHP output | **nothing** | no `Content-Type` charset and no `<meta>`, so browsers guess |
+| Legacy templates/`.htm` | mixed `iso-8859-1` and raw cp1252 | 38 committed files are not valid UTF-8 |
+
+Production sends `Content-Type: text/html` with no charset and no `<meta
+charset>`. Every browser therefore guesses — Chrome picks `windows-1252` — and
+because the 152 double-encoded values *are* well-formed UTF-8 byte sequences,
+decoding them as cp1252 shows them as mojibake. Verified: production renders
+`WORLD LEAGUE with SVEN VÃ„TH`, and so does the port. **Production is not the
+correct reference here** — on this defect the two agree, and both are wrong.
+
+### The three states in `hbr1`
+
+Measured over the 1,560 non-ASCII values in the 33 affected `latin1` columns:
+
+| State | Count | Meaning |
+|---|---|---|
+| clean cp1252 | 1,374 | stored bytes are the right single-byte text; `ü`, `ö`, `ä`, `ß`, `é`, `€`, `»`, `–` all round-trip losslessly. Nothing to do. |
+| **double-encoded** | **152** | a UTF-8 byte string that the legacy `latin1` connection stored byte-for-byte. Reading the stored bytes *as* UTF-8 recovers the intended characters. Fully repairable — proven end to end on a scratch table. |
+| mixed | 25 | some UTF-8 sequences and some lone high bytes. Mostly repairable; a few are genuinely ambiguous. |
+| already lost | 9 | contain U+FFFD. Unrecoverable. |
+
+186 values therefore need the repair (152 + 25 + 9); 177 of them will come out
+right.
+
+So `WORLD LEAGUE with SVEN VÄTH` is stored as `SVEN VÃ„TH` in 5 party rows,
+`München` as `MÃ¼nchen` in 58 `party.location` rows, and so on. Both production
+and the port render those as mojibake, for different reasons: production never
+declares a charset and the sequence is valid UTF-8 decoded as cp1252, while the
+port declares UTF-8 and the sequence *is* the wrong text. Verified side by side
+on party 2530.
+
+The important part: **the damage is historical, not ongoing.** It clusters in
+2004–2009 (`party` 2008: 21 rows, 2009: 20; `guestbook` spread the same way) and
+no row written since is affected. The current `utf8mb4` connection writing into
+a `latin1` column produces clean cp1252, verified on a scratch table. The 2026
+parties are clean.
+
+### What the port must not do
+
+- **Do not add a charset conversion in the read path.** The obvious "fix" —
+  detecting mojibake and repairing it when loading a row — would double-apply
+  once the schema is converted, and would corrupt the 1,374 clean values it
+  guesses wrong about.
+- **Do not convert the schema before repairing.** `ALTER TABLE … CONVERT TO
+  CHARACTER SET utf8mb4` reinterprets the stored bytes as cp1252 and re-encodes
+  them as UTF-8. That is correct for the 1,374 clean values and **wrong** for
+  the 152 double-encoded ones: `SVEN VÃ„TH` becomes `SVEN VÃƒâ€žTH`, permanently.
+  Verified on clones.
+- `fit()` in `StationViewService` used to truncate by *bytes*, which was
+  harmless while everything was cp1252 and splits multi-byte characters now
+  that pages are UTF-8. It counts characters.
+
+### The conversion, in order
+
+1. **Back up** `hbr1`. The repair is not reversible by inspection.
+2. **Repair the 186 rows**, while the columns are still `latin1`: for each
+   value matching `/[\xC2-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}/`, read the
+   stored bytes **as UTF-8** and write them back. The `utf8mb4` connection then
+   encodes the result as cp1252, so the column ends up holding the single-byte
+   text the `ALTER` expects. Rows containing U+FFFD are skipped.
+3. **Fix `referer.url` first.** It is a `varchar(255)` under a `MyISAM`
+   `PRIMARY KEY`, which is 1,020 bytes in `utf8mb4` — over MyISAM's 1,000-byte
+   key limit, so the `ALTER` fails with `1071 Specified key was too long`.
+   Verified. Two working options, both tested on a clone:
+   - shorten the column to `varchar(200)` and keep the primary key;
+   - or add an `id` surrogate key and index `url` with a `190`-character prefix.
+
+   The table holds 4 rows and nothing in the application reads it, so either is
+   cheap. The 7 other "over 767 byte" keys are all `FULLTEXT`, which has no such
+   limit, and convert in place — verified on a clone of `party` with its 16
+   `FULLTEXT` indexes.
+4. **`ALTER TABLE … CONVERT TO CHARACTER SET utf8mb4 COLLATE
+   utf8mb4_general_ci`** on all 46 tables (21 MB). Verified on clones of
+   `party` (860 rows), `guestbook` and `mixes`.
+5. **`db/schema.sql`** regenerates from the live schema at that point.
+
+`utf8mb4_general_ci` matches what `hbr1`'s default already is and what the
+`GAL_` tables use. It is a deliberate choice over `utf8mb4_unicode_ci`: the
+RadioDJ side treats `ß = ss` under `unicode_ci` but not under `general_ci`, and
+changing that would change what the request rules consider a repeat.
+
+### The playout schemas are not ours
+
+`radiodj_*` belong to RadioDJ; it writes them and it has its own idea about
+encoding. `history.artist` holds `hÃ¤uptling schlumpf` and `FreakzOnTour Â» RIT`
+in exactly the same double-encoded state, and 62 of 66 columns are already
+`utf8mb4`, so the mojibake there came from RadioDJ reading files whose tags it
+mis-identified — not from us. Do not repair those. Reads of non-ASCII metadata
+should tolerate a mangled string rather than assume it is clean.
+
+### Committed files that are not UTF-8
+
+38 files under `htdocs/`, `cgi-bin/`, `template/` and `docker/legacy-perl/` are
+cp1252/`iso-8859-1`, and 4 under `htdocs/test/` carry a UTF-8 BOM. They are all
+legacy or scheduled for deletion in Phase 0. Anything new must be UTF-8 without
+a BOM — [`.gitattributes`](../.gitattributes) pins the line endings but cannot
+police encoding, so this stays a review item.
+
 ## Layout
 
 ```

@@ -169,28 +169,35 @@ class StationViewService
     }
 
     /**
-     * `fit_string()` from `cgi-bin/main.php`, verbatim in behaviour.
+     * `fit_string()` from `cgi-bin/main.php`, with one deliberate difference.
+     *
+     * The legacy version measured in bytes, which was the same thing as
+     * characters back when every string was cp1252. The port renders UTF-8, so
+     * a byte cut can land inside a multi-byte sequence and emit an invalid
+     * byte sequence - the caption then shows a replacement glyph. This counts
+     * characters instead, so the window and the word-boundary rule keep the
+     * legacy meaning and the result is always valid UTF-8.
      *
      * Truncates to $size characters, preferring to cut at the last space when
      * that does not lose more than 20% of the window, and appends $cut.
      */
     public function fit(string $string, int $size, string $cut = ' ...'): string
     {
-        $len = strlen($string);
+        $len = mb_strlen($string, 'UTF-8');
 
         if ($string === '' || $size <= 0 || $size > $len) {
             return $string;
         }
 
-        $diff = (int) ($size * 0.2);
-        $tmp  = substr($string, 0, $size);
-        $found = strrpos($tmp, ' ');
+        $diff  = (int) ($size * 0.2);
+        $tmp   = mb_substr($string, 0, $size, 'UTF-8');
+        $found = mb_strrpos($tmp, ' ', 0, 'UTF-8');
 
         if ($found !== false && $size - $found < $diff) {
-            $tmp = substr($tmp, 0, $found);
+            $tmp = mb_substr($tmp, 0, $found, 'UTF-8');
         }
 
-        return $tmp . (strlen($tmp) < $len ? $cut : '');
+        return $tmp . (mb_strlen($tmp, 'UTF-8') < $len ? $cut : '');
     }
 
     /**
