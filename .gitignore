@@ -23,3 +23,10 @@ composer.phar
 /docker/legacy-perl/perl-lib/pab3/
 /docker/legacy-perl/perl-lib/ssms/
 /docker/legacy-perl/build/
+
+# The admin gate - crypt hashes are credentials. Install from the password
+# manager; see deploy/apache/www.hbr1.com.conf for the location.
+/htdocs/admin/.htpasswd
+
+# Legacy config backups - they hold credentials by definition.
+cgi-bin/include/*.old

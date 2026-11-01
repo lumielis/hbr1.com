@@ -40,6 +40,20 @@ credential. The services no longer name a connection role, and
 
 ## Configuration
 
+Credentials never appear in a tracked file. `env.php` holds safe placeholders
+and loads, in order:
+
+| Order | Path | Purpose |
+|---|---|---|
+| 1 | `$HBR1_ENV` | explicit override, absolute path |
+| 2 | `/etc/hbr1/env.php` | production |
+| 3 | `./env.local.php` | a checkout, git-ignored |
+
+[`deploy/env.example.php`](env.example.php) is the committed template -
+`cp deploy/env.example.php env.local.php` for development. Anything the
+environment does not override keeps the placeholder, so a fresh clone boots
+without secrets and without that file existing at all.
+
 The DSN is composed from parts rather than hard-coded, so host and credentials
 rotate independently:
 
@@ -55,6 +69,34 @@ rotate independently:
 
 `DB_DSN` is derived from those, and can still be set outright if a socket path
 or an exotic DSN is ever needed.
+
+Both legacy trees read the same file, so there is one place to rotate:
+
+- **PHP** — `cgi-bin/include/config.php` `require_once`s `env.php` and maps the
+  legacy `$DB_*` names onto its constants. `main.php` is reachable from
+  `cgi-bin/` without the new front controller, so it must not depend on
+  `App\Bootstrap`.
+- **Perl** — `cgi-bin/include/config.pab.pl` parses `env.local.php` /
+  `/etc/hbr1/env.php` in a `BEGIN` block and exposes the values it needs as
+  `$ENV{HBR1_*}`, mirroring `$Setup{'DBI'}` and `$Setup{'PAB3::DB'}`.
+
+### What is deliberately *not* tracked
+
+| Path | Why |
+|---|---|
+| `env.local.php` | database and Icecast credentials |
+| `htdocs/admin/.htpasswd` | crypt-des hashes are reversible at the speeds they were chosen for; install from the password manager |
+
+`htdocs/admin/htaccess.txt` stays — it names the file but holds no hash.
+
+### These values are still in git history
+
+Removing them from the working tree does not remove them from the commits that
+already contain them: `cgi-bin/include/config.php`, `cgi-bin/include/config.pab.pl`,
+`cgi-bin/include/config.pab.pl.old` and `htdocs/admin/.htpasswd` have all been
+committed with live values, and the history predates this change. **Rotating
+every credential reachable from that document root is required regardless of
+what happens to history** — see the Phase 0 runbook.
 
 ## Least privilege
 
