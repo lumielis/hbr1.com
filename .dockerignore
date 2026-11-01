@@ -1,0 +1,37 @@
+# The legacy-Perl oracle only COPYs from docker/legacy-perl/{apache.conf,perl-lib/}.
+# Everything else — the 119 MB document root, the PHP app, vendor/ — would
+# otherwise be shipped to the daemon on every build.
+#
+# Explicit exclusions rather than an allow-list: a leading `*` here silently
+# dropped apache.conf from the context and the build failed at the COPY.
+
+.idea/
+.vscode/
+temp/
+vendor/
+var/
+node_modules/
+
+app/
+config/
+db/
+deploy/
+docs/
+public/
+template/
+tests/
+tools/
+views/
+htdocs/
+cgi-bin/
+data/
+
+# Stale build output in the vendored libraries: the image rebuilds the XS from
+# source, and a copied .so would shadow the freshly compiled one.
+docker/legacy-perl/perl-lib/PAB2/blib/
+docker/legacy-perl/perl-lib/pab3/blib/
+docker/legacy-perl/perl-lib/**/*.o
+docker/legacy-perl/perl-lib/**/*.so
+docker/legacy-perl/perl-lib/**/Makefile
+docker/legacy-perl/perl-lib/**/Makefile.old
+docker/legacy-perl/perl-lib/**/pm_to_blib
