@@ -431,8 +431,8 @@ the archived `template/tracklist.req.phtml` keeps the original for reference.
 
 The site is old enough to have lived through three encodings, and the data
 still shows it. The short version: **`hbr1` is `latin1` and should become
-`utf8mb4`, but 186 values must be repaired first or the migration will bake the
-damage in permanently.**
+`utf8mb4` — but 161 values must be repaired first, or the conversion bakes the
+damage in permanently.** 16 more can only be repaired after it.
 
 ### What is declared where
 
@@ -447,27 +447,25 @@ damage in permanently.**
 
 Production sends `Content-Type: text/html` with no charset and no `<meta
 charset>`. Every browser therefore guesses — Chrome picks `windows-1252` — and
-because the 152 double-encoded values *are* well-formed UTF-8 byte sequences,
-decoding them as cp1252 shows them as mojibake. Verified: production renders
-`WORLD LEAGUE with SVEN VÃ„TH`, and so does the port. **Production is not the
-correct reference here** — on this defect the two agree, and both are wrong.
+because the damaged values *are* well-formed UTF-8 byte sequences, decoding them
+as cp1252 shows them as mojibake. Verified: production renders `WORLD LEAGUE
+with SVEN VÃ„TH`, and so does the port. **Production is not the correct reference
+here** — on this defect the two agree, and both are wrong.
 
-### The three states in `hbr1`
+### The four states in `hbr1`
 
-Measured over the 1,560 non-ASCII values in the 33 affected `latin1` columns:
+Measured over the 1,560 non-ASCII values in the 33 affected `latin1` columns of
+13 tables:
 
 | State | Count | Meaning |
 |---|---|---|
-| clean cp1252 | 1,374 | stored bytes are the right single-byte text; `ü`, `ö`, `ä`, `ß`, `é`, `€`, `»`, `–` all round-trip losslessly. Nothing to do. |
-| **double-encoded** | **152** | a UTF-8 byte string that the legacy `latin1` connection stored byte-for-byte. Reading the stored bytes *as* UTF-8 recovers the intended characters. Fully repairable — proven end to end on a scratch table. |
-| mixed | 25 | some UTF-8 sequences and some lone high bytes. Mostly repairable; a few are genuinely ambiguous. |
-| already lost | 9 | contain U+FFFD. Unrecoverable. |
-
-186 values therefore need the repair (152 + 25 + 9); 177 of them will come out
-right.
+| clean cp1252 | 1,374 | stored bytes are already the right single-byte text; `ü`, `ö`, `ä`, `ß`, `é`, `€`, `»`, `–` all round-trip losslessly. Nothing to do. |
+| repairable | 161 | a UTF-8 byte string that the legacy `latin1` connection stored byte-for-byte, plus the mixed values. Reading the bytes as UTF-8 recovers the characters, and the result fits cp1252, so it can be written back **today**. |
+| deferred | 16 | recoverable too, but the correct text needs a character cp1252 cannot hold — Cyrillic, Japanese, fullwidth punctuation. Repairing now would turn those into `?`, which is worse than the mojibake. Needs `utf8mb4` first. |
+| already lost | 9 | contain U+FFFD. Nothing to recover. |
 
 So `WORLD LEAGUE with SVEN VÄTH` is stored as `SVEN VÃ„TH` in 5 party rows,
-`München` as `MÃ¼nchen` in 58 `party.location` rows, and so on. Both production
+`München` as `MÃ¼nchen` in 59 `party.location` rows, and so on. Both production
 and the port render those as mojibake, for different reasons: production never
 declares a charset and the sequence is valid UTF-8 decoded as cp1252, while the
 port declares UTF-8 and the sequence *is* the wrong text. Verified side by side
@@ -479,49 +477,76 @@ no row written since is affected. The current `utf8mb4` connection writing into
 a `latin1` column produces clean cp1252, verified on a scratch table. The 2026
 parties are clean.
 
+25 of the 161 are *mixed*: part double-encoded, part plain cp1252, in one value.
+They need a run-wise scan, not a regex over the whole string — which is what the
+legacy code did, and why it rewrote bytes in exactly those cases.
+
 ### What the port must not do
 
 - **Do not add a charset conversion in the read path.** The obvious "fix" —
   detecting mojibake and repairing it when loading a row — would double-apply
   once the schema is converted, and would corrupt the 1,374 clean values it
   guesses wrong about.
-- **Do not convert the schema before repairing.** `ALTER TABLE … CONVERT TO
-  CHARACTER SET utf8mb4` reinterprets the stored bytes as cp1252 and re-encodes
-  them as UTF-8. That is correct for the 1,374 clean values and **wrong** for
-  the 152 double-encoded ones: `SVEN VÃ„TH` becomes `SVEN VÃƒâ€žTH`, permanently.
-  Verified on clones.
 - `fit()` in `StationViewService` used to truncate by *bytes*, which was
   harmless while everything was cp1252 and splits multi-byte characters now
   that pages are UTF-8. It counts characters.
 
+### Repairing now, and what it does to the live site
+
+The repair needs **no schema change**. The column still holds latin1 bytes, and
+after the repair it holds the *correct* latin1 bytes, so:
+
+- the **port** renders correctly — it reads through `utf8mb4` and `MÃ¼nchen`
+  becomes `München`;
+- **legacy Perl** is unaffected. It connects without a charset, gets the server
+  default `latin1`, and receives the same cp1252 bytes it received before the
+  repair;
+- **legacy PHP** (`main.php`, `$DB_Charset = 'utf8'`) improves. It used to
+  receive `MÃƒÂ¼nchen` for these rows and now receives `MÃ¼nchen` — still
+  mojibake, because that client is permanently mis-configured, but no longer
+  double.
+
+Verified by writing the repair to a clone and reading it back through each of
+the three connection charsets. **This makes repairing before the cutover safe**,
+which matters because the legacy site will keep serving for a while yet.
+
 ### The conversion, in order
 
-1. **Back up** `hbr1`. The repair is not reversible by inspection.
-2. **Repair the 186 rows**, while the columns are still `latin1`: for each
-   value matching `/[\xC2-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}/`, read the
-   stored bytes **as UTF-8** and write them back. The `utf8mb4` connection then
-   encodes the result as cp1252, so the column ends up holding the single-byte
-   text the `ALTER` expects. Rows containing U+FFFD are skipped.
-3. **Fix `referer.url` first.** It is a `varchar(255)` under a `MyISAM`
-   `PRIMARY KEY`, which is 1,020 bytes in `utf8mb4` — over MyISAM's 1,000-byte
-   key limit, so the `ALTER` fails with `1071 Specified key was too long`.
-   Verified. Two working options, both tested on a clone:
-   - shorten the column to `varchar(200)` and keep the primary key;
-   - or add an `id` surrogate key and index `url` with a `190`-character prefix.
+`php tools/charset-repair.php` reports; `--repair` writes; `--convert` migrates
+the schema. `php tools/charset-rehearse.php` does the whole thing against `zz_`
+copies of the affected tables and drops them, so the outcome can be inspected
+before anything is touched. Both are idempotent.
 
-   The table holds 4 rows and nothing in the application reads it, so either is
-   cheap. The 7 other "over 767 byte" keys are all `FULLTEXT`, which has no such
-   limit, and convert in place — verified on a clone of `party` with its 16
-   `FULLTEXT` indexes.
-4. **`ALTER TABLE … CONVERT TO CHARACTER SET utf8mb4 COLLATE
-   utf8mb4_general_ci`** on all 46 tables (21 MB). Verified on clones of
-   `party` (860 rows), `guestbook` and `mixes`.
-5. **`db/schema.sql`** regenerates from the live schema at that point.
+1. **Back up** `hbr1`. The repair is not reversible by inspection.
+2. **Rehearse:** `php tools/charset-rehearse.php`. Expect `161` repaired,
+   `16` deferred, `9` lost, and `verified: 161/161 exact`.
+3. **Repair:** `php tools/charset-repair.php --repair`. Safe to run while the
+   legacy site is live, for the reason above.
+4. **`referer.url`** is now `varchar(200)`, which is 800 bytes in `utf8mb4` and
+   fits `MyISAM`'s 1,000-byte key limit. Before the change it was `varchar(255)`
+   and the `ALTER` failed with `1071 Specified key was too long` — verified. The
+   7 other "over 767 byte" keys are all `FULLTEXT`, which has no such limit.
+5. **Convert:** `php tools/charset-repair.php --convert`. This is what makes the
+   `16` deferred values fixable; re-run `--repair` afterwards to take them.
+6. **Regenerate `db/schema.sql`** from the converted schema.
 
 `utf8mb4_general_ci` matches what `hbr1`'s default already is and what the
 `GAL_` tables use. It is a deliberate choice over `utf8mb4_unicode_ci`: the
 RadioDJ side treats `ß = ss` under `unicode_ci` but not under `general_ci`, and
 changing that would change what the request rules consider a repeat.
+
+### Why the order cannot be reversed
+
+`ALTER TABLE … CONVERT TO CHARACTER SET utf8mb4` reads the stored bytes as
+cp1252 and re-encodes them as UTF-8. That is right for the 1,374 clean values
+and **wrong** for the 161: `SVEN VÃ„TH` would become `SVEN VÃƒâ€žTH`, and the
+damage would no longer be recognisable as damage. Verified on clones of all 46
+tables.
+
+There is a way to convert first if that ever becomes necessary — snapshot the
+raw values, convert, then write the repaired text back from the snapshot — but
+it is strictly more work and needs a scratch store. Repairing first is cheaper
+and safer.
 
 ### The playout schemas are not ours
 
@@ -577,6 +602,15 @@ php tools/check-redirects.php
 bash tools/serve-probe.sh   # HTTP probe against the built-in server
 composer test
 ```
+
+Two data tools, both safe to run at any time:
+
+```bash
+php tools/charset-repair.php     # report the latin1 damage; --repair writes
+php tools/charset-rehearse.php   # same, against zz_ copies, then drops them
+```
+
+See [Character encoding](#character-encoding) before using either.
 
 `tools/lint.php` skips `vendor/`, `var/`, `temp/`, `legacy/`, `.git/` and
 `.vscode/`. It compares normalised paths, because on Windows
