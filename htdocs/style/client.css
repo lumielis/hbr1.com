@@ -337,12 +337,9 @@ table#MessageLog td {
 	color: #88EE00;
 	font-weight: bold;
 }
-.picture-spacer td,
-.picture-caption td {
-	padding: 0;
-}
 .picture-spacer td {
 	height: 5px;
+	padding: 0;
 	line-height: 0;
 	font-size: 0;
 }
@@ -350,8 +347,4 @@ table#MessageLog td {
 	height: 10px;
 	line-height: 0;
 	font-size: 0;
-}
-.picture-wrap {
-	margin: 0 auto;
-	border-collapse: collapse;
 }
