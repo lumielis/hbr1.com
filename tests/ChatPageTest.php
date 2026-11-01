@@ -40,13 +40,15 @@ class ChatPageTest extends TestCase
         $this->message = $recent[0];
     }
 
-    public function testFramesetMatchesProduction(): void
+    public function testTerminalKeepsProductionGeometryAsAGrid(): void
     {
         foreach (['/chat', '/chat/'] as $path) {
             $body = $this->page($path);
 
-            self::assertStringContainsString('<frameset rows="26,*,26,29"', $body, $path);
-            self::assertStringContainsString('<frameset cols="64,*,100,64"', $body, $path);
+            self::assertStringNotContainsString('<frameset', $body, $path);
+            self::assertStringContainsString('class="terminal"', $body, $path);
+            self::assertStringContainsString('grid-template-rows: auto 1fr auto auto', $body, $path);
+            self::assertStringContainsString('grid-template-columns: 85px 1fr 133px 85px', $body, $path);
             self::assertStringContainsString('src="/chat/top.htm?1"', $body, $path);
             self::assertStringContainsString('src="/chat/left.htm"', $body, $path);
             self::assertStringContainsString('src="/chat/right.htm"', $body, $path);
@@ -57,6 +59,33 @@ class ChatPageTest extends TestCase
             self::assertStringNotContainsString('apax.cgi', $body, $path);
             self::assertStringNotContainsString('/html/chat_content.html', $body, $path);
         }
+    }
+
+    /**
+     * A frameset's row heights are frameset units that page CSS cannot reach,
+     * so once the site scaled itself the frames grew inside rows that stayed at
+     * 26/29 raw pixels and clipped the submit bar. The grid avoids that: the
+     * rows are sized by the zoomed content, and the tracks are pre-multiplied
+     * so the chrome panes still fill them.
+     */
+    public function testTerminalTracksAreScaledAndTheShellIsNot(): void
+    {
+        $body = $this->page('/chat');
+
+        // The shell must not inherit client.css's body zoom, or the tracks
+        // would be multiplied twice.
+        self::assertStringNotContainsString('/style/client.css', $body);
+
+        // 64 * 1.333 = 85.3, 100 * 1.333 = 133.3. Whole pixels are fine here
+        // because the column is filled, not measured.
+        self::assertStringContainsString('grid-template-columns: 85px 1fr 133px 85px', $body);
+
+        // left.htm and right.htm have no stylesheet, so they are scaled here.
+        self::assertStringContainsString('.pane-left, .pane-right {', $body);
+        self::assertMatchesRegularExpression(
+            '~\.pane-left,\s*\.pane-right\s*\{[^}]*zoom:\s*1\.333~s',
+            $body
+        );
     }
 
     public function testContentFrameUsesTheLegacyLineFormat(): void
@@ -104,7 +133,7 @@ class ChatPageTest extends TestCase
             $body,
             'html/body must be able to resolve a percentage height'
         );
-        self::assertStringContainsString('<form action="/chat" method="post" class="chat-form">', $body);
+        self::assertStringContainsString('<form action="/chat/submit" method="post" class="chat-form">', $body);
         self::assertMatchesRegularExpression(
             '/\.chat-form\s*\{[^}]*height:\s*100%/s',
             $body,
@@ -150,13 +179,13 @@ class ChatPageTest extends TestCase
     {
         $body = $this->page('/chat/submit');
 
-        self::assertStringContainsString('<form action="/chat" method="post"', $body);
+        self::assertStringContainsString('<form action="/chat/submit" method="post"', $body);
         self::assertStringContainsString('name="_csrf_token"', $body);
         self::assertStringContainsString('name="name"', $body);
         self::assertStringContainsString('name="content"', $body);
         self::assertStringContainsString('value="OK"', $body);
         self::assertStringContainsString('size="10"', $body);
-        self::assertStringContainsString('size="40"', $body);
+        self::assertStringContainsString('size="39"', $body);
         self::assertStringContainsString('maxlength="255"', $body);
     }
 
@@ -185,7 +214,7 @@ class ChatPageTest extends TestCase
 
         $body = is_string($response) ? $response : $response->getBody();
 
-        self::assertStringContainsString('<form action="/chat"', $body);
+        self::assertStringContainsString('<form action="/chat/submit"', $body);
         self::assertStringContainsString('value="Tester"', $body);
         self::assertStringNotContainsString('<frameset', $body);
     }
@@ -202,7 +231,7 @@ class ChatPageTest extends TestCase
 
         self::assertSame(400, $response->getStatus());
         self::assertStringContainsString('Please enter a nickname.', $response->getBody());
-        self::assertStringContainsString('<form action="/chat"', $response->getBody());
+        self::assertStringContainsString('<form action="/chat/submit"', $response->getBody());
     }
 
     public function testContentAndSubmitFramesAreWellFormed(): void

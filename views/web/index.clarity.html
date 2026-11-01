@@ -17,6 +17,9 @@ if (navigator.userAgent.indexOf("iPhone") >= 0) {
     location.replace("/iphone");
 }
 </script>
+<!-- Must come before the frameset: the tracks are applied as they parse.
+     See /cgi-htm/jscript/zoom.js and the "Page scaling" note in docs/README.md. -->
+<script src="/cgi-htm/jscript/zoom.js"></script>
 </head>
 <frameset cols="*,794,*" frameborder="NO" border="0" framespacing="0">
   <frame noresize src="/empty.htm" marginwidth="0" marginheight="0" scrolling="NO">

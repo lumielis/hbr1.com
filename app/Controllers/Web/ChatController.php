@@ -17,13 +17,19 @@ use Azera\Http\Response;
  * `apax.cgi?Part=Chat&Action=…`. They are canonical routes here, and the
  * message pane renders the `chat` table live instead of the stale generated
  * `htdocs/html/chat_content.html`.
+ *
+ * The terminal itself is a CSS grid rather than a frameset. A frameset's row
+ * heights are frameset units that page CSS cannot reach, so once the site
+ * scaled itself to 1.333 the frames inside grew while their rows stayed at
+ * 26/29 raw pixels and clipped. The grid keeps production's geometry but
+ * scales as one document; see `views/web/chat_terminal.clarity.html`.
  */
 class ChatController extends BaseController
 {
-    /** The frameset. */
+    /** The terminal. */
     public function indexAction(): string
     {
-        return $this->fragment('web/chat_frameset');
+        return $this->fragment('web/chat_terminal');
     }
 
     /** The message pane (`chat_main`), refreshed by the frame's meta tag. */

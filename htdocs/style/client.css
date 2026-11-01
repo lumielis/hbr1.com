@@ -9,6 +9,19 @@ body {
 	scrollbar-arrow-color: #002060;
 	background-color: #000000;
 	color: #ffffff;
+	/*
+		See the note on this rule in `layouts/page.clarity.html`. The site was
+		laid out for 583 px and is small at 1:1, so everything is scaled up.
+
+		This lives here as well as in the layout because a <frameset> frame is a
+		separate document: it does not inherit the parent's zoom. The chat
+		frames link this stylesheet, so they pick it up from here.
+
+		1.333 = 1/0.75, the round trip through 4:3. The legacy chrome gifs are
+		then 26.6 px tall against a 26 px frame row, which is why the frameset's
+		fixed rows use `calc()` - see `views/web/chat_frameset.clarity.html`.
+	*/
+	zoom: 1.333;
 }
 body, td, th {
 	font-family: Tahoma, Arial, Helvetica, Sans-Serif, Mono;

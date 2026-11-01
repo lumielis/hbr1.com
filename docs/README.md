@@ -265,6 +265,68 @@ the bar rendered at the top of the frame. The fix is an explicit
 is that any `height="100%"` legacy layout needs every ancestor in the chain to
 carry a height, including the `<form>` in between.
 
+## Page scaling
+
+The site was designed at 583 px for a VGA-era window and reads small on modern
+hardware, so it scales itself to **1.333x** (4/3) by default. That is CSS
+`zoom`, declared on `body` in both `layouts/page.clarity.html` and `client.css`.
+
+CSS `zoom` is the only mechanism a page has here. `meta viewport` and its
+`initial-scale` are **mobile-only** - desktop browsers ignore them entirely -
+and no API can set the browser's own zoom level. `zoom` is a genuine layout
+reflow rather than a paint-time transform, so the browser's own scaler
+magnifies the chrome gifs and they stay crisp; `transform: scale` would blur
+them. There is no `@media`, `vh`/`vw` or `position: fixed` anywhere in the
+stylesheet or the views, so nothing else is sensitive to the mismatch between
+CSS `zoom` and real browser zoom (which also shrinks the viewport; `zoom` does
+not, so content does not reflow).
+
+Two traps, both hit while building this:
+
+* **A frameset cannot be zoomed.** `<frame>` row heights are frameset units
+  that page CSS cannot reach. Zooming the frames made their content grow inside
+  rows stuck at 26/29 raw pixels, which clipped the submit bar and sliced the
+  "MESSAGE TERMINAL" heading in half. That is why `/chat` is a CSS grid now: a
+  nested grid in one document scales as a whole. Keep it that way - do not
+  reintroduce a frameset.
+* **`getBoundingClientRect()` reports unzoomed values** under CSS `zoom`. Every
+  numeric probe during this work read `583` for a box that visibly rendered at
+  700 px. Verify zoom changes with screenshots or by comparing rendered output,
+  not with computed rects.
+
+The terminal shell deliberately carries **no** `zoom` and does **not** link
+`client.css`; instead its grid tracks are pre-multiplied (85/133 px rather than
+64/100) and the two bare chrome panes that have no stylesheet get the zoom
+declared on the `<iframe>` itself.
+
+### Framesets need their tracks scaled too
+
+`body { zoom }` alone is not enough for a page that lives inside a `<frameset>`.
+Frameset track sizes are frameset *units*, not CSS pixels, so a
+`cols="*,794,*"` shell keeps its 794 px middle column while the pages inside it
+grow by the zoom. The content then overflows its frame by exactly that factor —
+measured on `/`: the `main` frame was 600 px wide holding 777 px of content, so
+every page grew a horizontal scrollbar.
+
+`htdocs/cgi-htm/jscript/zoom.js` multiplies every fixed track by the zoom,
+leaving `*` and `%` tracks alone, and must be loaded **before** the `<frameset>`
+tag because the tracks are applied as they parse. `ZoomFactorTest` enforces
+both, and is also what keeps the factor in step across the four places it is
+declared (see below). It found two framesets (`/chat/`, and the WebTV ticker)
+that had been missed by hand.
+
+The factor is declared in four places and they must agree:
+
+| Where | Why |
+|---|---|
+| `htdocs/style/client.css` `body { zoom }` | every page that links it, including the chat panes |
+| `views/layouts/page.clarity.html` `body { zoom }` | the PHP-rendered pages |
+| `htdocs/cgi-htm/jscript/zoom.js` `PAGE_ZOOM` | the frameset track scaler |
+| `views/web/chat_terminal.clarity.html` | the grid tracks and the two stylesheet-less panes |
+
+`ZoomFactorTest` asserts all four, plus `ltop.htm` and `lbot.html` (which do not
+link `client.css` and so carry their own copy).
+
 **`/mixes` and `/tracklist` were the same data, and are now the same page.**
 HBR1 plays mixes only - there are no standalone songs - so the RadioDJ `songs`
 rows the "Inventory" page listed *are* the DJ sets. The legacy tree still had

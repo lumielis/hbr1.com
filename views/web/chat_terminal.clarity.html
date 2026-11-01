@@ -1,0 +1,105 @@
+{# The chat terminal - production `https://hbr1.com/chat/`.
+
+   Production is a <frameset> with rows 26,*,26,29 and columns 64,*,100,64.
+   The port keeps that geometry but not the frameset: a frameset's row heights
+   are frameset units that CSS cannot reach, so they stay at 26/29 raw pixels
+   while the frames inside scale - which clipped the submit bar and sliced the
+   "MESSAGE TERMINAL" heading in half once the site switched to a 1.333 zoom.
+
+   A CSS grid with the same numbers as tracks, in ONE document, scales as a
+   whole. Each pane is a nested scrolling box, which is what a frame was.
+
+   The four chrome panes are the static files shipped under /chat/. They are
+   loaded through iframes rather than inlined so the files stay the single
+   source of truth, exactly as the legacy frameset referenced them.
+
+   The panes keep production's `name` attributes, so the `target` the legacy
+   `/chat/bottom.htm` chrome and the message pane's links use still resolve.
+   Nothing else needs them: `/chat` is only ever loaded as its own document
+   (`/chat/` is the navigation map's `target="main"`), never inside another
+   frame, so there is no cross-frame `updatePage()` handshake to preserve. #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+<title>Chat Terminal - HBR1</title>
+<style>
+	/*
+		The tracks are production's 26/29 px and 64/100 px chrome sizes. Two
+		things are deliberate:
+
+		* No `client.css` link. It sets `body { zoom: 1.333 }`, and this document
+		  is the one body that must not scale or the tracks would be multiplied
+		  a second time.
+		* The panes carry that zoom themselves, so the tracks scale with them.
+		  `/chat/left.htm` and `/chat/right.htm` do not link `client.css` either,
+		  so `.pane-left`/`.pane-right` set the zoom in their own document (see
+		  the `zoom` declarations on `.terminal > iframe` below).
+	*/
+	html, body {
+		height: 100%;
+		margin: 0;
+		background-color: #000000;
+		color: #FFFFFF;
+		overflow: hidden;
+	}
+
+	.terminal {
+		display: grid;
+		grid-template-rows: auto 1fr auto auto;
+		grid-template-columns: 85px 1fr 133px 85px;
+		grid-template-areas:
+			"top    top    top    top"
+			"left   main   users  right"
+			"bottom bottom bottom bottom"
+			"submit submit submit submit";
+		height: 100%;
+	}
+
+	.terminal > * {
+		border: 0;
+		display: block;
+		width: 100%;
+		min-width: 0;
+		min-height: 0;
+	}
+
+	/* 26 / 29 raw pixels at 1.333. `auto` on the grid rows already lets the
+	   zoomed content size these, so these are the floor, not the cap. */
+	.pane-top    { grid-area: top;    height: 35px; }
+	.pane-left   { grid-area: left;   height: 100%; }
+	.pane-main   { grid-area: main;   height: 100%; }
+	.pane-users  { grid-area: users;  height: 100%; }
+	.pane-right  { grid-area: right;  height: 100%; }
+	.pane-bottom { grid-area: bottom; height: 35px; }
+	.pane-submit { grid-area: submit; height: 39px; }
+
+	/* left.htm and right.htm are bare <body> documents with no stylesheet, so
+	   they do not pick up client.css's zoom. Scale their content to match the
+	   scaled tracks rather than editing the legacy files. */
+	.pane-left, .pane-right {
+		zoom: 1.333;
+	}
+</style>
+</head>
+<body>
+<div class="terminal">
+	<iframe class="pane-top" src="/chat/top.htm?1" scrolling="no" title="Chat header"></iframe>
+	<iframe class="pane-left" src="/chat/left.htm" scrolling="no" title="Chat left edge"></iframe>
+	<iframe class="pane-main" id="chat_main" name="chat_main" src="/chat/content" title="Chat messages"></iframe>
+	<iframe class="pane-users" id="chat_users" name="chat_users" src="/chat/users" title="Chat users"></iframe>
+	<iframe class="pane-right" src="/chat/right.htm" scrolling="no" title="Chat right edge"></iframe>
+	<iframe class="pane-bottom" id="chat_bottom" src="/chat/bottom.htm?1" scrolling="no" title="Chat footer"></iframe>
+	<iframe class="pane-submit" id="chat_submit" name="chat_submit" src="/chat/submit" scrolling="no" title="Chat message form"></iframe>
+</div>
+
+<script>
+<!--
+var PageID = 'chat';
+//-->
+</script>
+</body>
+</html>

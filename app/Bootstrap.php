@@ -274,13 +274,20 @@ class Bootstrap implements BootstrapProvider
         $router->add('POST', '/party/{id:int}/edit', 'Web\\PartyController::updateAction');
         $router->add('GET', '/party/{id:int}', 'Web\\PartyController::detailAction');
 
-        // The chat terminal is a frameset, as it was in production. The chrome
-        // frames are static (`/chat/top.htm` …); these three are live.
+        // The chat terminal is a CSS grid (production used a frameset; see the
+        // view). The chrome panes are static (`/chat/top.htm` …); these three
+        // are live.
         $router->add('GET', '/chat/content', 'Web\\ChatController::contentAction');
         $router->add('GET', '/chat/users', 'Web\\ChatController::usersAction');
         $router->add('GET', '/chat/submit', 'Web\\ChatController::formAction');
         $router->add('GET', '/chat', 'Web\\ChatController::indexAction');
         $router->add('GET', '/chat/', 'Web\\ChatController::indexAction');
+        // The form posts to /chat/submit, not /chat: the submit pane is an
+        // iframe of its own, so /chat would load the whole terminal inside that
+        // 39 px box on reload. Keeping the URL on /chat/submit also means the
+        // pane's own reload() re-renders the bar, which is what production's
+        // frame did.
+        $router->add('POST', '/chat/submit', 'Web\\ChatController::submitAction');
         $router->add('POST', '/chat', 'Web\\ChatController::submitAction');
 
         // WebTV ticker (W7). The left camera frame loads /webtv/ticker/, whose

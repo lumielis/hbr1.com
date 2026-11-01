@@ -62,6 +62,22 @@
 <link rel="stylesheet" type="text/css" href="/style/client.css{% if clientCssVersion %}?{{ clientCssVersion }}{% endif %}">
 
 <style type="text/css">
+/* The site was designed at 583 px for a 2003 VGA-era window and is small on a
+   modern screen. Scaling it up is what the owner wants by default, and CSS
+   `zoom` is the only mechanism a page has: `meta viewport` is mobile-only, and
+   no API can set the browser's own zoom level.
+
+   `zoom` is a real layout reflow, not a paint-time transform, so images are
+   magnified by the browser's scaler and stay crisp - a `transform: scale`
+   would blur them and would also have to be undone on the position-fixed
+   elements. `client.css` carries the same rule so the chat frames scale too;
+   frames are separate documents and do not inherit this one.
+
+   Deliberately not `html { zoom }`: `client.css` has to apply the same zoom to
+   the frames, and keeping both rules on `body` means one value to change. */
+body {
+	zoom: 1.333;
+}
 .genre {
 	font-size: 10px;
 	font-family: Arial, Adobe Helvetica;

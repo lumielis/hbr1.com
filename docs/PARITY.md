@@ -88,16 +88,26 @@ is a frameset, not a content page, so it keeps the legacy frameset doctype
 
 | Route | Production reference | Result |
 |---|---|---|
-| `/chat`, `/chat/` | `/chat/` | Match. `rows="26,*,26,29"`, `cols="64,*,100,64"`, the four static chrome frames, and the message/user/submit frames on canonical routes. |
+| `/chat`, `/chat/` | `/chat/` | Match. Same geometry as production's `rows="26,*,26,29"` / `cols="64,*,100,64"`, expressed as one CSS grid instead of a frameset so the whole terminal scales together at the site's 1.333x default zoom. The four chrome panes are still the static files under /chat/; the message/user/submit panes are canonical routes. |
 | `/chat/content` | `/html/chat_content.html` | Match. 9 s meta refresh, `#100040` well, `MM/DD HH:MM` in `#009988`, nickname in its stored colour, message text escaped. Rendered live from `chat` instead of the generated file. |
 | `/chat/users` | `apax.cgi?Part=Chat&Action=listUsers` | Match. Production's empty shell, same title, refresh and background. |
 | `/chat/submit` | `apax.cgi?Part=Chat&Action=submit` | Match. 29 px bar pinned to the bottom of the frame, Nickname/Message/OK in the dark-blue input chrome with the 9 px tabs hugging the top, auto-layout spacer giving the production 798/198 column split; inputs at x=355/446/728 at a 996 px viewport, identical to production. |
 
-The four chrome frames (`top`, `left`, `right`, `bottom`) were already
-byte-identical to production and are still served as static files.
+The four chrome panes (`top`, `left`, `right`, `bottom`) were already
+byte-identical to production and are still served as static files, loaded
+through iframes so they stay the single source of truth.
 
-`/chat/submit` needed two geometry corrections, both invisible in a wide
-viewport but obvious at frame height:
+The terminal was a `<frameset>` until the site started scaling itself to
+1.333x. A frame's 26/29 px row heights are frameset units that page CSS cannot
+reach, so the panes grew inside rows that did not, clipping the submit bar and
+cutting the "MESSAGE TERMINAL" heading in half. It is now a CSS grid with the
+same numbers - `grid-template-rows: auto 1fr auto auto`,
+`grid-template-columns: 64px 1fr 100px 64px` - in a single document, so
+everything scales together. Each pane is a nested scrolling `<iframe>`, which
+is what a `<frame>` was.
+
+`/chat/submit` also needed two geometry corrections, both invisible in a wide
+viewport but obvious inside its pane:
 
 * **The bar sat at the top instead of the bottom.** It is the last cell of a
   `height="100%"` table with `valign="bottom"`. Production got the full-height
@@ -120,9 +130,10 @@ viewport but obvious at frame height:
 | Deviation | Reason |
 |---|---|
 | The message pane is live from the database | Production polls a generated file that is only rewritten on a post; between posts it goes stale. The frame keeps the same 9 s refresh and line format. |
-| `Part=Chat&Action=…` maps to `/chat/…` | Canonical frame URLs; the legacy entry points still redirect. |
-| The old single-page `/chat` view is gone | The terminal is the frameset, as in production. |
-| `/html/chat_content.html` and `/chat/index.html` remain as stale static copies | Only reached by direct bookmarks; the frameset no longer loads them. |
+| `Part=Chat&Action=…` maps to `/chat/…` | Canonical pane URLs; the legacy entry points still redirect. |
+| The old single-page `/chat` view is gone | The terminal is the grid, as in production. |
+| The submit form posts to `/chat/submit`, not `/chat` | The bar is its own pane. Posting to `/chat` left the pane's URL on the terminal, so a refresh loaded the whole terminal inside the 39 px bar. Keeping the URL on `/chat/submit` reproduces what production's frame did. `POST /chat` still works for old clients. |
+| `/html/chat_content.html` and `/chat/index.html` remain as stale static copies | Only reached by direct bookmarks; the terminal no longer loads them. |
 
 ## Remaining content pages
 
