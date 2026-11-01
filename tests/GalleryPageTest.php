@@ -255,6 +255,30 @@ class GalleryPageTest extends TestCase
         }
     }
 
+    /**
+     * The 142x110 border art has a 110x82 opening at 16 px / 14 px.
+     *
+     * `img:only-child { display: block }` (needed for the band art) also matches
+     * a thumbnail, because it is the only child of its <a>. A block image
+     * ignores the cell's `text-align: center`, so without auto margins the
+     * picture sits flush left and leaves a 32 px band on the right.
+     */
+    public function testGalleryThumbnailsAreCentredInsideTheirFrame(): void
+    {
+        $css = (string) file_get_contents(dirname(__DIR__) . '/htdocs/style/client.css');
+
+        self::assertMatchesRegularExpression(
+            '/\.gallery-frame\s+img\s*\{[^}]*margin-left:\s*auto[^}]*margin-right:\s*auto[^}]*\}/s',
+            $css,
+            'a thumbnail is a block-level image, so it needs auto margins to centre'
+        );
+        self::assertMatchesRegularExpression(
+            '/\.gallery-frame\s*\{[^}]*vertical-align:\s*middle/s',
+            $css,
+            'the frame centres the thumbnail vertically'
+        );
+    }
+
     /** Render a public gallery route through the real dispatcher. */
     private function page(string $path): string
     {

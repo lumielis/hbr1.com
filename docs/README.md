@@ -243,6 +243,16 @@ with 71 px station panels instead of 61. `client.css` now carries
 explicitly, so the port keeps its doctype and standards mode while matching
 production to the pixel.
 
+That rule has one deliberate exception. A gallery thumbnail is also the only
+child of its cell - it is wrapped in `<a>` - so it becomes a block too, and a
+block image ignores the cell's `text-align: center`. The 110x82 picture then
+pinned itself to the left edge of its 142x110 `*_select_border.gif` art, leaving
+a visible 32 px band on the right. `.gallery-frame img` now carries
+`margin-left/right: auto` to recentre it; the cell's `vertical-align: middle`
+already handled the 14 px vertical inset. The single-picture view was unaffected
+- its 400x300 image sits between two 25x300 border pieces in a collapsed table,
+so there is no slack to distribute.
+
 **`/mixes` and `/tracklist` were the same data, and are now the same page.**
 HBR1 plays mixes only - there are no standalone songs - so the RadioDJ `songs`
 rows the "Inventory" page listed *are* the DJ sets. The legacy tree still had
