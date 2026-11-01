@@ -9,6 +9,7 @@
    scales this frame's track to match. This document does not link client.css,
    so it has to declare the same zoom itself or its artwork no longer fills
    the scaled track. */
+html { background-color: #000000; }
 body { zoom: 1.333; }
 </style>
 </head>
@@ -16,6 +17,12 @@ body { zoom: 1.333; }
 <body bgcolor="#000000" text="#FFFFFF"
 	leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"
 	background="/images/lbg.gif">
+<!-- `html` carries a background-color on purpose. A background on <body> with
+     a transparent root propagates to the canvas, which is painted at viewport
+     level - outside the body's zoom - so the 194 px lbg.gif tile would repeat
+     at its raw size instead of the scaled 258.6 px and this column would stop
+     lining up with the frames above it. Any non-transparent background-color on
+     <html> stops that propagation. -->
 
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr>

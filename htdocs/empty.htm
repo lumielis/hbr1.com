@@ -1,5 +1,19 @@
 <html>
 <head>
+<style type="text/css">
+/* The site scales to 1.333 (see client.css) and /cgi-htm/jscript/zoom.js scales
+   the frameset's fixed tracks to match. This document does not link client.css,
+   so it declares the same zoom itself: it is the two side columns of the shell
+   and its mesh texture has to grow with them.
+
+   `html` carries the background too. A background on <body> with a transparent
+   root propagates to the canvas, which is painted at viewport level - outside
+   the body's zoom - so the 78 px empty_bg.gif tile would repeat at its raw size
+   instead of the scaled 104 px. Any non-transparent background-color on <html>
+   stops that propagation. */
+html { background-color: #200000; }
+body { zoom: 1.333; margin: 0; }
+</style>
 </head>
 <body bgcolor="#200000" text="#000000" background="images/empty_bg.gif">
 </body>

@@ -351,6 +351,29 @@ frameset loads a frame that is not in that enumeration, so adding a pane cannot
 skip the check. Adding one of these is not cosmetic: without it the pane is
 visibly the wrong size.
 
+### A `<body background>` does not scale - it leaks to the canvas
+
+The one thing that does *not* grow with the zoom is a background image set with
+the legacy `background=` attribute on `<body>`. Measured, not assumed: the
+`lbg.gif` tile in `/html/lbot.html` repeated every **194 px** - its raw width -
+where 258.6 px was expected.
+
+The cause is CSS background propagation. When the root element is transparent,
+the body's background is propagated to the **canvas**, and the canvas is painted
+across the viewport, outside the body's `zoom`. Everything else grows and that
+one image does not, so the left column stops lining up with the frames above it.
+
+Any non-transparent `background-color` on `<html>` stops the propagation, and
+then the body's background scales like any other element's. With that added the
+same tile measures **258.3 px**. `empty.htm` and the ticker pages needed the same
+rule. `ZoomFactorTest::testBodyBackgroundIsNotPropagatedToTheCanvas` fails if a
+frame sets a body background without one on `<html>`.
+
+Only `<body>` is affected. `background=` on a `<td>` or `<table>` scales
+normally - measured directly: the green 100 px tile at zoom 1.333 is visibly
+larger than the red one at zoom 1.0 - so the layout's band artwork and the
+`lcam` ticker's cell background need nothing.
+
 **`/mixes` and `/tracklist` were the same data, and are now the same page.**
 HBR1 plays mixes only - there are no standalone songs - so the RadioDJ `songs`
 rows the "Inventory" page listed *are* the DJ sets. The legacy tree still had

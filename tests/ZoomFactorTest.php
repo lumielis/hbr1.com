@@ -39,8 +39,8 @@ class ZoomFactorTest extends TestCase
     private const FRAME_DOCUMENTS = [
         '/empty.htm' => [
             'path'   => 'htdocs/empty.htm',
-            'source' => 'none',
-            'why'    => 'a solid backdrop; there is no artwork to scale',
+            'source' => 'own',
+            'why'    => 'the 78 px mesh tile fills the scaled side columns',
         ],
         '/ltop.htm' => [
             'path'   => 'htdocs/ltop.htm',
@@ -196,11 +196,6 @@ class ZoomFactorTest extends TestCase
         foreach (self::FRAME_DOCUMENTS as $url => $doc) {
             $content = $this->stripComments($this->read($doc['path']));
 
-            if ($doc['source'] === 'none') {
-                self::assertStringNotContainsString('zoom', $content, $url . ' has nothing to scale');
-                continue;
-            }
-
             if ($doc['source'] === 'css') {
                 self::assertStringContainsString(
                     'client.css',
@@ -233,6 +228,48 @@ class ZoomFactorTest extends TestCase
                 $url . ' renders at 1x inside a track scaled to 1.333 (' . $doc['why'] . ')'
             );
         }
+    }
+
+    /**
+     * A `<body background=>` must be paired with a background on `<html>`.
+     *
+     * This one is not obvious and cost a round of debugging. When the root
+     * element is transparent, CSS propagates the *body's* background to the
+     * canvas - and the canvas is painted across the viewport, outside the
+     * body's `zoom`. So the background image repeats at its raw size while
+     * everything else grows: `lbg.gif` tiled every 194 px instead of 258.6, and
+     * the left column stopped lining up with the frames above it.
+     *
+     * Any non-transparent background-color on `<html>` stops the propagation,
+     * and then the body's background scales like any other element's. Verified
+     * against the rendered pixels, not against computed style: with the fix the
+     * tile pitch measures 258.3 px.
+     *
+     * Only `background=` on `<body>` is affected. The same attribute on a `<td>`
+     * or `<table>` scales normally - measured directly - so the layout's band
+     * artwork needs nothing.
+     */
+    public function testBodyBackgroundIsNotPropagatedToTheCanvas(): void
+    {
+        $checked = 0;
+
+        foreach (self::FRAME_DOCUMENTS as $url => $doc) {
+            $content = $this->stripComments($this->read($doc['path']));
+
+            if (preg_match('/<body\b[^>]*\bbackground\s*=/i', $content) !== 1) {
+                continue;
+            }
+            $checked++;
+
+            self::assertMatchesRegularExpression(
+                '/html\s*\{[^}]*background(-color)?\s*:/s',
+                $content,
+                $url . ' sets a background on <body>; <html> must carry a background too, or the '
+                . 'image propagates to the canvas and does not scale'
+            );
+        }
+
+        self::assertGreaterThan(0, $checked, 'expected at least one frame to use a body background');
     }
 
     /**

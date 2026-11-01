@@ -25,7 +25,15 @@
 <style>
 /* The ticker's tracks (10/160/24) are scaled to 13.33/213.28/31.99 by
    /cgi-htm/jscript/zoom.js, so the page has to carry the same zoom or it
-   renders at 1x inside a frame sized for 1.333. */
+   renders at 1x inside a frame sized for 1.333.
+
+   `html` gets the background colour as well. A background on <body> with a
+   transparent root propagates to the canvas, which is painted at viewport
+   level - outside the body's zoom - so the row's background image would repeat
+   at its raw size instead of scaling with everything else. */
+html {
+  background-color: #{{ page:bgColor }};
+}
 body {
   background-color: #{{ page:bgColor }};
   margin: 3px;
