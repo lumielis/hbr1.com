@@ -265,6 +265,11 @@ class Bootstrap implements BootstrapProvider
         $router->add('POST', '/guestbook', 'Web\\GuestbookController::submitAction');
 
         $router->add('GET', '/party', 'Web\\PartyController::indexAction');
+        // The form's security image. Same picture as `/request/code.png`, its
+        // own session key. Registered before `{id:int}` for the same reason
+        // `/party/new` is: the segment is static, and the pair stays adjacent
+        // so the order is documented rather than inferred.
+        $router->add('GET', '/party/code.png', 'Web\\PartyController::imageAction');
         // `/party/new` must be registered before `{id:int}`; the router scores
         // static segments higher, but keeping the pair adjacent documents the
         // order. The legacy link was `?part=edit&party_id=new`.

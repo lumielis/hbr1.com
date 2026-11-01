@@ -3,6 +3,7 @@
 namespace App\Controllers\Web;
 
 use App\Controllers\BaseController;
+use App\Services\CaptchaService;
 use App\Services\PartyService;
 use Azera\Http\Response;
 
@@ -31,6 +32,11 @@ use Azera\Http\Response;
  *    hashed; the clear-text rows keep working through
  *    `PartyService::verifyPassword()`, which upgrades each one the first time
  *    its owner edits it.
+ *
+ * The form also carries a security image now, the same one the song request
+ * form draws (`CaptchaService`). It uses its own session key and a longer
+ * lifetime, because this form is a dozen fields and a flyer upload rather than
+ * one click.
  */
 class PartyController extends BaseController
 {
@@ -129,12 +135,51 @@ class PartyController extends BaseController
     }
 
     /**
+     * The security image for the form.
+     *
+     * Issued here rather than on the form page for the same reason as
+     * `/request/code.png`: the template only emits an `<img>` tag, so the code
+     * has to be written when the browser fetches the picture it is about to
+     * show. Its own session key keeps it from overwriting a song request's
+     * code in another tab, and it lives for an hour because this form is long.
+     */
+    public function imageAction(): Response
+    {
+        /** @var CaptchaService $captcha */
+        $captcha = $this->service(CaptchaService::class);
+
+        $code = $captcha->issue(
+            $this->context()->session(),
+            CaptchaService::PARTY_SESSION_KEY,
+            CaptchaService::PARTY_EXPIRY_SECONDS
+        );
+
+        return new Response(200, [
+            'Content-Type'  => 'image/png',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate',
+            'Pragma'        => 'no-cache',
+        ], $captcha->render($code));
+    }
+
+    /**
      * The shared POST path for both forms.
      *
-     * The order of the checks is the legacy order: the required fields first,
-     * then the submitter credentials, then the upload. A rejection re-renders
-     * the form rather than redirecting, because the page the visitor was
-     * looking at is the only one that can explain what went wrong.
+     * The order of the checks matters, and is one place this departs from the
+     * legacy order ("required fields, then credentials, then upload"):
+     *
+     *  1. the fields, so a mistyped date is reported before anything else and
+     *     the visitor is not sent back to retype a code over a typo,
+     *  2. the security image, *before* the credentials, because otherwise an
+     *     edit could be used to test a password without ever solving a code
+     *     and the captcha would protect nothing,
+     *  3. the stored name and password,
+     *  4. the upload, which stays last so a rejected image cannot publish a
+     *     party the visitor was told had failed (`party.pl` ordered
+     *     `upload_file()` before `$party->save()` for the same reason).
+     *
+     * A rejection re-renders the form rather than redirecting, because the page
+     * the visitor was looking at is the only one that can explain what went
+     * wrong.
      *
      * @param array|null $party the stored row when editing, null when creating
      */
@@ -144,6 +189,12 @@ class PartyController extends BaseController
         $input   = $this->input();
 
         $errors = $service->validate($input, $party);
+
+        // A wrong code is a typo, not an attempt to flood the calendar, so it
+        // re-renders with a fresh image instead of erroring out.
+        if ($errors === [] && !$this->validCaptcha($request->post('code'))) {
+            $errors['code'] = 'The code you entered did not match the image. Please try again.';
+        }
 
         // On create there is nothing to authenticate against. On update the
         // stored name and password decide whether this visitor may change the
@@ -244,6 +295,10 @@ class PartyController extends BaseController
             'countries' => $service->countries(),
             'message'   => $message,
             'csrf'      => $this->csrfToken(),
+            // The form emits only an `<img>` tag; the code is written when the
+            // browser fetches the picture, so a re-rendered form always shows a
+            // code the session actually holds.
+            'captcha'   => $this->captchaUrl(),
             // The legacy form always offered a fresh file input. Showing the
             // stored flyer as a thumbnail is the one addition: without it there
             // is no way to tell whether one is already on file.
@@ -265,6 +320,7 @@ class PartyController extends BaseController
             'title', 'start_timestamp', 'end_timestamp', 'country', 'city',
             'location', 'djs', 'live', 'chillout', 'deco', 'memo', 'flyer',
             'organizer', 'email', 'url', 'hotline', 'submitter', 'password',
+            'code',
         ] as $field) {
             $padded[$field] = (string) ($errors[$field] ?? '');
         }
@@ -304,6 +360,32 @@ class PartyController extends BaseController
         }
 
         return $input;
+    }
+
+    /**
+     * The value for the form's `<img src>`.
+     *
+     * `?t=` is a cache-buster, exactly as `/request/code.png` uses. Without it
+     * a browser that cached the previous image would show a code the session no
+     * longer holds - which matters here more, because a rejected submission
+     * re-renders the form.
+     */
+    private function captchaUrl(): string
+    {
+        return '/party/code.png?t=' . time();
+    }
+
+    /** Check the submitted security code against this form's session key. */
+    private function validCaptcha(mixed $submitted): bool
+    {
+        /** @var CaptchaService $captcha */
+        $captcha = $this->service(CaptchaService::class);
+
+        return $captcha->verify(
+            $this->context()->session(),
+            is_scalar($submitted) ? (string) $submitted : '',
+            CaptchaService::PARTY_SESSION_KEY
+        );
     }
 
     /**

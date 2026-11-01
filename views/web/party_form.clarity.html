@@ -36,7 +36,17 @@
    The password confirmation is shown on both forms. The legacy template
    printed it only while `PARTY_STATUS` was 0, so once a party was published its
    password could never be changed; the field is harmless on an edit because
-   the stored password is only replaced when a new one is typed. #}
+   the stored password is only replaced when a new one is typed.
+
+   The security image is the one addition to the legacy markup. The legacy form
+   had none, and the calendar was open to scripted bulk submission - which is
+   exactly what left the 19 blank drafts in the table. It is the same picture as
+   the song request form (`CaptchaService`), with its own session key and an
+   hour-long lifetime, and it sits at the end of ADMINISTRATION so the visitor
+   types the code after having filled everything else in. The controller checks
+   the fields before the code and the code before the stored credentials, so a
+   mistyped date surfaces first while a wrong password cannot be told apart
+   until an image has been solved. #}
 {% extends "layouts/page" %}
 
 {% set submenu = true %}
@@ -235,6 +245,17 @@
                 <td><input type="password" name="password2" value="" class="blue" maxlength="32" size="20"></td>
               </tr>
             </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="txt" rowspan="2"><b>{% if errors:code %}<font color="#ff0000">{% endif %}Security Code</b></td>
+          <td class="txt"><font color="#999999">To verify your input please enter the code shown above.</font></td>
+        </tr>
+        <tr>
+          <td>
+            <img width="100" height="30" src="{{ captcha }}" style="border: 1px solid #0055cc;" alt="security code"><br>
+            <input type="text" name="code" size="6" maxlength="5" class="blue" autocomplete="off">
+            {% if errors:code %}<br><font color="#ff0000" class="txt">{{ errors:code }}</font>{% endif %}
           </td>
         </tr>
         <tr>

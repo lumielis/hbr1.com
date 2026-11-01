@@ -103,7 +103,8 @@ class CaptchaServiceTest extends TestCase
 
     /**
      * securimage's `expiry_time` default was 900 seconds; the port has to keep
-     * that, or a form left open over lunch stops submitting.
+     * that, or a form left open over lunch stops submitting. The party form asks
+     * for its own, longer lifetime - see {@see testThePartyKeyHasItsOwnLifetime()}.
      */
     public function testExpiredCodeFails(): void
     {
@@ -118,6 +119,61 @@ class CaptchaServiceTest extends TestCase
 
         self::assertFalse($this->captcha->verify($this->session, $code));
         self::assertNull($this->captcha->peek($this->session), 'an expired code is discarded');
+    }
+
+    /**
+     * Two forms draw the same picture, and each writes its code when its
+     * `<img>` is fetched. One shared key would let the party form silently
+     * replace the code the song request form is showing.
+     */
+    public function testTheTwoFormsKeepSeparateCodes(): void
+    {
+        $request = $this->captcha->issue($this->session);
+        $party   = $this->captcha->issue($this->session, CaptchaService::PARTY_SESSION_KEY);
+
+        self::assertSame($request, $this->captcha->peek($this->session));
+        self::assertSame($party, $this->captcha->peek($this->session, CaptchaService::PARTY_SESSION_KEY));
+
+        self::assertTrue($this->captcha->verify($this->session, $party, CaptchaService::PARTY_SESSION_KEY));
+        self::assertSame(
+            $request,
+            $this->captcha->peek($this->session),
+            'consuming the party code must leave the request code in place'
+        );
+    }
+
+    /**
+     * The party form is a dozen fields plus a flyer upload; fifteen minutes is
+     * not enough to fill it in, so the party key gets an hour.
+     */
+    public function testThePartyKeyHasItsOwnLifetime(): void
+    {
+        $this->captcha->issue(
+            $this->session,
+            CaptchaService::PARTY_SESSION_KEY,
+            CaptchaService::PARTY_EXPIRY_SECONDS
+        );
+
+        $stored = $this->session->get(CaptchaService::PARTY_SESSION_KEY);
+
+        self::assertIsArray($stored);
+        self::assertSame(
+            CaptchaService::PARTY_EXPIRY_SECONDS,
+            (int) $stored['expires'] - (int) $stored['issued']
+        );
+
+        // Still valid where the request form's code would already have expired.
+        $this->session->set(CaptchaService::PARTY_SESSION_KEY, [
+            'code'    => $stored['code'],
+            'issued'  => time() - CaptchaService::EXPIRY_SECONDS - 60,
+            'expires' => time() + 60,
+        ]);
+
+        self::assertTrue($this->captcha->verify(
+            $this->session,
+            (string) $stored['code'],
+            CaptchaService::PARTY_SESSION_KEY
+        ));
     }
 
     public function testUnreadableFontDoesNotThrow(): void

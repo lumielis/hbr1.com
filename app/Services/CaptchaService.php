@@ -5,12 +5,16 @@ namespace App\Services;
 use Azera\Http\Session;
 
 /**
- * The security image on the song request form.
+ * The security image.
  *
  * The legacy form used `cgi-bin/lib/securimage.php` 3.2RC2 (2012), which does
  * not parse on PHP 8.3 at all - it uses curly-brace string offsets, removed in
  * PHP 8.0. So the library cannot simply be kept; this is a purpose-built
  * replacement for the one thing the site actually used it for.
+ *
+ * Two forms draw it: the song request form (`/request/code.png`) and the party
+ * submission form (`/party/code.png`). Each has its own session key, so the two
+ * can be open at once without drawing over each other's code.
  *
  * The drawing pipeline is deliberately the same as securimage's, because the
  * point is the *picture the listener sees*, not a new design:
@@ -36,6 +40,16 @@ class CaptchaService
     /** Session key holding `['code' => string, 'issued' => int]`. */
     public const SESSION_KEY = 'captcha_code';
 
+    /**
+     * The party form's own key.
+     *
+     * Two forms use the same picture now, and each draws a code when its
+     * `<img>` is fetched. Sharing one key would mean the party form silently
+     * replacing the code of a song request form left open in another tab, so
+     * every call takes the key it belongs to.
+     */
+    public const PARTY_SESSION_KEY = 'captcha_code_party';
+
     public const CODE_LENGTH = 5;
 
     /** The legacy charset: digits only, which is why the image is readable. */
@@ -59,6 +73,17 @@ class CaptchaService
     /** securimage's `expiry_time` default. */
     public const EXPIRY_SECONDS = 900;
 
+    /**
+     * The party form's lifetime.
+     *
+     * The song request form is one track and one code, so securimage's fifteen
+     * minutes are enough. The party form is a dozen fields, two dates and an
+     * image upload; an expired code there rejects a submission that was
+     * otherwise complete, which reads as data loss. An hour is long enough to
+     * type it and short enough to still mean something.
+     */
+    public const PARTY_EXPIRY_SECONDS = 3600;
+
     public function __construct(
         private readonly string $fontPath,
     ) {
@@ -69,14 +94,22 @@ class CaptchaService
      *
      * Returns the plain code so the caller can draw it. Every call replaces
      * the previous one, so reloading the form invalidates the old image.
+     *
+     * `$ttl` is the securimage default unless a caller needs longer: the party
+     * form asks for a dozen fields and a flyer upload, so fifteen minutes would
+     * expire for anyone who fills it in slowly.
      */
-    public function issue(?Session $session): string
-    {
+    public function issue(
+        ?Session $session,
+        string $key = self::SESSION_KEY,
+        int $ttl = self::EXPIRY_SECONDS
+    ): string {
         $code = $this->generateCode();
 
-        $session?->set(self::SESSION_KEY, [
-            'code'   => $code,
-            'issued' => time(),
+        $session?->set($key, [
+            'code'    => $code,
+            'issued'  => time(),
+            'expires' => time() + $ttl,
         ]);
 
         return $code;
@@ -90,20 +123,27 @@ class CaptchaService
      * image on failure, so the retry used a new code anyway, but keeping the
      * stored value means a double submit cannot fail for the wrong reason.
      */
-    public function verify(?Session $session, string $submitted): bool
+    public function verify(?Session $session, string $submitted, string $key = self::SESSION_KEY): bool
     {
         if ($session === null) {
             return false;
         }
 
-        $stored = $session->get(self::SESSION_KEY);
+        $stored = $session->get($key);
 
         if (!is_array($stored) || !isset($stored['code'], $stored['issued'])) {
             return false;
         }
 
-        if (time() - (int) $stored['issued'] > self::EXPIRY_SECONDS) {
-            $session->remove(self::SESSION_KEY);
+        // A stored entry without `expires` predates the per-form lifetime and
+        // keeps the securimage default, which is what the song request form
+        // still uses.
+        $expires = isset($stored['expires'])
+            ? (int) $stored['expires']
+            : (int) $stored['issued'] + self::EXPIRY_SECONDS;
+
+        if (time() > $expires) {
+            $session->remove($key);
 
             return false;
         }
@@ -114,15 +154,15 @@ class CaptchaService
             return false;
         }
 
-        $session->remove(self::SESSION_KEY);
+        $session->remove($key);
 
         return true;
     }
 
-    /** The code currently bound to the session, for tests and diagnostics. */
-    public function peek(?Session $session): ?string
+    /** The code currently bound to a form, for tests and diagnostics. */
+    public function peek(?Session $session, string $key = self::SESSION_KEY): ?string
     {
-        $stored = $session?->get(self::SESSION_KEY);
+        $stored = $session?->get($key);
 
         return is_array($stored) && isset($stored['code']) ? (string) $stored['code'] : null;
     }

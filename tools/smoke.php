@@ -68,6 +68,8 @@ $checks = [
     // so it is checked for a PNG rather than a status alone.
     ['/request/trance/1', 200],
     ['/request/code.png', 200],
+    // The party form's security image: same picture, its own session key.
+    ['/party/code.png', 200],
     ['/chat', 200],
     ['/chat/', 200],
     // The frameset's dynamic frames. The four chrome frames are static files

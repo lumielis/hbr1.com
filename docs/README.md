@@ -70,6 +70,7 @@ W6 community pages:
 /party/{id}             single party
 /party/new              submit a party (was `?part=edit&party_id=new`)
 /party/{id}/edit        edit a party you submitted
+/party/code.png         the party form's security image
 /chat                   chat room (database-backed, not the jsm* file transport)
 ```
 
@@ -154,6 +155,18 @@ One consequence worth knowing: the edit form shows `München` where the column
 holds `M&uuml;nchen`, so saving an old row normalises its entities once. The
 rendered output is identical either way — the detail page decodes on read — and
 the columns are cp1252, so the German repertoire stores losslessly.
+
+The form also carries the site's security image, which the legacy page did not.
+`/party/new` and `/party/{id}/edit` both render the same 100x30 PNG as the song
+request form and both POSTs check it. The field checks run first, so a mistyped
+date is reported before the code, but the code is checked *before* the stored
+name and password: otherwise an edit could be used to test a password without
+ever solving an image. `App\Services\CaptchaService` is shared, but
+the party form uses its own session key (`PARTY_SESSION_KEY`) and an hour-long
+lifetime (`PARTY_EXPIRY_SECONDS`): one key would let whichever form fetched its
+image last invalidate the other's code, and fifteen minutes is not enough to
+fill in a dozen fields plus a flyer upload. A wrong code answers **400** with a
+fresh image and the submitted values still in the controls.
 
 
 W7 WebTV ticker:
@@ -522,7 +535,7 @@ The endpoint is therefore covered like this:
 If a staging RadioDJ instance ever exists, point `radio_dj_request_url` at it
 and add a real end-to-end case.
 
-## The request form's security image
+## The security image
 
 The legacy captcha was `securimage` 3.2RC2 from 2012, which does not parse on
 PHP 8.3 at all: it uses curly-brace string offsets (`$str{0}`), removed in PHP
@@ -539,11 +552,20 @@ is used. Colour histograms of a production image and a port image match (13
 colours in production, ~290 text pixels from `#33ccff`), so the two are
 indistinguishable at a glance.
 
-The code lives in the session with a 15-minute expiry (securimage's default) and
-is **single-use**: a correct submission removes it, so a captured form cannot be
-replayed. It is issued by `/request/code.png`, not by the form page, because the
-form emits only an `<img>` tag — the code must be written when the browser
-fetches the picture it is about to show.
+Two forms draw it — the song request form at `/request/code.png` and the party
+submission form at `/party/code.png`. Each has its own session key
+(`SESSION_KEY` and `PARTY_SESSION_KEY`), because both images are fetched by the
+browser: one key would let whichever form was opened last invalidate the code
+the other is showing. The party form also asks for a longer lifetime
+(`PARTY_EXPIRY_SECONDS`, an hour) than securimage's fifteen minutes, because it
+is a dozen fields, two dates and a flyer upload rather than one click.
+
+The code lives in the session next to its expiry and is **single-use**: a
+correct submission removes it, so a captured form cannot be replayed. It is
+issued by the `.png` route, not by the form page, because the form emits only an
+`<img>` tag — the code must be written when the browser fetches the picture it
+is about to show. A rejection re-renders the form with a fresh image, so a
+retry never starts from a code that has already failed.
 
 `/request/code.png` is also the redirect target for the legacy
 `main.php?module=tracklist&show=secimg`, so a page cached before the port shows
@@ -551,7 +573,10 @@ a working image instead of 301-ing to the catalogue.
 
 Captcha failures answer **400** with a fresh image, not 429: a wrong code is a
 typo, while the per-IP rules in `RequestService` remain the control that bounds
-abuse. The captcha stops scripted bulk submission; the limits bound it.
+abuse. The captcha stops scripted bulk submission; the limits bound it. On the
+party form the field checks run before the code and the credentials after it, so
+a mistyped date is reported first while a password cannot be tested without
+solving an image.
 
 One deliberate wording change: the legacy template asked the listener to enter
 "the code **schown** above". The port says "shown". Everything else on the page
