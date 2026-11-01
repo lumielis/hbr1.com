@@ -253,6 +253,18 @@ already handled the 14 px vertical inset. The single-picture view was unaffected
 - its 400x300 image sits between two 25x300 border pieces in a collapsed table,
 so there is no slack to distribute.
 
+Quirks mode did not only change image layout; it also changed how percentage
+heights resolve, and that has bitten once more. The chat submit bar
+(`/chat/submit`) is the last cell of a `height="100%"` table with
+`valign="bottom"`, and production got the full-height table for free because
+quirks mode propagates `height: 100%` from `<body>` through the `<form>` that
+wraps the rows. In standards mode a percentage height does **not** propagate
+through a form at all, so the table collapsed to its 29 px content height and
+the bar rendered at the top of the frame. The fix is an explicit
+`html, body, .chat-form { height: 100% }` chain; the rule of thumb for this port
+is that any `height="100%"` legacy layout needs every ancestor in the chain to
+carry a height, including the `<form>` in between.
+
 **`/mixes` and `/tracklist` were the same data, and are now the same page.**
 HBR1 plays mixes only - there are no standalone songs - so the RadioDJ `songs`
 rows the "Inventory" page listed *are* the DJ sets. The legacy tree still had

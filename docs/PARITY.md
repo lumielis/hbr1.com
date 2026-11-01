@@ -91,10 +91,29 @@ is a frameset, not a content page, so it keeps the legacy frameset doctype
 | `/chat`, `/chat/` | `/chat/` | Match. `rows="26,*,26,29"`, `cols="64,*,100,64"`, the four static chrome frames, and the message/user/submit frames on canonical routes. |
 | `/chat/content` | `/html/chat_content.html` | Match. 9 s meta refresh, `#100040` well, `MM/DD HH:MM` in `#009988`, nickname in its stored colour, message text escaped. Rendered live from `chat` instead of the generated file. |
 | `/chat/users` | `apax.cgi?Part=Chat&Action=listUsers` | Match. Production's empty shell, same title, refresh and background. |
-| `/chat/submit` | `apax.cgi?Part=Chat&Action=submit` | Match. 29 px bar, Nickname/Message/OK in the dark-blue input chrome, auto-layout spacer giving the production 798/198 column split; inputs at x=355/446/728 at a 996 px viewport, identical to production. |
+| `/chat/submit` | `apax.cgi?Part=Chat&Action=submit` | Match. 29 px bar pinned to the bottom of the frame, Nickname/Message/OK in the dark-blue input chrome with the 9 px tabs hugging the top, auto-layout spacer giving the production 798/198 column split; inputs at x=355/446/728 at a 996 px viewport, identical to production. |
 
 The four chrome frames (`top`, `left`, `right`, `bottom`) were already
 byte-identical to production and are still served as static files.
+
+`/chat/submit` needed two geometry corrections, both invisible in a wide
+viewport but obvious at frame height:
+
+* **The bar sat at the top instead of the bottom.** It is the last cell of a
+  `height="100%"` table with `valign="bottom"`. Production got the full-height
+  table for free: quirks mode propagates `height: 100%` from `<body>` through
+  the `<form>` that wraps the rows. Standards mode does not propagate a
+  percentage height through a form at all, so the table collapsed to its 29 px
+  content height. `html`, `body` and the now-`class="chat-form"` form all
+  declare `height: 100%` explicitly; the table then measures 963.2 px at a
+  963 px viewport and the bar lands at y=934.2, exactly as production does.
+* **The two 9 px chrome tabs were pushed to the bottom.** Production sets
+  `valign="top"` on just the `inptl`/`inptr` cells and leaves `inpl`/`inpr` (the
+  29 px end pieces) unset. The port applied a blanket
+  `vertical-align: bottom` to every cell in the row, which dropped both tabs to
+  y=20 and flattened the tab silhouette. `.chat-tab` is now `top` and
+  `.chat-corner` resets to `baseline` — `vertical-align` does not inherit, so
+  that reset has to be written out rather than omitted.
 
 ### Deliberate deviations
 

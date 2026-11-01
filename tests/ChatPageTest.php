@@ -89,6 +89,63 @@ class ChatPageTest extends TestCase
         self::assertStringContainsString('<table', $body);
     }
 
+    public function testSubmitFramePinsTheBarToTheBottomOfTheViewport(): void
+    {
+        // The bar is the bottom row of a full-height table. Production got that
+        // for free because quirks mode propagates `height: 100%` from <body>
+        // through the <form> wrapping the rows. Standards mode does not
+        // propagate through a form, so the chain has to be explicit or the
+        // table collapses to its 29 px content height and sits at the top.
+        $body = $this->page('/chat/submit');
+
+        self::assertStringContainsString('html, body {', $body);
+        self::assertMatchesRegularExpression(
+            '/html,\s*body\s*\{[^}]*height:\s*100%/s',
+            $body,
+            'html/body must be able to resolve a percentage height'
+        );
+        self::assertStringContainsString('<form action="/chat" method="post" class="chat-form">', $body);
+        self::assertMatchesRegularExpression(
+            '/\.chat-form\s*\{[^}]*height:\s*100%/s',
+            $body,
+            'the form is the link that quirks mode gave for free'
+        );
+        self::assertMatchesRegularExpression(
+            '/\.chat-submit\s*\{[^}]*height:\s*100%/s',
+            $body,
+            'the table still asks for the full height'
+        );
+    }
+
+    public function testSubmitFrameAlignsTheChromeTabsToTheTop(): void
+    {
+        // The four chrome gifs are not uniformly aligned: inpl/inpr are 29 px
+        // and fill the bar, inptl/inptr are 9 px tabs that hug the top. A
+        // blanket `vertical-align: bottom` on every cell pushed the tabs to
+        // y=20 and broke the tab silhouette.
+        $body = $this->page('/chat/submit');
+
+        self::assertSame(
+            2,
+            preg_match_all('/class="chat-tab"/', $body),
+            'both 9 px tabs are marked'
+        );
+        self::assertSame(
+            2,
+            preg_match_all('/class="chat-corner"/', $body),
+            'both 29 px end pieces are marked'
+        );
+        self::assertMatchesRegularExpression(
+            '/td\.chat-tab\s*\{[^}]*vertical-align:\s*top/s',
+            $body
+        );
+        self::assertMatchesRegularExpression(
+            '/td\.chat-corner\s*\{[^}]*vertical-align:\s*baseline/s',
+            $body,
+            'the end pieces reset the inherited bottom, since vertical-align does not inherit'
+        );
+    }
+
     public function testSubmitFrameHasTheLegacyForm(): void
     {
         $body = $this->page('/chat/submit');
