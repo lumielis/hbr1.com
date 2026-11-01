@@ -56,11 +56,20 @@ it; the algorithm and key are in `gbms.pab.pl` / `PAB::Crypt::Xor`).
 | Route | Production reference | Result |
 |---|---|---|
 | `/guestbook` | `apax.cgi?run=gbms` | Match. GUESTBOOK band, centred welcome heading and intro, Submit link, 1 px `#333BAA` splitters around every entry, obfuscated e-mail links, `Europe/Berlin` dates labelled `(utc)`, `Nav_*` pager, `-THE END-`, `(c) HBR1 2001-2005` signature. |
-| `/guestbook/submit` | `apax.cgi?run=gbms&cmd=submit` | Match. Centred well, left-aligned welcome/spam-filter note, `Back to the Entries`, centred 3 px-padded form, 11 px Verdana fields, blue field chrome. |
+| `/guestbook/submit` | `apax.cgi?run=gbms&cmd=submit` | Match. Centred well, centred welcome/spam-filter note and `Back to the Entries`, centred 3 px-padded form, 11 px Verdana fields, blue field chrome. |
 
 Measured: h2 top 54, first splitter top 139, first entry top 151, document
 height 2704 — identical to production. The pager sits 6 px lower and the
 submit button 3 px lower; the remaining delta is font-metric rounding.
+
+On `/guestbook/submit` the horizontal geometry now matches exactly: the h2 text
+box lands at x 136.6 / width 181.8, `Back to the Entries` at x 169.0 / width
+117.0, and the textarea centre at 260.8 — all identical to production. The
+`*-left` modifier classes that used to sit on those three elements were wrong:
+production's `guestbook.submit.htm` puts them in the layout's `align="center"`
+well with no align of their own, so they inherit the centring. Left-aligning
+them moved the back link from x 169 to x 0 and made the whole block look
+detached from the form below it.
 
 ### Deliberate deviations
 

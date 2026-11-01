@@ -1,24 +1,32 @@
 {# The guestbook form - production `apax.cgi?run=gbms&cmd=submit`.
 
    Reference: `temp/prod-guestbook-submit.html`. The legacy form is its own
-   page: GUESTBOOK band, a left-aligned "Welcome to our Guestbook", the
+   page: GUESTBOOK band, the "Welcome to our Guestbook" heading, the
    spam-filter note, a "Back to the Entries" link and a cell-padded table.
    Field names stay canonical (`submitter`/`email`/`content`); the legacy
-   `gb_` prefix was only a PAB form convention and is not visible. #}
+   `gb_` prefix was only a PAB form convention and is not visible.
+
+   All three of those text elements are centred. Production's
+   `guestbook.submit.htm` writes `<h2 class="head">` and two `p.text` lines with
+   no align of their own inside the layout's `align="center"` well, so they
+   inherit the centring from the cell. Do not add a left modifier: it moved
+   `Back to the Entries` from x 169 to x 0. #}
 {% extends "layouts/page" %}
 
 {% block title %}The Guestbook of HBR1.com{% endblock %}
 {% block heading %}GUESTBOOK{% endblock %}
 {% block pageid %}PageID = 'guestbook';{% endblock %}
-{# The submit page's well is centred in production; only the listing uses
-   align="left". The layout's default centre alignment is therefore kept. #}
+{# The submit page's well is centred in production, exactly like the listing
+   which gets there via `content_attributes`. Both keep the layout's default
+   centre alignment; the difference is that the listing opts into
+   `.guestbook-well { text-align: left }` and this page does not. #}
 
 {% block signature %}<td class="guestbook-signature"><i>(c) <a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> 2001-2005</i></td>{% endblock %}
 
 {% block content %}
-<h2 class="guestbook-heading guestbook-heading-left">Welcome to our Guestbook</h2>
-<p class="guestbook-intro guestbook-intro-left">Spam-Filter: Your E-Mail address will be protected by a runtime encryption.</p>
-<p class="guestbook-intro guestbook-intro-left"><a href="/guestbook"><b>Back to the Entries</b></a></p>
+<h2 class="guestbook-heading">Welcome to our Guestbook</h2>
+<p class="guestbook-intro">Spam-Filter: Your E-Mail address will be protected by a runtime encryption.</p>
+<p class="guestbook-intro"><a href="/guestbook"><b>Back to the Entries</b></a></p>
 
 {% if errors:submitter or errors:email or errors:content %}
 <div class="guestbook-errors">

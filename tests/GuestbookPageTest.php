@@ -100,6 +100,25 @@ class GuestbookPageTest extends TestCase
         self::assertStringContainsString('-THE END-', $body);
     }
 
+    public function testSubmitPageHeadingAndIntroAreCentredLikeProduction(): void
+    {
+        // Production's `guestbook.submit.htm` puts <h2 class="head"> and the two
+        // `p.text` lines inside the layout's align="center" well and gives them
+        // no align of their own, so they inherit the centring. The port once
+        // added `*-left` modifiers here, which left-aligned all three and pushed
+        // `Back to the Entries` from x=169 to x=0.
+        $body = $this->page('/guestbook/submit');
+
+        self::assertStringNotContainsString('guestbook-heading-left', $body);
+        self::assertStringNotContainsString('guestbook-intro-left', $body);
+        self::assertStringContainsString('<h2 class="guestbook-heading">', $body);
+
+        $css = (string) file_get_contents(dirname(__DIR__) . '/htdocs/style/client.css');
+
+        self::assertStringNotContainsString('.guestbook-heading-left', $css, 'the left override is gone');
+        self::assertStringNotContainsString('.guestbook-intro-left', $css, 'the left override is gone');
+    }
+
     public function testSubmitPageUsesTheLegacyForm(): void
     {
         $body = $this->page('/guestbook/submit');

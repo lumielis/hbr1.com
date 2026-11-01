@@ -378,17 +378,11 @@ table#MessageLog td {
 	color: #4477AA;
 	text-align: center;
 }
-.guestbook-heading-left {
-	text-align: left;
-}
 .guestbook-intro {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 11px;
 	color: #4477AA;
 	text-align: center;
-}
-.guestbook-intro-left {
-	text-align: left;
 }
 .guestbook-actions {
 	text-align: center;
