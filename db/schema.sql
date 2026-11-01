@@ -1,6 +1,6 @@
 -- HBR1 schema baseline
 -- database: hbr1
--- generated: 2026-10-31T18:03:12+00:00
+-- generated: 2026-11-01T14:27:20+00:00
 
 -- access
 CREATE TABLE `access` (
@@ -14,7 +14,7 @@ CREATE TABLE `access` (
   `hits` int(10) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=103996 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=103996 DEFAULT CHARSET=utf8mb4;
 
 -- access_group
 CREATE TABLE `access_group` (
@@ -25,7 +25,7 @@ CREATE TABLE `access_group` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_id` (`group_id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 -- access_module
 CREATE TABLE `access_module` (
@@ -36,7 +36,7 @@ CREATE TABLE `access_module` (
   `access` int(10) unsigned NOT NULL DEFAULT 420,
   PRIMARY KEY (`id`),
   UNIQUE KEY `module` (`module`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 -- access_user
 CREATE TABLE `access_user` (
@@ -53,7 +53,7 @@ CREATE TABLE `access_user` (
   UNIQUE KEY `user_id` (`user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- chat
 CREATE TABLE `chat` (
@@ -64,7 +64,7 @@ CREATE TABLE `chat` (
   `content` varchar(255) NOT NULL DEFAULT '',
   `color` varchar(6) NOT NULL DEFAULT 'CCCCCC',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=50560 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=50561 DEFAULT CHARSET=utf8mb4;
 
 -- chat_history
 CREATE TABLE `chat_history` (
@@ -75,7 +75,7 @@ CREATE TABLE `chat_history` (
   `content` varchar(255) NOT NULL DEFAULT '',
   `color` varchar(6) NOT NULL DEFAULT 'CCCCCC',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- client_account
 CREATE TABLE `client_account` (
@@ -87,7 +87,7 @@ CREATE TABLE `client_account` (
   `amount` bigint(20) NOT NULL DEFAULT 0,
   `charge` bigint(20) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- client_category
 CREATE TABLE `client_category` (
@@ -96,7 +96,7 @@ CREATE TABLE `client_category` (
   `fixed` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- client_person
 CREATE TABLE `client_person` (
@@ -121,14 +121,14 @@ CREATE TABLE `client_person` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `category` (`category`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- country
 CREATE TABLE `country` (
   `id` char(2) NOT NULL DEFAULT '',
   `name` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- gallery
 CREATE TABLE `gallery` (
@@ -144,7 +144,7 @@ CREATE TABLE `gallery` (
   PRIMARY KEY (`id`),
   KEY `client` (`submitter`),
   KEY `category` (`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4;
 
 -- gallery_picture
 CREATE TABLE `gallery_picture` (
@@ -155,7 +155,7 @@ CREATE TABLE `gallery_picture` (
   `copyright` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `gallery` (`gallery_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=723 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=723 DEFAULT CHARSET=utf8mb4;
 
 -- GAL_Gallery
 CREATE TABLE `GAL_Gallery` (
@@ -171,7 +171,7 @@ CREATE TABLE `GAL_Gallery` (
   PRIMARY KEY (`GAL_Index`),
   KEY `client` (`GAL_Submitter`),
   KEY `category` (`GAL_MCG_Index`)
-) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4;
 
 -- GAP_GalleryPicture
 CREATE TABLE `GAP_GalleryPicture` (
@@ -182,7 +182,7 @@ CREATE TABLE `GAP_GalleryPicture` (
   `GAP_Copyright` varchar(255) NOT NULL,
   PRIMARY KEY (`GAP_Index`),
   KEY `gallery` (`GAP_GAL_Index`)
-) ENGINE=MyISAM AUTO_INCREMENT=723 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=723 DEFAULT CHARSET=utf8mb4;
 
 -- guestbook
 CREATE TABLE `guestbook` (
@@ -190,13 +190,13 @@ CREATE TABLE `guestbook` (
   `timestamp` bigint(20) unsigned NOT NULL DEFAULT 0,
   `email` varchar(255) NOT NULL DEFAULT '',
   `submitter` varchar(255) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
+  `content` mediumtext NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT 1,
   `remote_addr` varchar(15) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `timestamp` (`timestamp`,`status`),
   KEY `remote_addr` (`remote_addr`)
-) ENGINE=MyISAM AUTO_INCREMENT=7593 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7594 DEFAULT CHARSET=utf8mb4;
 
 -- guestbook_filter
 CREATE TABLE `guestbook_filter` (
@@ -205,7 +205,7 @@ CREATE TABLE `guestbook_filter` (
   `Match` varchar(128) NOT NULL DEFAULT '',
   `Case` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 -- labels
 CREATE TABLE `labels` (
@@ -215,19 +215,19 @@ CREATE TABLE `labels` (
   `email` varchar(255) DEFAULT NULL,
   `hits` bigint(20) unsigned DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1133 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1133 DEFAULT CHARSET=utf8mb4;
 
 -- live_broadcast
 CREATE TABLE `live_broadcast` (
   `Id` varchar(16) NOT NULL DEFAULT '',
   `Artist` varchar(64) NOT NULL DEFAULT '',
   `Title` varchar(64) NOT NULL DEFAULT '',
-  `Html_LBot` text NOT NULL,
+  `Html_LBot` mediumtext NOT NULL,
   `Status` tinyint(2) unsigned NOT NULL DEFAULT 0,
   `Station` varchar(16) NOT NULL DEFAULT 'Trance',
   `Fixed` tinyint(2) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- mailinglist
 CREATE TABLE `mailinglist` (
@@ -242,7 +242,7 @@ CREATE TABLE `mailinglist` (
   `group_id` int(10) unsigned NOT NULL DEFAULT 0,
   `access` int(10) unsigned NOT NULL DEFAULT 420,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- MCG_MediaCategory
 CREATE TABLE `MCG_MediaCategory` (
@@ -254,7 +254,7 @@ CREATE TABLE `MCG_MediaCategory` (
   `MCG_Flags` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`MCG_Index`),
   KEY `MCG_Status` (`MCG_Status`,`MCG_Flags`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 
 -- media_base
 CREATE TABLE `media_base` (
@@ -266,7 +266,7 @@ CREATE TABLE `media_base` (
   `Copyright` char(64) NOT NULL DEFAULT '',
   `Type` char(4) NOT NULL DEFAULT '',
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- media_category
 CREATE TABLE `media_category` (
@@ -277,7 +277,7 @@ CREATE TABLE `media_category` (
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `flags` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 
 -- media_playlist
 CREATE TABLE `media_playlist` (
@@ -288,7 +288,7 @@ CREATE TABLE `media_playlist` (
   `file` char(128) NOT NULL DEFAULT '',
   `type` char(6) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- message_picture
 CREATE TABLE `message_picture` (
@@ -299,7 +299,7 @@ CREATE TABLE `message_picture` (
   `copyright` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `gallery` (`message_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- message_thread
 CREATE TABLE `message_thread` (
@@ -315,7 +315,7 @@ CREATE TABLE `message_thread` (
   PRIMARY KEY (`id`),
   KEY `client` (`submitter`),
   KEY `category` (`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- mixes
 CREATE TABLE `mixes` (
@@ -329,16 +329,16 @@ CREATE TABLE `mixes` (
   PRIMARY KEY (`id`),
   FULLTEXT KEY `name` (`name`),
   FULLTEXT KEY `dj` (`dj`)
-) ENGINE=MyISAM AUTO_INCREMENT=890 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=890 DEFAULT CHARSET=utf8mb4;
 
 -- news_ticker
 CREATE TABLE `news_ticker` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `Message` text NOT NULL,
+  `Message` mediumtext NOT NULL,
   `Status` tinyint(2) NOT NULL DEFAULT 0,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- nowplaying
 CREATE TABLE `nowplaying` (
@@ -357,7 +357,7 @@ CREATE TABLE `nowplaying` (
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`Id`),
   KEY `Station` (`Station`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- our_music
 CREATE TABLE `our_music` (
@@ -371,7 +371,7 @@ CREATE TABLE `our_music` (
   `mixedby` varchar(100) NOT NULL DEFAULT '',
   `style` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4;
 
 -- party
 CREATE TABLE `party` (
@@ -383,21 +383,21 @@ CREATE TABLE `party` (
   `type` varchar(20) NOT NULL DEFAULT '',
   `country` varchar(100) NOT NULL DEFAULT '',
   `city` varchar(100) NOT NULL DEFAULT '',
-  `djs` text NOT NULL,
-  `live` text NOT NULL,
-  `chillout` text NOT NULL,
-  `deco` text NOT NULL,
-  `location` text NOT NULL,
+  `djs` mediumtext NOT NULL,
+  `live` mediumtext NOT NULL,
+  `chillout` mediumtext NOT NULL,
+  `deco` mediumtext NOT NULL,
+  `location` mediumtext NOT NULL,
   `hotline` varchar(100) NOT NULL DEFAULT '',
   `organizer` varchar(100) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `url` varchar(100) NOT NULL DEFAULT 'http://',
-  `memo` text NOT NULL,
+  `memo` mediumtext NOT NULL,
   `submitter` varchar(32) NOT NULL DEFAULT '',
   `create_timestamp` bigint(20) unsigned NOT NULL DEFAULT 0,
   `edit_timestamp` bigint(20) unsigned NOT NULL DEFAULT 0,
   `flyer` varchar(100) NOT NULL DEFAULT '',
-  `password` varchar(32) NOT NULL DEFAULT '',
+  `password` varchar(255) NOT NULL,
   `source_url` varchar(255) NOT NULL DEFAULT '',
   `source_name` varchar(100) NOT NULL DEFAULT '',
   `source_id` bigint(20) unsigned NOT NULL DEFAULT 0,
@@ -418,7 +418,7 @@ CREATE TABLE `party` (
   FULLTEXT KEY `organizer` (`organizer`),
   FULLTEXT KEY `location` (`location`),
   FULLTEXT KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=7460 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7743 DEFAULT CHARSET=utf8mb4;
 
 -- party_comment
 CREATE TABLE `party_comment` (
@@ -430,7 +430,7 @@ CREATE TABLE `party_comment` (
   `info` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `party_id` (`party_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- party_comment_1
 CREATE TABLE `party_comment_1` (
@@ -442,7 +442,7 @@ CREATE TABLE `party_comment_1` (
   `info` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `party_id` (`party_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=42550 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=42550 DEFAULT CHARSET=utf8mb4;
 
 -- party_sav
 CREATE TABLE `party_sav` (
@@ -489,7 +489,7 @@ CREATE TABLE `party_sav` (
   FULLTEXT KEY `organizer` (`organizer`),
   FULLTEXT KEY `location` (`location`),
   FULLTEXT KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 
 -- rating_category
 CREATE TABLE `rating_category` (
@@ -498,7 +498,7 @@ CREATE TABLE `rating_category` (
   `fixed` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- rating_object
 CREATE TABLE `rating_object` (
@@ -514,14 +514,14 @@ CREATE TABLE `rating_object` (
   `result` int(10) unsigned NOT NULL DEFAULT 0,
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- referer
 CREATE TABLE `referer` (
-  `url` varchar(255) NOT NULL DEFAULT '',
+  `url` varchar(200) NOT NULL,
   `hits` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`url`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- releases
 CREATE TABLE `releases` (
@@ -536,21 +536,21 @@ CREATE TABLE `releases` (
   PRIMARY KEY (`id`),
   KEY `mix` (`mix`),
   FULLTEXT KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=5461 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5461 DEFAULT CHARSET=utf8mb4;
 
 -- release_types
 CREATE TABLE `release_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- runtime
 CREATE TABLE `runtime` (
   `Name` varchar(64) NOT NULL DEFAULT '',
   `Value` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`Name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- settings
 CREATE TABLE `settings` (
@@ -566,7 +566,7 @@ CREATE TABLE `settings` (
   PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
   KEY `TYPE` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- thread_category
 CREATE TABLE `thread_category` (
@@ -575,7 +575,7 @@ CREATE TABLE `thread_category` (
   `fixed` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- thread_entry
 CREATE TABLE `thread_entry` (
@@ -588,7 +588,7 @@ CREATE TABLE `thread_entry` (
   `message` mediumblob NOT NULL,
   `status` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- ticker
 CREATE TABLE `ticker` (
@@ -616,7 +616,7 @@ CREATE TABLE `ticker` (
   `object_type` enum('n','f') NOT NULL DEFAULT 'n',
   `flash_movie` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=384 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=384 DEFAULT CHARSET=utf8mb4;
 
 -- tz_rules
 CREATE TABLE `tz_rules` (
@@ -631,7 +631,7 @@ CREATE TABLE `tz_rules` (
   `save` int(11) NOT NULL DEFAULT 0,
   `letter` char(4) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1607 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1607 DEFAULT CHARSET=utf8mb4;
 
 -- tz_zones
 CREATE TABLE `tz_zones` (
@@ -645,7 +645,7 @@ CREATE TABLE `tz_zones` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `is_def` (`is_def`)
-) ENGINE=MyISAM AUTO_INCREMENT=1053 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1053 DEFAULT CHARSET=utf8mb4;
 
 -- user_info
 CREATE TABLE `user_info` (
@@ -665,5 +665,5 @@ CREATE TABLE `user_info` (
   `email` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
