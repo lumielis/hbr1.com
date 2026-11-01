@@ -599,7 +599,7 @@ never sits right.
 ### Backing up before the repair
 
 The repair changes stored bytes irreversibly, so take a backup first, and choose
-the export encoding deliberately. Two choices are exact and one silently loses
+the export encoding deliberately. Two choices are exact and two silently lose
 data.
 
 MariaDB's `latin1` is really cp1252, and PHP's `latin1` is ISO-8859-1. They
@@ -609,38 +609,40 @@ encoding" it asks for decides what happens to those five bytes:
 
 | phpMyAdmin choice | restores exactly? |
 |---|---|
-| **UTF-8** | **yes** |
+| **UTF-8** | **yes** — verified both directions |
 | **latin1 / ISO-8859-1** | **yes** |
-| cp1252 / Windows-1252 | no — the 5 undefined bytes become `?` |
+| cp1252 / Windows-1252 | no — 17 values, 43 bytes become `?` |
 | latin9 / ISO-8859-15 | no — `€` and seven other bytes become `?` |
 
-cp1252 looks like the obvious pick and is the wrong one: it *adds* holes to
-bytes that ISO-8859-1 defines fine. UTF-8 is the safest because it can represent
-everything.
+**Choose UTF-8.** It is the only option that is total: every byte maps to a
+character, so nothing can be dropped on the way out, and `SET NAMES utf8mb4` in
+the file makes the same mapping on the way back. cp1252 looks like the obvious
+pick and is the wrong one, because it *adds* holes to bytes that ISO-8859-1
+defines fine.
 
-The current dump was taken with **cp1252**, so it is not exact. Measured against
-the live database, byte for byte:
+Verified on the `hbr1-utf8.sql` export of this database:
 
-- **17 values** differ, losing **43 hole bytes** in total, replaced by `?`;
-- affected: 1 `chat.name` (`0x90`), 3 `guestbook.content` (`0x81`), 1
-  `party.location` (`0x9D`), 12 `party_comment_1` (`0x81`);
-- exactly one of them, `party.location #2611`, is in the `--repair` set — so a
-  restore would not reproduce that row.
+- 1,560 of 1,560 non-ASCII values present exactly, as UTF-8;
+- all three used hole bytes (`0x81`, `0x90`, `0x9D`) preserved as `C2 81`, `C2 90`,
+  `C2 9D` — the same characters that were `?` under cp1252;
+- 76,715 of 76,715 rows across 46 tables; 46 `PRIMARY KEY`, 27 `FULLTEXT`;
+- engines and `latin1` column charsets unchanged, so a restore returns to the
+  damaged state rather than to repaired text — which is what a backup must do;
+- every one of those bytes round-trips through the real restore path (a
+  `utf8mb4` client inserting into a `latin1` column), including `€` as `0x80`.
 
-43 bytes out of 19 MB, and none of them meaningful text — but a backup taken
-before an irreversible change should restore bit for bit, and this one will not.
+The earlier `hbr1-cp1252.sql` export is *not* exact: 17 values lose 43 hole bytes
+to `?`, and one of them (`party.location #2611`) is in the `--repair` set.
 
-Better options, in order:
+Verify rather than assume: compare each value's `CAST(col AS BINARY)` against the
+escaped text in the file. Grepping for the visible characters is not enough —
+that is what made an early check of the cp1252 dump look clean while 17 values
+were already altered.
 
-1. `mysqldump --default-character-set=latin1` — no conversion at all.
-2. phpMyAdmin with **UTF-8** as the file encoding.
-3. phpMyAdmin with **latin1**, which restores exactly as long as the file is
-   read back as latin1.
-
-Either way, verify rather than assume: compare each value's `CAST(col AS
-BINARY)` against the escaped text in the file. Grepping for the visible
-characters is not enough — that is what made an earlier check of this dump look
-clean while 17 values were already altered.
+One harmless side effect to expect: `party`'s `AUTO_INCREMENT` reads 7717 in the
+live table against 7691 in either dump, because 26 blank drafts were created by
+test submissions since. A restore of either file is consistent; it just drops
+those 26 rows, which are drafts with an empty title.
 
 ### The playout schemas are not ours
 
