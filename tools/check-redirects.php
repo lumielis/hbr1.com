@@ -81,10 +81,28 @@ foreach ($cases as $case) {
  * none, the station page has a SUBMENU band and a `th_*.gif` title cap - and
  * rendering the wrong one is invisible to a status-code check. This asserts the
  * markers instead.
+ *
+ * The party calendar is the third legacy frame: two SUBMENU bands of two
+ * buttons each, a 64 px content gutter instead of 55, and the `(c) HBR1
+ * 2001-2003` signature rather than `- Music on Futurenet`. A redesign passes a
+ * status check and fails a listener, so its markers are asserted too.
  */
 $chrome = [
     // path, must contain, must not contain
     ['/mixes', ['Choose a station'], ['submenu_bg.gif', 'table/th_left.gif']],
+    [
+        '/party',
+        [
+            'PARTY CALENDAR',
+            'ENTER_A_PARTY',
+            'RESET_CALENDAR',
+            'id="calendar_current"',
+            '(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003',
+            'width="64"',
+            'cellspacing="1" cellpadding="2"',
+        ],
+        ['Music on Futurenet', 'submenu_bot_bg.gif" >'],
+    ],
 ];
 
 echo "\n";

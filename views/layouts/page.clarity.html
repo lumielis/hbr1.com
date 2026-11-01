@@ -33,6 +33,25 @@
   `tracklist.*.phtml` - carry a SUBMENU band directly above and below the
   content well and start the well without the leading <br>. They opt in by
   setting `submenu` in their preamble; every other page leaves the default.
+
+  Two refinements of that band, both taken from the party calendar:
+
+  `submenu_centre` centres the two inner cells inside the band table: the
+  calendar has one band per row and lets the browser centre it, which needs
+  `align="center"` on the band table rather than a fixed-width one.
+
+  `content_style` is written into the well's `<td>` as a `style` attribute. The
+  party page needs `text-align: left`, because the well is centred and the
+  legacy template overrode that; the catalogue, which sets `margin-top: 15px`
+  on a wrapper div instead, does not.
+
+  A page that needs more than one band sets the array `bands`, each entry being
+  `{href, label, colour}`; the same array is used for the band under the well.
+  When it is absent the single-band defaults apply, so the catalogue and the
+  request form are untouched.
+
+  `signature` replaces the `- Music on Futurenet` line. The older pages - the
+  party calendar among them - carry `(c) HBR1 2001-2003` instead.
 #}
 {% set submenu = false %}
 <!DOCTYPE html>
@@ -174,6 +193,25 @@ function openMuses( url )
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
     <td align="center" background="/images/body_bg.jpg" height="1%">
+      {% if bands is defined and bands %}
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          {% for item in bands %}
+          <td align="center" background="/images/submenu_bg.gif">
+            <table cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td align="left"><img src="/images/submenu_left.gif" alt=""></td>
+                <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+                <td class="txt"><b><a href="{{ item:href }}"><font color="{{ item:colour }}">{{ item:label }}</font></a></b></td>
+                <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+                <td align="left"><img src="/images/submenu_right.gif" alt=""></td>
+              </tr>
+            </table>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
+      {% else %}
       <table cellspacing="0" cellpadding="0" border="0" background="/images/submenu_bg.gif">
         <tr>
           <td align="left"><img src="/images/submenu_left.gif" alt=""></td>
@@ -183,24 +221,44 @@ function openMuses( url )
           <td align="left"><img src="/images/submenu_right.gif" alt=""></td>
         </tr>
       </table>
+      {% endif %}
     </td>
     <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
   </tr>
   {% endif %}
   <tr>
-    <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="55" alt=""></td>
-    <td align="center" background="/images/body_bg.jpg" valign="top">
+    <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="{% block content_gutter %}55{% endblock %}" alt=""></td>
+    <td align="center" background="/images/body_bg.jpg" valign="top"{% block content_attributes %}{% endblock %}>
 
     {% if not submenu %}<br>{% endif %}
 {% block content %}{% endblock %}
 {% block aside %}{% endblock %}
     </td>
-    <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="55" alt=""></td>
+    <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="{% block content_gutter_right %}55{% endblock %}" alt=""></td>
   </tr>
   {% if submenu %}
   <tr>
     <td align="left" width="1%" background="/images/body_left.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
     <td align="center" background="/images/body_bg.jpg" height="1%">
+      {% if bands is defined and bands %}
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          {% for item in bands %}
+          <td align="center" background="/images/submenu_bot_bg.gif">
+            <table cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td align="left"><img src="/images/submenu_bot_left.gif" alt=""></td>
+                <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+                <td class="txt"><b><a href="{{ item:href }}"><font color="{{ item:colour }}">{{ item:label }}</font></a></b></td>
+                <td><img height="1" src="/images/spacer.gif" width="2" alt=""></td>
+                <td align="left"><img src="/images/submenu_bot_right.gif" alt=""></td>
+              </tr>
+            </table>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
+      {% else %}
       <table cellspacing="0" cellpadding="0" border="0" background="/images/submenu_bot_bg.gif">
         <tr>
           <td align="left"><img src="/images/submenu_bot_left.gif" alt=""></td>
@@ -210,6 +268,7 @@ function openMuses( url )
           <td align="left"><img src="/images/submenu_bot_right.gif" alt=""></td>
         </tr>
       </table>
+      {% endif %}
     </td>
     <td align="right" width="1%" background="/images/body_right.gif"><img height="1" src="/images/spacer.gif" width="64" alt=""></td>
   </tr>
@@ -219,7 +278,7 @@ function openMuses( url )
     <td align="middle" background="/images/title_bg.gif" height="1%">
       <table cellspacing="0" cellpadding="0" border="0">
         <tr>
-          <td align="center" class="footer"><i><a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> - Music on Futurenet</i></td>
+          {% block signature %}<td align="center" class="footer"><i><a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> - Music on Futurenet</i></td>{% endblock %}
         </tr>
       </table>
     </td>
@@ -234,3 +293,4 @@ function openMuses( url )
 
 </body>
 </html>
+

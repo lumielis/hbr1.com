@@ -71,6 +71,49 @@ W6 community pages:
 /chat                   chat room (database-backed, not the jsm* file transport)
 ```
 
+### The party calendar
+
+`/party` reproduces `htdocs/cgi-htm/client/party_main.htm`, and it is the page
+that looks *least* like the rest of the port, so it is worth spelling out what
+is deliberate.
+
+The first version of this page was a redesign: a bold year/month strip, a
+seven-column grid with hover titles, and a flat "coming up" list. None of that
+is on production. What production has is three strips of the same link in
+three colours (`#999999` / `#ccee00` / `#0DBD43`, selected by the legacy `id`s
+`calendar` / `calendar_found` / `calendar_current`), a `01. Sun` day grid, and
+a `cellspacing="1"` list of events grouped by date under a `#200080` header.
+The reason it matters: the colours are the *only* signal the page carries that
+a year, month or day contains a party, so flattening them removes information.
+
+Three details are easy to get wrong and are now pinned by
+`tests/PartyServiceTest.php`:
+
+- The year strip is `current-3 .. current+2` — six entries, not eleven. The
+  legacy tag was `<CALENDAR_YEARS start="-3" end="3">` with an exclusive end.
+- The month and day strips break the row *before* every seventh cell
+  (`<IF_TIMES=6>` sat in front of the `<td>`), so index 0 is a break too. It is
+  what closes the `colspan=6` spacer row. Getting this wrong does not look
+  broken — it widens the whole 583 px frame to 661 px, because the spacer then
+  shares a row with six real cells.
+- `parties_in_time()`, the query behind the cell colour, is the one legacy
+  query with **no `status` filter**. A draft therefore lights up its day. The
+  page used to delete abandoned drafts on every request, which hid that; the
+  port does not delete on GET (`PartyService::pruneDrafts()` is a console task),
+  so the behaviour is reachable and is reproduced rather than "fixed".
+
+The frame differs from the newer pages too: two SUBMENU bands of two buttons
+each (`ENTER_A_PARTY`, `RESET_CALENDAR`, both `#AAAA22`), a 64 px content gutter
+instead of 55, `text-align: left` on the well, and the `(c) HBR1 2001-2003`
+signature instead of `- Music on Futurenet`. The layout exposes `bands`,
+`content_gutter` and `signature` for that; the catalogue and the request form
+keep their defaults.
+
+`ENTER_A_PARTY` points at `/party/new`, which is `W8` admin work and currently
+404s. Keeping the button and letting it fail is more honest than a button that
+silently does nothing.
+
+
 W7 WebTV ticker:
 
 ```
@@ -287,6 +330,11 @@ The endpoint is therefore covered like this:
   the image route binds the code to the session, and that GO_BACK carries the
   catalogue offset (9 cases). Every case rejects before the playout call, so
   none of them can queue a track.
+- `PartyServiceTest` — the calendar's shape: six years from `current-3`, the
+  twelve month names, the `01. Sun` day grid, the six-cell row breaks including
+  the leading one, exactly one `calendar_current` per strip, `found` following
+  the year rather than the visible month, and the leap-day clamp (11 cases).
+  These are read-only queries against `party`.
 - The accept path is verified against `evaluate()` returning `STATUS_OK`, and
   the real submission is left untested by design.
 

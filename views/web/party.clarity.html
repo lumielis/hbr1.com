@@ -1,83 +1,133 @@
+{# The party calendar - `htdocs/cgi-htm/client/party_main.htm`.
+
+   This is the page the port had *redesigned*: a bold yellow year/month strip, a
+   modern seven-column grid with a hover title, and a flat "Coming up" list.
+   Production has none of that. It has three strips of the same link in three
+   colours, a week grid whose cells read `01. Sun`, and a bordered list of
+   events grouped by date.
+
+   What the legacy template actually emitted, and what is reproduced here:
+
+   - A `cellSpacing=0 cellPadding=0 width=100%` table with six columns.
+   - The year strip is the first row. It is *not* wrapped in its own row per
+     year: all six years sit in one `<tr>`, and the second `<tr>` opens with a
+     `colspan=6` spacer cell.
+   - Months and days use `<IF_TIMES=6></tr><tr></IF>`, i.e. a new row every six
+     cells. Twelve months therefore come out as 6 + 6, and the 30 days of a
+     month as six rows of six with the last row holding the remainder.
+   - Each cell is `<td class="txt" align="center">` with a link whose `id` is
+     `calendar`, `calendar_found` or `calendar_current`. Those ids are what the
+     legacy inline CSS coloured `#999999` / `#ccee00` / `#0DBD43`, which is why
+     July and August are yellow in production while September is grey.
+   - The day cell text is `CALENDAR_DATE . CALENDAR_DAY`, e.g. `01. Sun`.
+   - Below the grid, a second `cellspacing="1" cellpadding="2"` table holds the
+     events. Each event is: a `#200080` date header (`#cccc66`, `class="head"`)
+     only when the day changes, a 1px `#000066` hairline between events that
+     share a day, a `class="head"` title cut to 30 characters, then a
+     three-column row of city / type / comments and country / flags.
+
+   The page also has **two SUBMENU bands, each holding two buttons**, and a
+   `(c) HBR1 2001-2003` signature band rather than the `- Music on Futurenet`
+   one the newer pages carry. Those are passed in as `bands` and reproduced by
+   the layout's multi-band support.
+
+   One thing is not reproduced: the legacy `ENTER_A_PARTY` link opened an edit
+   form that is `W8` admin work. The button is kept, pointing at `/party/new`,
+   which currently 404s - a dangling button is more honest than one that
+   silently does nothing. #}
 {% extends "layouts/page" %}
 
-{% block title %}HBR1 Party Calendar{% endblock %}
+{% set submenu = true %}
+
+{% block title %}{{ title }}{% endblock %}
 {% block heading %}PARTY CALENDAR{% endblock %}
 {% block pageid %}PageID = 'party';{% endblock %}
+{% block content_attributes %} style="text-align: left"{% endblock %}
+{% block content_gutter %}64{% endblock %}
+{% block content_gutter_right %}64{% endblock %}
+{% block signature %}<td class="txt" align="center"><font color="#9999EE"><i>(c) <a href="http://www.hbr1.com" target="_top">HBR1</a> 2001-2003</i></font></td>{% endblock %}
 
 {% block styles %}
-<style>
-.cal-year a, .cal-month a { color: #5588FF; text-decoration: none; padding: 0 3px; }
-.cal-year .current, .cal-month .current { color: #FFFF88; font-weight: bold; }
-.cal-day { width: 22px; text-align: center; font-size: 10px; font-family: Arial, sans-serif; }
-.cal-day .has-events { color: #FFFF88; font-weight: bold; }
-.cal-day .today { border: 1px solid #4477AA; }
-.party-row { font-size: 11px; font-family: Verdana, Arial, sans-serif; border-bottom: 1px solid #222244; }
-.party-date { color: #666666; font-size: 10px; }
+<style type="text/css">
+/* The three calendar colours the legacy page carried inline. They are ids, not
+   classes, because that is how the legacy template wrote them, and a page that
+   has several strips of the same link needs the id selector to win. */
+a#calendar {
+	font-family: Courier New, Mono;
+	font-size: 12px;
+	color: #999999;
+}
+a#calendar_current {
+	font-family: Courier New, Mono;
+	font-size: 12px;
+	color: #0DBD43;
+}
+a#calendar_found {
+	font-family: Courier New, Mono;
+	font-size: 12px;
+	color: #ccee00;
+}
+#info {
+	color: #cccc66;
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div style="margin: 15px; text-align: left;">
+      <br>
 
-        <div class="cal-year" align="center">
+      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
           {% for year in calendar:years %}
-            {% if year:current %}
-              <span class="current">{{ year:year }}</span>
-            {% else %}
-              <a href="/party?from={{ year:timestamp }}">{{ year:year }}</a>
-            {% endif %}
+          <td class="txt" align="center"><a href="/party?from={{ year:timestamp }}" id="{{ year:id }}">{{ year:year }}</a></td>
           {% endfor %}
-        </div>
+        </tr>
+        <tr><td colspan="6">&nbsp;</td>
+        {% for month in calendar:months %}
+        {% if month:rowStart %}</tr><tr>{% endif %}
+          <td class="txt" align="center"><a href="/party?from={{ month:timestamp }}" id="{{ month:id }}">{{ month:month }}</a></td>
+        {% endfor %}
+        </tr>
+        <tr><td colspan="6">&nbsp;</td>
+        {% for day in calendar:days %}
+        {% if day:rowStart %}</tr><tr>{% endif %}
+          <td class="txt" align="center"><a href="/party?from={{ day:timestamp }}" id="{{ day:id }}">{{ day:date }}. {{ day:day }}</a></td>
+        {% endfor %}
+        </tr>
+      </table>
 
-        <div class="cal-month" align="center">
-          {% for month in calendar:months %}
-            {% if month:current %}
-              <span class="current">{{ month:month }}</span>
-            {% else %}
-              <a href="/party?from={{ month:timestamp }}">{{ month:month }}</a>
-            {% endif %}
-          {% endfor %}
-        </div>
-
-        <table cellspacing="1" cellpadding="2" border="0" align="center" style="margin-top: 10px;">
-          <tr>
-            {% for name in weekdays %}
-            <td class="cal-day"><font color="#666666">{{ name }}</font></td>
-            {% endfor %}
-          </tr>
-          {% for week in calendar:weeks %}
-          <tr>
-            {% for day in week %}
-            <td class="cal-day">
-              {% if day %}
-                {% if day:parties > 0 %}
-                  <span class="has-events{% if day:current %} today{% endif %}"
-                        title="{{ day:parties }} event(s)">{{ day:date }}</span>
-                {% else %}
-                  <span{% if day:current %} class="today"{% endif %}>{{ day:date }}</span>
-                {% endif %}
-              {% endif %}
-            </td>
-            {% endfor %}
-          </tr>
-          {% endfor %}
-        </table>
-
-        <hr color="#222244">
-
-        <h3><font color="#9999ff">Coming up</font></h3>
-
-        {% if upcoming %}
-          {% for item in upcoming %}
-          <div class="party-row">
-            <a href="/party/{{ item:id }}"><b>{{ item:title }}</b></a>
-            <span class="party-date">{{ item:startDate }} &middot; {{ item:city }}{% if item:countryName %}, {{ item:countryName }}{% endif %}</span>
-          </div>
-          {% endfor %}
+      <br>
+      <table border="0" cellspacing="1" cellpadding="2" width="100%">
+      {% for group in calendar:rows %}
+        {% if group:newDay %}
+        <tr>
+          <td class="head" bgcolor="#200080" colspan="3" id="info">{{ group:date }}</td>
+        </tr>
         {% else %}
-          <p><font color="#999999">No parties are scheduled right now.
-          The calendar keeps everything that has been submitted.</font></p>
+        <tr>
+          <td bgcolor="#000066" colspan="3"><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+        </tr>
         {% endif %}
-
-      </div>
+        <tr>
+          <td colspan="3"><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+        </tr>
+        <tr>
+          <td class="head" id="title" colspan="3"><a href="/party/{{ group:party:id }}"><b>{{ group:party:titleShort }}</b></a></td>
+        </tr>
+        <tr>
+          <td class="txt"><b>{{ group:party:city }}</b></td>
+          <td class="txt">{{ group:party:type }}</td>
+          <td class="txt" align="right">{% if group:party:commentCount %}<font color="#999999">({{ group:party:commentCount }}) </font>{% endif %}<a href="/party/{{ group:party:id }}">Comments</a></td>
+        </tr>
+        <tr>
+          <td class="txt">{{ group:party:countryName }}</td>
+          <td class="txt">{{ group:party:flags }}</td>
+          <td class="txt">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="3"><img src="/images/spacer.gif" width="1" height="1" alt=""></td>
+        </tr>
+      {% endfor %}
+      </table>
+      <br>
 {% endblock %}

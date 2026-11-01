@@ -12,6 +12,11 @@ use Azera\Http\Response;
  * `/party` is the calendar, `/party/{id}` a single event. Submitting a party
  * needs an account (the legacy form was a password-protected edit view), so
  * that lives in the admin workstream, not here.
+ *
+ * The page keeps the legacy URL contract: the calendar is driven by a single
+ * unix timestamp, and every year / month / day cell links back with another
+ * one. The ported name for it is `?from=`; the legacy `?time_from=` is accepted
+ * too, because those links are bookmarked and indexed.
  */
 class PartyController extends BaseController
 {
@@ -23,13 +28,15 @@ class PartyController extends BaseController
         $timezone  = $this->config()['app']['timezone'] ?? 'Europe/Berlin';
         $timestamp = $this->requestedTimestamp();
 
-        $calendar = $service->calendar($timestamp, $timezone);
+        $calendar = $service->calendar($timestamp);
 
         return $this->page('web/party', [
-            'title'    => 'Party Calendar - HBR1',
+            'title'    => 'Party Base',
             'calendar' => $calendar,
-            'upcoming' => $service->upcoming($timestamp, 25),
-            'weekdays' => ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+            'bands'    => [
+                ['href' => '/party/new', 'label' => 'ENTER_A_PARTY', 'colour' => '#AAAA22'],
+                ['href' => '/party', 'label' => 'RESET_CALENDAR', 'colour' => '#AAAA22'],
+            ],
             'tz'       => $timezone,
         ]);
     }
@@ -53,22 +60,23 @@ class PartyController extends BaseController
     }
 
     /**
-     * The legacy page took `time_from` as a unix timestamp. It is clamped to a
-     * sane range so a hand-crafted value cannot ask for year 100000 and make
-     * the calendar build thousands of rows.
+     * The legacy page read `time_from` and fell back to "now". It is clamped to
+     * five years either side so a hand-crafted value cannot ask the calendar to
+     * build rows for year 100000.
      */
     private function requestedTimestamp(): int
     {
-        $value = $this->context()->request()->query('from');
+        $query = $this->context()->request()->query();
 
-        if (!is_numeric($value)) {
+        $value = $query['from'] ?? $query['time_from'] ?? null;
+
+        if (!is_scalar($value) || !is_numeric($value)) {
             return time();
         }
 
         $timestamp = (int) $value;
         $now       = time();
 
-        // Five years either side, matching the year list.
         return max($now - 5 * 366 * 86400, min($now + 5 * 366 * 86400, $timestamp));
     }
 }

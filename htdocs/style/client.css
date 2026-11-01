@@ -29,6 +29,12 @@ img:only-child {
 .head {
 	font-size: 11px
 }
+/* The legacy templates carried their own copy of `.txt` in an inline <style>;
+   the ported pages share this file instead, so it has to be here too. */
+.txt {
+	font-family: Verdana, Arial, Helvetica, sans-serif, Mono;
+	font-size: 10px;
+}
 .big {
 	font-size: 12px
 }
