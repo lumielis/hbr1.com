@@ -596,6 +596,29 @@ cost of leaving them is zero visible characters; the cost of a clever
 auto-fixer is damaging nine correct rows. Leave them, and edit by hand if that
 never sits right.
 
+### Backing up before the repair
+
+The repair changes stored bytes irreversibly, so take a backup first. **Make it
+with `mysqldump --default-character-set=latin1`, not phpMyAdmin.**
+
+A phpMyAdmin dump of this database looks fine — it writes `SET NAMES latin1` and
+keeps the accented characters byte for byte — but it runs in PHP, and PHP
+discards the five bytes cp1252 leaves undefined (`0x81 0x8D 0x8F 0x90 0x9D`)
+when it converts a latin1 string. They arrive in the dump as `?`. Verified by
+reading the dump: **17 values** across `chat`, `guestbook`, `party` and
+`party_comment_1` hold one of those bytes, and all 17 are `?` in the file.
+
+That is 17 bytes out of ~19 MB, none of them meaningful text — but one of the
+17 is `party.location #2611`, which is in the `--repair` set, so restoring that
+backup would not reproduce the current state exactly. Only one value, only its
+0x9D; still, a backup that cannot be restored exactly is not the backup you
+want before an irreversible change.
+
+`mysqldump` does no such conversion, so its output restores bit for bit. If only
+phpMyAdmin is available, verify the dump before trusting it by comparing the
+values with `CAST(col AS BINARY)` against the escaped text in the file — an
+exact byte comparison, not a grep for the visible characters.
+
 ### The playout schemas are not ours
 
 `radiodj_*` belong to RadioDJ; it writes them and it has its own idea about
