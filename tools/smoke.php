@@ -61,6 +61,10 @@ $checks = [
     ['/mixes', 200],
     ['/mixes/ambient', 200],
     ['/mixes/nope', 404],
+    // The request form and its security image. The image is issued per fetch,
+    // so it is checked for a PNG rather than a status alone.
+    ['/request/trance/1', 200],
+    ['/request/code.png', 200],
     ['/chat', 200],
     // The iPhone chooser, and the admin placeholder that replaced the legacy
     // self-redirecting frameset.

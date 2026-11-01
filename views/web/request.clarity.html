@@ -1,57 +1,81 @@
+{# The song request form - `template/tracklist.req.phtml`.
+
+   Three details here are copied from the legacy template on purpose, so they
+   should not be "tidied" later:
+
+   The heading is "REQUEST RESULT", not "REQUEST". The legacy page showed the
+   outcome of a request under that band and wrapped the form in the same band,
+   so the form and its result were one page.
+
+   Both SUBMENU bands read GO_BACK and are coloured #AAAA22, not the #AACC33
+   `CHANGE_STATION` of the catalogue.
+
+   The captcha message really does say "schown". That typo is in production, and
+   the image, the wording and the layout are all part of what the page looks like
+   to a listener, so it is reproduced rather than corrected.
+
+   The GO_BACK target uses `backUrl`, which the controller builds from the
+   station slug plus the `?from=` offset the catalogue passed in. The legacy page
+   took the whole URL from a `backlink` parameter and navigated to it; the port
+   keeps only the one number and rebuilds the path, so it cannot be pointed
+   elsewhere. #}
 {% extends "layouts/page" %}
 
 {% set submenu = true %}
 
-{% block title %}HBR1 Request{% endblock %}
-{% block heading %}REQUEST{% endblock %}
+{% block title %}HBR1 Inventory Request{% endblock %}
+{% block heading %}REQUEST RESULT{% endblock %}
 {% block pageid %}PageID = 'inventory';{% endblock %}
 
-{% block submenu_href %}/mixes{% endblock %}
-{% block submenu_label %}CHANGE_STATION{% endblock %}
-{% block submenu_bottom_href %}/mixes{% endblock %}
-{% block submenu_bottom_label %}CHANGE_STATION{% endblock %}
+{% block submenu_href %}{{ backUrl }}{% endblock %}
+{% block submenu_label %}GO_BACK{% endblock %}
+{% block submenu_colour %}#AAAA22{% endblock %}
+
+{% block submenu_bottom_href %}{{ backUrl }}{% endblock %}
+{% block submenu_bottom_label %}GO_BACK{% endblock %}
+{% block submenu_colour_bottom %}#AAAA22{% endblock %}
 
 {% block content %}
-<p><b>{{ station:title }}</b></p>
+          <div style="margin-top: 25px; margin-bottom: 25px;">
 
-        {% if error is defined and error %}
-          <p><font color="#FF6666">{{ error }}</font></p>
-        {% endif %}
+          {% if queued is defined and queued %}
+          <b>{% if track:artist %}{{ track:artist }} - {% endif %}{{ track:title }}</b>
 
-        {% if queued is defined and queued %}
-          <p><font color="#88FF88">Your request has been queued.</font></p>
+          <div style="margin-top: 25px; margin-bottom: 25px;">
+            <b>Your request has sucessfully been delivered and should play soon.</b>
+          </div>
+
+          {% else %}
+          <font color="#999999">Your wish for playing</font>
+
           <p>
-            {% if track is defined and track %}
-              {{ track:artist }} &ndash; {{ track:title }}
-            {% endif %}
-          </p>
-          <p style="margin-top: 14px;">
-            <a href="/mixes/{{ station:slug }}">[back to the catalogue]</a>
-            &middot;
-            <a href="/playlist/{{ station:slug }}">[see the queue]</a>
+            <b>{% if track is defined and track %}{% if track:artist %}{{ track:artist }} - {% endif %}{{ track:title }}{% else %}[track not available]{% endif %}</b>
           </p>
 
-        {% elseif track is defined and track %}
-          <p>{{ track:artist }} &ndash; {{ track:title }}</p>
+          {% if error is defined and error %}
+          <p><font color="#cc0000"><b>{{ error }}</b></font></p>
+          {% endif %}
 
-          <form method="post" action="/request/{{ station:slug }}">
-            <input type="hidden" name="song" value="{{ track:id }}">
+          {% if track is defined and track %}
+          <p>
+            <img width="100" height="30" src="{{ captcha }}" style="border: 1px solid #0055cc;" alt="security code">
+          </p>
+
+          <font color="#6666ff">To verify your input please enter the code schown above</font>
+
+          <p>
+          <form action="/request/{{ station:slug }}" method="post">
             <input type="hidden" name="_csrf_token" value="{{ csrf }}">
-            <p style="margin-top: 12px;">
-              <input type="submit" value="Request this track">
-              &nbsp;
-              <a href="/mixes/{{ station:slug }}">[cancel]</a>
-            </p>
+            <input type="hidden" name="song" value="{{ track:id }}">
+            {% if from is defined and from is not null %}
+            <input type="hidden" name="from" value="{{ from }}">
+            {% endif %}
+            <input type="text" name="code" size="6" maxlength="5" class="blue" autocomplete="off">
+            <input type="submit" value="OK" class="blue2">
           </form>
+          </p>
+          {% endif %}
+          {% endif %}
 
-          <p style="margin-top: 18px;"><font color="#666666" size="1">
-            Requests are limited per listener: 10 per day and 2 per hour.
-            A track, title or artist that has played recently cannot be
-            requested again straight away.
-          </font></p>
-
-        {% else %}
-          <p><font color="#999999">[track not available]</font></p>
-          <p><a href="/mixes/{{ station:slug }}">[back to the catalogue]</a></p>
-        {% endif %}
+          </div>
 {% endblock %}

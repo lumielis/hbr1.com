@@ -123,11 +123,19 @@ final class LegacyUrlMapper
                 return '/';
             }
 
-            // `tracklist` also served the request flow: every "Play it" link on
+            // `tracklist` also served the request flow. Every "Play it" link on
             // the Inventory page was `module=tracklist&cmd=request&songid=N`,
-            // and inbound bookmarks and old search results still use it.
-            if ($base === '/mixes' && ($query['cmd'] ?? null) === 'request') {
+            // and its form posted back to `cmd=reqver`. Inbound bookmarks and
+            // old search results still use both.
+            if ($base === '/mixes' && in_array($query['cmd'] ?? null, ['request', 'reqver'], true)) {
                 return self::toRequest($query);
+            }
+
+            // The request form's security image. The legacy URL was an `<img
+            // src>` on that form, so a page cached before the port would
+            // otherwise 301 to the catalogue and show a broken image.
+            if ($base === '/mixes' && ($query['show'] ?? null) === 'secimg') {
+                return '/request/code.png';
             }
 
             return self::withStation($base, $query);
@@ -148,6 +156,9 @@ final class LegacyUrlMapper
      * The legacy link also carried a `backlink` round-trip; the ported form
      * derives that from the station and mix, so it is not needed - and not
      * trusted, since the legacy code sent the browser to whatever it held.
+     * `cmd=reqver` (the form's own POST target) resolves to the same page, so an
+     * abandoned form re-fetched by the back button still lands on the form
+     * rather than on a catalogue page.
      */
     private static function toRequest(array $query): string
     {

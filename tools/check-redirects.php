@@ -20,8 +20,12 @@ $cases = [
     '/cgi-bin/main.php?module=tracklist',
     '/cgi-bin/main.php?module=tracklist&station=Trance',
     // Every Inventory row's "Play it" link, and the shape of any bookmark to
-    // the old request page.
+    // the old request page. `reqver` is the form's own POST target: a browser
+    // that re-fetches it (back button, bookmark) must land on the form.
     '/cgi-bin/main.php?module=tracklist&cmd=request&station=Trance&songid=2',
+    '/cgi-bin/main.php?module=tracklist&cmd=reqver&station=Trance&songid=2',
+    // The request form's security image, as an `<img src>` on a cached page.
+    '/cgi-bin/main.php?module=tracklist&show=secimg&time=1',
     '/cgi-bin/main.php?module=listen&station=Ambient',
     '/cgi-bin/main.php?module=topframe',
     '/cgi-bin/main.php?module=gallery',

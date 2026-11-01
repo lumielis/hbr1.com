@@ -90,6 +90,10 @@ return [
         'log'    => BASE_DIR . '/var/log',
         'public' => BASE_DIR . '/public',
         'data'   => BASE_DIR . '/data',
+        // The TrueType face drawn by the request form's security image. It is
+        // the identical file the legacy `securimage` used, so the digits look
+        // the same; `security.ttf` is 38 KB and committed.
+        'font_security' => BASE_DIR . '/data/security.ttf',
         // The retired document root. Still holds the static pages the
         // frameset references (`/ltop.htm`, `/djs.htm`, …) plus the asset
         // directories the web server aliases. Read-only.

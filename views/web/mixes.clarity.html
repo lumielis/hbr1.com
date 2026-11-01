@@ -9,7 +9,10 @@
    The legacy `Play it` link carried a `backlink` round-trip so the request page
    could send the listener back to the exact page they left. `/request/...`
    knows the station and the mix, so the backlink is derived rather than passed
-   - it cannot go stale or be pointed at another host.
+   - it cannot go stale or be pointed at another host. It carries the numeric
+   page offset only (`?from=`), because that is the one piece of the round-trip
+   the request page cannot derive, and without it GO_BACK would land on a
+   random page - the catalogue picks one when `?offset=` is absent.
 
    The pager reproduces `page_navigation()`: a seven-page window that holds the
    current page near its left edge until it would overrun the last page, then
@@ -77,7 +80,7 @@
               <td><img src="/images/spacer.gif" width="2" height="1" alt=""></td>
               <td valign="top">
                 {% if canRequest %}
-                <a href="/request/{{ current:slug }}/{{ row:id }}">Play it</a>
+                <a href="/request/{{ current:slug }}/{{ row:id }}{% if pager %}?from={{ pager:offset }}{% endif %}">Play it</a>
                 {% else %}
                 <font color="gray">Request</font>
                 {% endif %}

@@ -40,7 +40,9 @@ What works against the live server right now:
 /mixes                  the station catalogue: pick a station ("Inventory")
 /mixes/{station}        paginated catalogue for one station (?offset=)
 /tracklist, /tracklist/{station}   301 -> /mixes (the legacy name)
-/request/{station}/{id} song request form (CSRF, per-IP limits)
+/request/{station}/{id} song request form (CSRF, captcha, per-IP limits)
+/request/code.png       the form's security image; also the target for the legacy
+                        `?module=tracklist&show=secimg`
 /topframe               clock/header frame
 /iphone                 oversized station chooser for the iPhone
 /admin                  placeholder until W8 (the real admin area)
@@ -277,13 +279,50 @@ The endpoint is therefore covered like this:
 
 - `RequestServiceTest` — all limit and repeat rules against synthetic history
   (11 cases), no I/O at all.
+- `CaptchaServiceTest` — the security image: five digits, single use, the
+  15-minute expiry, and that the render is a real 100x30 PNG rather than a
+  blank one (13 cases).
 - `RequestControllerTest` — the reject paths (unknown station, station without
-  request support) and that CSRF is actually registered.
+  request support, a wrong captcha code), that the form renders the image, that
+  the image route binds the code to the session, and that GO_BACK carries the
+  catalogue offset (9 cases). Every case rejects before the playout call, so
+  none of them can queue a track.
 - The accept path is verified against `evaluate()` returning `STATUS_OK`, and
   the real submission is left untested by design.
 
 If a staging RadioDJ instance ever exists, point `radio_dj_request_url` at it
 and add a real end-to-end case.
+
+## The request form's security image
+
+The legacy captcha was `securimage` 3.2RC2 from 2012, which does not parse on
+PHP 8.3 at all: it uses curly-brace string offsets (`$str{0}`), removed in PHP
+8.0. It was therefore replaced, not restored.
+
+`App\Services\CaptchaService` reproduces the picture and the protocol, not a
+new design: **100x30 PNG**, five digits from `1234567890`, background `#100060`,
+text `#33ccff`, lines `#0077ff`, two wandering lines, noise level 1,
+perturbation 0.15 — the exact settings from the `show=secimg` branch of
+`include/tracklist.php`. The drawing pipeline is securimage's: a 5x supersampled
+image for the digits and noise, two lines on the final image, then a three-pole
+lens distortion sampling the big image back down. The same `data/security.ttf`
+is used. Colour histograms of a production image and a port image match (13
+colours in production, ~290 text pixels from `#33ccff`), so the two are
+indistinguishable at a glance.
+
+The code lives in the session with a 15-minute expiry (securimage's default) and
+is **single-use**: a correct submission removes it, so a captured form cannot be
+replayed. It is issued by `/request/code.png`, not by the form page, because the
+form emits only an `<img>` tag — the code must be written when the browser
+fetches the picture it is about to show.
+
+`/request/code.png` is also the redirect target for the legacy
+`main.php?module=tracklist&show=secimg`, so a page cached before the port shows
+a working image instead of 301-ing to the catalogue.
+
+Captcha failures answer **400** with a fresh image, not 429: a wrong code is a
+typo, while the per-IP rules in `RequestService` remain the control that bounds
+abuse. The captcha stops scripted bulk submission; the limits bound it.
 
 ## Layout
 

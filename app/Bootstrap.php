@@ -156,6 +156,15 @@ class Bootstrap implements BootstrapProvider
             fn() => new \App\Services\ClockService()
         );
 
+        // The request form's security image. It needs the legacy TTF, which is
+        // the one asset the ported site reads from `data/`.
+        $ctx->set(
+            \App\Services\CaptchaService::class,
+            fn() => new \App\Services\CaptchaService(
+                AppContext::instance()->Config['paths']['font_security']
+            )
+        );
+
         $ctx->set(
             \App\Services\TickerService::class,
             fn() => new \App\Services\TickerService(
@@ -217,6 +226,12 @@ class Bootstrap implements BootstrapProvider
         // Song requests.
         $router->add('GET', '/request/{station:alpha}/{song:int}', 'Web\\RequestController::formAction');
         $router->add('POST', '/request/{station:alpha}', 'Web\\RequestController::submitAction');
+
+        // The security image on the request form. The legacy URL
+        // (`?module=tracklist&show=secimg`) is a cache-buster only; this path
+        // is the canonical one. It is a static segment rather than a typed
+        // parameter so it cannot be shadowed by `{song:int}` above.
+        $router->add('GET', '/request/code.png', 'Web\\RequestController::imageAction');
 
         // The iPhone chooser (`apax.cgi?run=iphone`). Oversized buttons, one
         // per station; the URL mapper sent this to /iphone but no such route
