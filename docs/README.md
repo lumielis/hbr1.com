@@ -598,26 +598,49 @@ never sits right.
 
 ### Backing up before the repair
 
-The repair changes stored bytes irreversibly, so take a backup first. **Make it
-with `mysqldump --default-character-set=latin1`, not phpMyAdmin.**
+The repair changes stored bytes irreversibly, so take a backup first, and choose
+the export encoding deliberately. Two choices are exact and one silently loses
+data.
 
-A phpMyAdmin dump of this database looks fine — it writes `SET NAMES latin1` and
-keeps the accented characters byte for byte — but it runs in PHP, and PHP
-discards the five bytes cp1252 leaves undefined (`0x81 0x8D 0x8F 0x90 0x9D`)
-when it converts a latin1 string. They arrive in the dump as `?`. Verified by
-reading the dump: **17 values** across `chat`, `guestbook`, `party` and
-`party_comment_1` hold one of those bytes, and all 17 are `?` in the file.
+MariaDB's `latin1` is really cp1252, and PHP's `latin1` is ISO-8859-1. They
+disagree on the five bytes cp1252 leaves undefined: `0x81 0x8D 0x8F 0x90 0x9D`.
+phpMyAdmin converts the string in PHP before writing the file, so the "file
+encoding" it asks for decides what happens to those five bytes:
 
-That is 17 bytes out of ~19 MB, none of them meaningful text — but one of the
-17 is `party.location #2611`, which is in the `--repair` set, so restoring that
-backup would not reproduce the current state exactly. Only one value, only its
-0x9D; still, a backup that cannot be restored exactly is not the backup you
-want before an irreversible change.
+| phpMyAdmin choice | restores exactly? |
+|---|---|
+| **UTF-8** | **yes** |
+| **latin1 / ISO-8859-1** | **yes** |
+| cp1252 / Windows-1252 | no — the 5 undefined bytes become `?` |
+| latin9 / ISO-8859-15 | no — `€` and seven other bytes become `?` |
 
-`mysqldump` does no such conversion, so its output restores bit for bit. If only
-phpMyAdmin is available, verify the dump before trusting it by comparing the
-values with `CAST(col AS BINARY)` against the escaped text in the file — an
-exact byte comparison, not a grep for the visible characters.
+cp1252 looks like the obvious pick and is the wrong one: it *adds* holes to
+bytes that ISO-8859-1 defines fine. UTF-8 is the safest because it can represent
+everything.
+
+The current dump was taken with **cp1252**, so it is not exact. Measured against
+the live database, byte for byte:
+
+- **17 values** differ, losing **43 hole bytes** in total, replaced by `?`;
+- affected: 1 `chat.name` (`0x90`), 3 `guestbook.content` (`0x81`), 1
+  `party.location` (`0x9D`), 12 `party_comment_1` (`0x81`);
+- exactly one of them, `party.location #2611`, is in the `--repair` set — so a
+  restore would not reproduce that row.
+
+43 bytes out of 19 MB, and none of them meaningful text — but a backup taken
+before an irreversible change should restore bit for bit, and this one will not.
+
+Better options, in order:
+
+1. `mysqldump --default-character-set=latin1` — no conversion at all.
+2. phpMyAdmin with **UTF-8** as the file encoding.
+3. phpMyAdmin with **latin1**, which restores exactly as long as the file is
+   read back as latin1.
+
+Either way, verify rather than assume: compare each value's `CAST(col AS
+BINARY)` against the escaped text in the file. Grepping for the visible
+characters is not enough — that is what made an earlier check of this dump look
+clean while 17 values were already altered.
 
 ### The playout schemas are not ours
 
