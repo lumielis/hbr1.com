@@ -279,6 +279,34 @@ class GalleryPageTest extends TestCase
         );
     }
 
+    /**
+     * The review finding: twelve galleries store BBC markup in `GAL_Info`, and
+     * production printed it through `bbc_to_html()`.
+     */
+    public function testGalleryInfoRendersTheLegacyCreditMarkup(): void
+    {
+        $target = null;
+
+        foreach ($this->gallery->categories() as $category) {
+            foreach ($this->gallery->galleriesFor($category['id']) as $gallery) {
+                if (str_contains($gallery['info'], '[a=') || str_contains($gallery['info'], '[a]')) {
+                    $target = [$category, $gallery];
+                    break 2;
+                }
+            }
+        }
+
+        if ($target === null) {
+            self::markTestSkipped('No gallery info carries legacy markup');
+        }
+
+        [$category, $gallery] = $target;
+        $body = $this->page('/gallery/' . $category['id'] . '/' . $gallery['id']);
+
+        self::assertStringNotContainsString($gallery['info'], $body, 'raw BBC markup leaked into the page');
+        self::assertMatchesRegularExpression('!<a href="https?://[^"]+"[^>]*>!', $body);
+    }
+
     /** Render a public gallery route through the real dispatcher. */
     private function page(string $path): string
     {

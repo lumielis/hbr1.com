@@ -1,0 +1,52 @@
+{# The guestbook form - production `apax.cgi?run=gbms&cmd=submit`.
+
+   Reference: `temp/prod-guestbook-submit.html`. The legacy form is its own
+   page: GUESTBOOK band, a left-aligned "Welcome to our Guestbook", the
+   spam-filter note, a "Back to the Entries" link and a cell-padded table.
+   Field names stay canonical (`submitter`/`email`/`content`); the legacy
+   `gb_` prefix was only a PAB form convention and is not visible. #}
+{% extends "layouts/page" %}
+
+{% block title %}The Guestbook of HBR1.com{% endblock %}
+{% block heading %}GUESTBOOK{% endblock %}
+{% block pageid %}PageID = 'guestbook';{% endblock %}
+{# The submit page's well is centred in production; only the listing uses
+   align="left". The layout's default centre alignment is therefore kept. #}
+
+{% block signature %}<td class="guestbook-signature"><i>(c) <a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> 2001-2005</i></td>{% endblock %}
+
+{% block content %}
+<h2 class="guestbook-heading guestbook-heading-left">Welcome to our Guestbook</h2>
+<p class="guestbook-intro guestbook-intro-left">Spam-Filter: Your E-Mail address will be protected by a runtime encryption.</p>
+<p class="guestbook-intro guestbook-intro-left"><a href="/guestbook"><b>Back to the Entries</b></a></p>
+
+{% if errors:submitter or errors:email or errors:content %}
+<div class="guestbook-errors">
+{% if errors:submitter %}<p class="guestbook-error">{{ errors:submitter }}</p>{% endif %}
+{% if errors:email %}<p class="guestbook-error">{{ errors:email }}</p>{% endif %}
+{% if errors:content %}<p class="guestbook-error">{{ errors:content }}</p>{% endif %}
+</div>
+{% endif %}
+
+<form action="/guestbook" method="post">
+<input type="hidden" name="_csrf_token" value="{{ csrf }}">
+<table class="guestbook-form">
+  <tr>
+    <td class="guestbook-label">Name:</td>
+    <td><input type="text" class="blue guestbook-input" name="submitter" value="{{ values:submitter }}" maxlength="64" size="40"></td>
+  </tr>
+  <tr>
+    <td class="guestbook-label">E-Mail:</td>
+    <td><input type="text" class="blue guestbook-input" name="email" value="{{ values:email }}" maxlength="128" size="40"></td>
+  </tr>
+  <tr>
+    <td class="guestbook-label">Comment:</td>
+    <td><textarea class="blue guestbook-input" name="content" cols="50" rows="8">{{ values:content }}</textarea></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><input type="submit" class="blue2 guestbook-input" value="Submit"></td>
+  </tr>
+</table>
+</form>
+{% endblock %}

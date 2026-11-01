@@ -111,3 +111,22 @@ line.
 - `tests/LegacyMarkupTest.php` (added)
 - `tests/GalleryPageTest.php` (added)
 - `docs/PARITY.md`, `docs/README.md`, `.claude/tdd/gallery-parity.tdd.md` (docs)
+
+## Addendum — resolved on `guestbook-parity` (2026-11-01)
+
+- **C1 fixed.** `LegacyMarkup` now rebuilds the allowed inline tags and drops
+  every attribute, so `<b onclick>` and `<br onmouseover>` cannot survive.
+  `LegacyMarkupTest::testAllowedTagsLoseTheirAttributes`.
+- **H1 fixed.** `GalleryService` exposes `infoHtml` and the gallery view
+  renders it after sanitizing. `GalleryPageTest::testGalleryInfoRendersTheLegacyCreditMarkup`.
+- **M1 fixed.** Protocol-relative URLs are rejected.
+  `LegacyMarkupTest::testProtocolRelativeUrlsAreNotTreatedAsLocal`.
+- **M2 still open.** The per-gallery `COUNT`/`locked` fields remain unused by
+  the views.
+- **New issue fixed while porting the guestbook:** entry content was printed
+  raw. It is now allowlisted and autolinked `formatGuestbookContent()`, with
+  tests for scripts, attributes and unsafe anchors.
+
+Re-validation: 325 tests / 1552 assertions pass, lint parses 137 files, smoke
+is 43/43, coverage is 73.61 % overall. No critical or high findings remain;
+the decision becomes **APPROVE with comments** once M2 is triaged.

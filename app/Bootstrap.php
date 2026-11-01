@@ -124,7 +124,8 @@ class Bootstrap implements BootstrapProvider
         $ctx->set(
             \App\Services\GuestbookService::class,
             fn() => new \App\Services\GuestbookService(
-                AppContext::instance()->dbManager()->getDefault()
+                AppContext::instance()->dbManager()->getDefault(),
+                AppContext::instance()->Config['app']['timezone'] ?? 'Europe/Berlin'
             )
         );
 
@@ -257,6 +258,9 @@ class Bootstrap implements BootstrapProvider
 
         // Community (W6).
         $router->add('GET', '/guestbook', 'Web\\GuestbookController::indexAction');
+        // The legacy listing linked to `?cmd=submit`, a separate page. Keep
+        // that shape, with a canonical path.
+        $router->add('GET', '/guestbook/submit', 'Web\\GuestbookController::formAction');
         $router->add('POST', '/guestbook', 'Web\\GuestbookController::submitAction');
 
         $router->add('GET', '/party', 'Web\\PartyController::indexAction');

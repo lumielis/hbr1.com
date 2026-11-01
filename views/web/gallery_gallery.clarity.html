@@ -20,7 +20,7 @@
 <a id="gallery"></a>
 <br>
 <p class="head">
-  <span class="gallery-title">{{ gallery:title }}</span>{% if gallery:info %}<br><span class="copyright gallery-intro">{{ gallery:info }}</span>{% endif %}
+  <span class="gallery-title">{{ gallery:title }}</span>{% if gallery:infoHtml %}<br><span class="copyright gallery-intro">{{ gallery:infoHtml|raw }}</span>{% endif %}
 </p>
 
 {% if rows %}

@@ -1,19 +1,21 @@
 {% extends "layouts/page" %}
 
-{% block title %}HBR1 Guestbook{% endblock %}
+{% block title %}The Guestbook of HBR1.com{% endblock %}
 {% block heading %}GUESTBOOK{% endblock %}
 {% block pageid %}PageID = 'guestbook';{% endblock %}
+{% block content_attributes %} class="guestbook-well"{% endblock %}
+
+{% block signature %}<td class="guestbook-signature"><i>(c) <a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> 2001-2005</i></td>{% endblock %}
 
 {% block content %}
-<div style="margin: 25px 15px; text-align: left;">
-        {% if pending %}
-          <p><b><font color="#9999ff">Thank you.</font></b></p>
-          <p><font color="#999999">Your entry has been saved and is waiting for
-          review. Entries that look like advertising are held back.</font></p>
-        {% else %}
-          <p><b><font color="#9999ff">Thank you for signing the guestbook.</font></b></p>
-          <p><font color="#999999">Your entry is now visible.</font></p>
-        {% endif %}
-        <p><a href="/guestbook">&laquo; back to the guestbook</a></p>
-      </div>
+<div class="guestbook-thanks">
+{% if pending %}
+<p class="guestbook-thanks-title"><b>Thank you.</b></p>
+<p class="guestbook-thanks-note">Your entry has been saved and is waiting for review. Entries that look like advertising are held back.</p>
+{% else %}
+<p class="guestbook-thanks-title"><b>Thank you for signing the guestbook.</b></p>
+<p class="guestbook-thanks-note">Your entry is now visible.</p>
+{% endif %}
+<p><a href="/guestbook">&laquo; back to the guestbook</a></p>
+</div>
 {% endblock %}

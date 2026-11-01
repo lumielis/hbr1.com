@@ -77,6 +77,7 @@ class GalleryService
             $id = (int) $gallery->GAL_Index;
 
             $title = (string) $gallery->GAL_Title;
+            $info  = (string) $gallery->GAL_Info;
 
             $out[] = [
                 'id'         => $id,
@@ -84,7 +85,9 @@ class GalleryService
                 // Production cuts the listing title to 20 characters with
                 // `cut_string()`, breaking at the last space when it can.
                 'titleShort' => LegacyMarkup::cut($title, 20, '..'),
-                'info'       => (string) $gallery->GAL_Info,
+                'info'       => $info,
+                // The legacy page ran the info line through `bbc_to_html()`.
+                'infoHtml'   => LegacyMarkup::bbcToHtml($info),
                 'thumb'      => $this->randomPictureForGallery($id),
                 'count'      => GAPGalleryPicture::count(['GAP_GAL_Index' => $id]),
                 'locked'     => trim((string) $gallery->GAL_Password) !== '',
@@ -107,11 +110,14 @@ class GalleryService
             return null;
         }
 
+        $info = (string) $gallery->GAL_Info;
+
         return [
             'id'       => (int) $gallery->GAL_Index,
             'category' => (int) $gallery->GAL_MCG_Index,
             'title'    => (string) $gallery->GAL_Title,
-            'info'     => (string) $gallery->GAL_Info,
+            'info'     => $info,
+            'infoHtml' => LegacyMarkup::bbcToHtml($info),
             'locked'   => trim((string) $gallery->GAL_Password) !== '',
         ];
     }

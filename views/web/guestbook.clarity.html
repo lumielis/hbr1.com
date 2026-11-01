@@ -1,81 +1,64 @@
+{# The guestbook listing - production `apax.cgi?run=gbms`.
+
+   Production reference: `temp/prod-guestbook.html`, captured with a freshly
+   minted legacy `sid`. The page is its own frame variant: the well is
+   left-aligned, the title is an Arial 14 px #4477AA h2, each entry is fenced
+   by a 1 px #333BAA splitter, and the signature is "(c) HBR1 2001-2005".
+
+   E-mail addresses are obfuscated exactly as production did it: the visible
+   href is the name, and `decryptEmail()` replaces it with the real address
+   using `PAB::Crypt::Xor` from /jscript/crypt.js. #}
 {% extends "layouts/page" %}
 
-{% block title %}HBR1 Guestbook{% endblock %}
+{% block title %}The Guestbook of HBR1.com{% endblock %}
 {% block heading %}GUESTBOOK{% endblock %}
 {% block pageid %}PageID = 'guestbook';{% endblock %}
+{% block content_attributes %} class="guestbook-well"{% endblock %}
 
 {% block styles %}
-<style>
-.entry { border-bottom: 1px solid #222244; padding: 8px 0; }
-.entry-name { font-size: 11px; font-family: Verdana, Arial, sans-serif; color: #9999FF; font-weight: bold; }
-.entry-date { font-size: 10px; font-family: Arial, sans-serif; color: #666666; }
-.entry-body { font-size: 11px; font-family: Verdana, Arial, sans-serif; }
-.field-error { color: #FF5555; font-size: 10px; font-family: Arial, sans-serif; }
-.pager a { margin: 0 3px; }
-textarea { width: 420px; height: 90px; }
-</style>
+<script src="/jscript/crypt.js"></script>
+<script>
+<!--
+function decryptEmail( anchor, crypt, query ) {
+	location.href = 'mailto:'
+		+ xor_decrypt_hex( crypt, {{ emailKey }} )
+		+ ( query ? '?' + query : '' );
+	return false;
+}
+//-->
+</script>
 {% endblock %}
 
+{% block signature %}<td class="guestbook-signature"><i>(c) <a href="http://www.hbr1.com" class="footer" target="_top">HBR1</a> 2001-2005</i></td>{% endblock %}
+
 {% block content %}
-{% if page is defined and page:entries %}
-          {% for entry in page:entries %}
-          <div class="entry">
-            <span class="entry-name">{{ entry:submitter }}</span>
-            <span class="entry-date">{{ entry:date }}</span>
-            <div class="entry-body">{{ entry:content|raw }}</div>
-          </div>
-          {% endfor %}
-        {% else %}
-          <p><font color="#999999">[no entries yet]</font></p>
-        {% endif %}        {% if pager is defined and pager:last > 1 %}
-        <p class="pager" align="center">
-          {% if pager:hasPrev %}
-            <a href="/guestbook?offset={{ pager:prevOff }}">&laquo; newer</a>
-          {% endif %}
-          <font color="#666666">page {{ pager:current }} of {{ pager:last }}</font>
-          {% if pager:hasNext %}
-            <a href="/guestbook?offset={{ pager:nextOff }}">older &raquo;</a>
-          {% endif %}
-        </p>
-        {% endif %}
+<h2 class="guestbook-heading">Welcome to our Guestbook</h2>
+<p class="guestbook-intro">Compliments and Criticism. Pleasures and Pain. The Guestbook is open for your comments.</p>
+<p class="guestbook-actions"><a href="/guestbook/submit"><b>Submit Your Comment</b></a></p>
 
-        <hr color="#222244">
+{% for entry in page:entries %}
+<div class="splitter"></div>
+<p class="guestbook-text guestbook-entry">{% if entry:emailCrypt %}<a href="mailto:{{ entry:submitter }}" onclick="return decryptEmail(this,'{{ entry:emailCrypt }}','subject=your%20comment%20on%20the%20guestbook%20of%20hbr1')">{{ entry:submitter }}</a>{% else %}{{ entry:submitter }}{% endif %} wrote at {{ entry:date }} (utc) following comment:<br></p>
+<blockquote class="Text">{{ entry:contentHtml|raw }}</blockquote>
+<div class="splitter"></div>
+{% endfor %}
 
-        <h3><font color="#9999ff">Sign the guestbook</font></h3>
+{% if pager:last > 1 %}
+<div class="guestbook-pager">
+<table class="guestbook-pager-table">
+<tr>
+{% if pager:hasPrev %}<td class="Nav_Control"><a href="/guestbook?offset={{ pager:prevOff }}">&lt; Newer entries</a>&nbsp;&nbsp;</td>{% endif %}
+{% if pager:start > 1 %}<td class="Nav_Page"><a href="/guestbook?offset=0"><b>1</b></a> .. </td>{% endif %}
+{% for item in pager:pages %}
+{% if item:current %}<td class="Nav_Current">{{ item:number }}</td>{% else %}<td class="Nav_Page"><a href="/guestbook?offset={{ item:offset }}">{{ item:number }}</a></td>{% endif %}
+<td class="Nav_Page">&nbsp;</td>
+{% endfor %}
+{% if pager:end < pager:last %}<td class="Nav_Page"> .. <a href="/guestbook?offset={{ pager:lastOffset }}"><b>{{ pager:last }}</b></a></td><td class="Nav_Page">&nbsp;</td>{% endif %}
+{% if pager:hasNext %}<td class="Nav_Control">&nbsp;&nbsp;<a href="/guestbook?offset={{ pager:nextOff }}">Older entries &gt;</a></td>{% endif %}
+</tr>
+</table>
+</div>
+{% endif %}
 
-        {% if errors:submitter or errors:email or errors:content %}
-        <p class="field-error">Please correct the marked fields.</p>
-        {% endif %}
-
-        <form method="post" action="/guestbook">
-          <input type="hidden" name="_csrf_token" value="{{ csrf }}">          <table cellspacing="2" cellpadding="2" border="0">
-            <tr>
-              <td class="entry-body" align="right">Name</td>
-              <td><input type="text" name="submitter" size="32" maxlength="255"
-                         value="{{ values:submitter }}"></td>
-            </tr>
-            {% if errors:submitter %}
-            <tr><td></td><td class="field-error">{{ errors:submitter }}</td></tr>
-            {% endif %}
-            <tr>
-              <td class="entry-body" align="right">E-mail</td>
-              <td><input type="text" name="email" size="32" maxlength="255"
-                         value="{{ values:email }}"></td>
-            </tr>
-            {% if errors:email %}
-            <tr><td></td><td class="field-error">{{ errors:email }}</td></tr>
-            {% endif %}
-            <tr>
-              <td class="entry-body" align="right" valign="top">Message</td>
-              <td><textarea name="content">{{ values:content }}</textarea></td>
-            </tr>
-            {% if errors:content %}
-            <tr><td></td><td class="field-error">{{ errors:content }}</td></tr>
-            {% endif %}
-            <tr>
-              <td></td>
-              <td><input type="submit" value="Submit"></td>
-            </tr>
-          </table>
-        </form>
+<div class="guestbook-end">-THE END-<br>&nbsp;</div>
 {% endblock %}

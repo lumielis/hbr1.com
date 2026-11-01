@@ -47,9 +47,33 @@ tall, with a 1 px global vertical offset inherited from the shared frame.
 | Credit links work; legacy links were broken | Agreed policy: same look, working links. |
 | 1 px vertical offset | The shared frame renders in standards mode with an explicit `img:only-child` compensation; pre-existing and accepted. |
 
+## Guestbook — verified 2026-11-01
+
+References: `temp/prod-guestbook.html` and `temp/prod-guestbook-submit.html`,
+captured with a freshly minted legacy `sid` (the page is unreachable without
+it; the algorithm and key are in `gbms.pab.pl` / `PAB::Crypt::Xor`).
+
+| Route | Production reference | Result |
+|---|---|---|
+| `/guestbook` | `apax.cgi?run=gbms` | Match. GUESTBOOK band, centred welcome heading and intro, Submit link, 1 px `#333BAA` splitters around every entry, obfuscated e-mail links, `Europe/Berlin` dates labelled `(utc)`, `Nav_*` pager, `-THE END-`, `(c) HBR1 2001-2005` signature. |
+| `/guestbook/submit` | `apax.cgi?run=gbms&cmd=submit` | Match. Centred well, left-aligned welcome/spam-filter note, `Back to the Entries`, centred 3 px-padded form, 11 px Verdana fields, blue field chrome. |
+
+Measured: h2 top 54, first splitter top 139, first entry top 151, document
+height 2704 — identical to production. The pager sits 6 px lower and the
+submit button 3 px lower; the remaining delta is font-metric rounding.
+
+### Deliberate deviations
+
+| Deviation | Reason |
+|---|---|
+| `?cmd=submit` is `/guestbook/submit` | Canonical route; the legacy entry point still redirects. |
+| A successful post shows the thanks page | Production returned to the listing with a message-log block; reproducing that is a W6 follow-up. |
+| Entry content is sanitized before rendering | Production printed stored HTML verbatim. An allowlist keeps `<br>`, inline tags and anchors, drops scripts/attributes, then `formatHyperlinks()` links bare URLs, e-mail addresses and domains. |
+| E-mail links are reproduced | The XOR handshake and `/jscript/crypt.js` are kept, so scrapers still cannot read addresses from the markup. |
+
 ## Remaining content pages
 
 Not yet verified against production: `/listen`, `/playlist`, `/mixes`,
-`/muses`, `/request/{station}/{song}`, `/guestbook`, `/party*`, `/chat`,
+`/muses`, `/request/{station}/{song}`, `/party*`, `/chat`,
 `/webtv/ticker*`, `/iphone`. They are the next slices; add a row here before
 calling any of them done.

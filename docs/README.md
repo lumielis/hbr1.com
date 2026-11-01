@@ -17,7 +17,7 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W3 — streams & station core | **mostly done** — listen, playlist, topframe, stream files, `/muses`, `/viewer`; `earthcam`/`jsm*` open |
 | W4 — catalogue | **done** — pagination, request endpoint, request rules + tests |
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; visual parity with production verified for all four levels, see [`PARITY.md`](PARITY.md); admin upload is W8 |
-| W6 — community | **mostly done** — guestbook, party calendar, party submission + edit, chat, navigation frame |
+| W6 — community | **mostly done** — guestbook and its submit page verified against production ([`PARITY.md`](PARITY.md)); party calendar, party submission + edit, chat, navigation frame |
 | W7 — webtv / ticker / broadcast | **mostly done** — ticker renders live from the `ticker` table (no more generated `content*.htm`); `broadcast`, `streamstats`, `jsm*`/CamTV upload open |
 | W8 — admin | not started |
 | W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |

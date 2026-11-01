@@ -357,3 +357,120 @@ table#MessageLog td {
 	line-height: 0;
 	font-size: 0;
 }
+
+/* ---------------------------------------------------------------------------
+   Guestbook
+
+   Reproduces template/client/guestbook.main.htm and guestbook.submit.htm.
+   The listing well is left-aligned (the legacy td carried align="left"), the
+   entry title is Arial 14 px #4477AA, entries are fenced by 1 px #333BAA
+   splitters, and the pager keeps the Nav_* class names - which, as on the
+   catalogue, have no rules in the stylesheet production linked.
+--------------------------------------------------------------------------- */
+.guestbook-well {
+	text-align: left;
+}
+.guestbook-heading {
+	/* No margin override: production relies on the browser's default h2
+	   margin, and suppressing it moved the title and every entry up ~12 px. */
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #4477AA;
+	text-align: center;
+}
+.guestbook-heading-left {
+	text-align: left;
+}
+.guestbook-intro {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+	color: #4477AA;
+	text-align: center;
+}
+.guestbook-intro-left {
+	text-align: left;
+}
+.guestbook-actions {
+	text-align: center;
+}
+.splitter {
+	height: 1px;
+	background-color: #333BAA;
+	line-height: 0;
+	font-size: 0;
+}
+.guestbook-text {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+}
+.guestbook-entry {
+	margin: 1em 0;
+	text-align: left;
+}
+.guestbook-entry blockquote {
+	margin: 1em 40px;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+}
+.guestbook-end {
+	text-align: center;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 8px;
+	color: #666666;
+}
+.guestbook-pager {
+	margin: 1em 0;
+	text-align: center;
+}
+.guestbook-pager-table {
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+.guestbook-pager-table td {
+	padding: 0;
+	/* Production did not put a .text class on the pager, so it inherited the
+	   body font (Tahoma) rather than the Verdana used for the entries. */
+	font-size: 11px;
+}
+.guestbook-signature {
+	color: #9999EE;
+	text-align: center;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+}
+.guestbook-form {
+	margin: 0;
+	border-collapse: collapse;
+}
+.guestbook-form td {
+	padding: 3px;
+	/* Production's form table carried no class, so the labels inherited the
+	   body font (Tahoma); only the inputs used the .blue style. */
+	font-size: 11px;
+}
+.guestbook-label {
+	font-family: Verdana, Arial, sans-serif;
+	text-align: left;
+}
+.guestbook-error {
+	margin: 0 0 4px;
+	color: #FF5555;
+	font-size: 10px;
+}
+.guestbook-thanks {
+	margin: 25px 15px;
+	text-align: left;
+}
+.guestbook-thanks-title {
+	color: #9999FF;
+}
+.guestbook-thanks-note {
+	color: #999999;
+}
+.guestbook-input {
+	/* Production's inputs carried `class="text"`; the `#blue` rule they also
+	   referenced did not exist on the page, so they rendered at the body's
+	   11 px Verdana rather than the 8 pt verdana of the .blue class. */
+	font-family: Verdana, Arial, sans-serif, Mono;
+	font-size: 11px;
+}

@@ -4,6 +4,7 @@ namespace App\Controllers\Web;
 
 use App\Controllers\BaseController;
 use App\Services\GuestbookService;
+use App\Support\LegacyMarkup;
 use Azera\Http\Response;
 
 /**
@@ -24,14 +25,21 @@ class GuestbookController extends BaseController
         $page = $service->page($offset);
 
         return $this->page('web/guestbook', [
-            'title'   => 'Guestbook - HBR1',
-            'page'    => $page,
-            'pager'   => $this->pager($page['total'], $offset, $page['limit']),
-            'errors'  => $this->padErrors([]),
-            'values'  => $this->blankValues(),
-            'posted'  => false,
-            'pending' => false,
-            'csrf'    => $this->csrfToken(),
+            'title'    => 'The Guestbook of HBR1.com',
+            'page'     => $page,
+            'pager'    => $this->pager($page['total'], $offset, $page['limit']),
+            'emailKey' => LegacyMarkup::EMAIL_XOR_KEY,
+        ]);
+    }
+
+    /** `?cmd=submit`: the form is its own page in the legacy tree too. */
+    public function formAction(): string
+    {
+        return $this->page('web/guestbook_submit', [
+            'title'  => 'The Guestbook of HBR1.com',
+            'errors' => $this->padErrors([]),
+            'values' => $this->blankValues(),
+            'csrf'   => $this->csrfToken(),
         ]);
     }
 
@@ -81,17 +89,11 @@ class GuestbookController extends BaseController
         $errors = $service->validate($input);
 
         if ($errors !== []) {
-            $page = $service->page(0);
-
-            return Response::html($this->page('web/guestbook', [
-                'title'   => 'Guestbook - HBR1',
-                'page'    => $page,
-                'pager'   => $this->pager($page['total'], 0, $page['limit']),
-                'errors'  => $this->padErrors($errors),
-                'values'  => $this->blankValues($input),
-                'posted'  => false,
-                'pending' => false,
-                'csrf'    => $this->csrfToken(),
+            return Response::html($this->page('web/guestbook_submit', [
+                'title'  => 'The Guestbook of HBR1.com',
+                'errors' => $this->padErrors($errors),
+                'values' => $this->blankValues($input),
+                'csrf'   => $this->csrfToken(),
             ]), 400);
         }
 
@@ -129,6 +131,16 @@ class GuestbookController extends BaseController
             $start = max(1, $end - $window * 2);
         }
 
+        $pages = [];
+
+        for ($number = $start; $number <= $end; $number++) {
+            $pages[] = [
+                'number'  => $number,
+                'offset'  => ($number - 1) * $limit,
+                'current' => $number === $current,
+            ];
+        }
+
         return [
             'current' => $current,
             'last'    => $last,
@@ -137,6 +149,8 @@ class GuestbookController extends BaseController
             'offset'  => $offset,
             'limit'   => $limit,
             'total'   => $total,
+            'pages'   => $pages,
+            'lastOffset' => max(0, ($last - 1) * $limit),
             'hasPrev' => $current > 1,
             'hasNext' => $current < $last,
             'prevOff' => max(0, $offset - $limit),

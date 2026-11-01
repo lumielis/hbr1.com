@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Support\LegacyMarkup;
+
 /**
  * The guestbook.
  *
@@ -31,8 +33,28 @@ class GuestbookService
     public const STATUS_PUBLIC  = 1;
     public const STATUS_PENDING = 2;
 
-    public function __construct(private \Azera\Db\Database $db)
+    public function __construct(
+        private \Azera\Db\Database $db,
+        private string $timezone = 'Europe/Berlin'
+    ) {
+    }
+
+    /**
+     * `formatTime('%a, %b %d %Y, %H:%M', $timestamp)`.
+     *
+     * The legacy page called `localtime()` - the server ran Europe/Berlin -
+     * but printed the literal "(utc)" after it. Reproduce the value, not the
+     * label's claim; the view keeps the literal.
+     */
+    public function formatDate(int $timestamp): string
     {
+        if ($timestamp <= 0) {
+            return '';
+        }
+
+        return (new \DateTimeImmutable('@' . $timestamp))
+            ->setTimezone(new \DateTimeZone($this->timezone))
+            ->format('D, d M Y H:i');
     }
 
     /**
@@ -60,16 +82,27 @@ class GuestbookService
         $entries = [];
 
         foreach ($rows as $row) {
+            $submitter = (string) $row['submitter'];
+            $email     = (string) $row['email'];
+            $content   = (string) $row['content'];
+
             $entries[] = [
                 'id'        => (int) $row['id'],
                 'timestamp' => (int) $row['timestamp'],
-                'date'      => $row['timestamp'] > 0
-                    ? date('D, d M Y H:i', (int) $row['timestamp'])
+                'date'      => $this->formatDate((int) $row['timestamp']),
+                'submitter' => $submitter,
+                'email'     => $email,
+                // The legacy page encrypted `name <address>` in the link and
+                // decrypted it in the browser, to keep scrapers out.
+                'emailCrypt' => $email !== ''
+                    ? LegacyMarkup::xorEncryptHex($submitter . ' <' . $email . '>')
                     : '',
-                'submitter' => (string) $row['submitter'],
-                'email'     => (string) $row['email'],
-                'content'   => (string) $row['content'],
-                'remoteAddr' => (string) $row['remote_addr'],
+                'content'   => $content,
+                // Stored entries contain entities and <br> by design; the
+                // formatter keeps those and links bare addresses the way
+                // `formatHyperlinks()` did.
+                'contentHtml' => LegacyMarkup::formatGuestbookContent($content),
+                'remoteAddr'  => (string) $row['remote_addr'],
             ];
         }
 
