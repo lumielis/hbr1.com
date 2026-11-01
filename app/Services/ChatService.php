@@ -20,8 +20,25 @@ class ChatService
     public const MAX_NAME = 50;
     public const MAX_CONTENT = 255;
 
-    public function __construct(private \Azera\Db\Database $db)
+    public function __construct(
+        private \Azera\Db\Database $db,
+        private string $timezone = 'Europe/Berlin'
+    ) {
+    }
+
+    /**
+     * The frame's timestamp: `formatTime('%m/%d %H:%M')` in the server's
+     * timezone, which is what production printed.
+     */
+    public function formatClock(int $timestamp): string
     {
+        if ($timestamp <= 0) {
+            return '';
+        }
+
+        return (new \DateTimeImmutable('@' . $timestamp))
+            ->setTimezone(new \DateTimeZone($this->timezone))
+            ->format('m/d H:i');
     }
 
     /**
@@ -43,10 +60,11 @@ class ChatService
         )->fetchAll(\PDO::FETCH_ASSOC);
 
         return array_map(
-            static fn(array $row): array => [
+            fn(array $row): array => [
                 'id'        => (int) $row['id'],
                 'timestamp' => (int) $row['timestamp'],
                 'time'      => $row['timestamp'] > 0 ? date('H:i', (int) $row['timestamp']) : '',
+                'clock'     => $this->formatClock((int) $row['timestamp']),
                 'name'      => (string) $row['name'],
                 // The legacy form stored its input HTML-encoded (`&#63;`,
                 // `&#58;`), and the template engine escapes on output, so the

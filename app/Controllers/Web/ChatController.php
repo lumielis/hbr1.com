@@ -7,28 +7,49 @@ use App\Services\ChatService;
 use Azera\Http\Response;
 
 /**
- * Chat room (replaces `cgi-bin/chat.cgi`).
+ * The chat terminal (replaces `cgi-bin/chat.cgi` and the `/chat/` frameset).
  *
- * The legacy page wrote a rendered copy of the room to
- * `htdocs/html/chat.html` on every post and let a meta-refresh poll it. That
- * file is still served as a static asset, so the ported page does the same
- * thing: it renders live from the database but keeps the file in step, which
- * is what the frameset and any bookmark of `/chat/chat.html` expect.
+ * Production is a four-band frameset: a 26 px header, a column split of
+ * 64 px / flexible / 100 px / 64 px holding the chrome, the message pane and
+ * the user list, a 26 px footer, and a 29 px submit bar. The chrome frames are
+ * static files under
+ * `/chat/`; the three dynamic frames used to be
+ * `apax.cgi?Part=Chat&Action=…`. They are canonical routes here, and the
+ * message pane renders the `chat` table live instead of the stale generated
+ * `htdocs/html/chat_content.html`.
  */
 class ChatController extends BaseController
 {
+    /** The frameset. */
     public function indexAction(): string
+    {
+        return $this->fragment('web/chat_frameset');
+    }
+
+    /** The message pane (`chat_main`), refreshed by the frame's meta tag. */
+    public function contentAction(): string
     {
         /** @var ChatService $service */
         $service = $this->service(ChatService::class);
 
-        return $this->page('web/chat', [
-            'title'    => 'Chat - HBR1',
+        return $this->fragment('web/chat_content', [
             'messages' => $service->recent(50),
-            'errors'   => ['name' => '', 'content' => ''],
-            'values'   => ['name' => $this->savedName()],
-            'posted'   => false,
-            'csrf'     => $this->csrfToken(),
+        ]);
+    }
+
+    /** The user list (`chat_users`). Production served an empty shell. */
+    public function usersAction(): string
+    {
+        return $this->fragment('web/chat_users');
+    }
+
+    /** The 29 px submit bar (`chat_submit`). */
+    public function formAction(): string
+    {
+        return $this->fragment('web/chat_submit', [
+            'values' => ['name' => $this->savedName(), 'content' => ''],
+            'error'  => '',
+            'csrf'   => $this->csrfToken(),
         ]);
     }
 
@@ -46,19 +67,16 @@ class ChatController extends BaseController
         $errors = $service->validate($input);
 
         if ($errors !== []) {
-            return Response::html($this->page('web/chat', [
-                'title'    => 'Chat - HBR1',
-                'messages' => $service->recent(50),
-                'errors'   => ['name' => (string) ($errors['name'] ?? ''), 'content' => (string) ($errors['content'] ?? '')],
-                'values'   => $input,
-                'posted'   => false,
-                'csrf'     => $this->csrfToken(),
+            return Response::html($this->fragment('web/chat_submit', [
+                'values' => $input,
+                'error'  => (string) reset($errors),
+                'csrf'   => $this->csrfToken(),
             ]), 400);
         }
 
         $service->post($input, (string) ($_SERVER['REMOTE_ADDR'] ?? ''));
 
-        // The legacy page saved the nickname in a cookie so regulars do not
+        // The legacy form saved the nickname in a cookie so regulars do not
         // retype it. Same name, same lifetime, same path.
         setcookie('chat_name', trim($input['name']), [
             'expires'  => time() + 86400 * 365,
@@ -67,7 +85,14 @@ class ChatController extends BaseController
             'samesite' => 'Lax',
         ]);
 
-        return Response::redirect('/chat');
+        // The form is the 29 px bottom frame; redirecting to /chat would load
+        // the frameset *inside* that frame. Production re-served the submit
+        // bar and let the message pane's 9 s meta refresh pick up the post.
+        return $this->fragment('web/chat_submit', [
+            'values' => ['name' => trim($input['name']), 'content' => ''],
+            'error'  => '',
+            'csrf'   => $this->csrfToken(),
+        ]);
     }
 
     private function savedName(): string

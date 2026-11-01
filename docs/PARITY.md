@@ -80,9 +80,34 @@ detached from the form below it.
 | Entry content is sanitized before rendering | Production printed stored HTML verbatim. An allowlist keeps `<br>`, inline tags and anchors, drops scripts/attributes, then `formatHyperlinks()` links bare URLs, e-mail addresses and domains. |
 | E-mail links are reproduced | The XOR handshake and `/jscript/crypt.js` are kept, so scrapers still cannot read addresses from the markup. |
 
+## Chat — verified 2026-11-01
+
+Reference: `https://hbr1.com/chat/` and its six frame documents. The terminal
+is a frameset, not a content page, so it keeps the legacy frameset doctype
+(HTML5 has no `frameset`), while its three dynamic frames use valid markup.
+
+| Route | Production reference | Result |
+|---|---|---|
+| `/chat`, `/chat/` | `/chat/` | Match. `rows="26,*,26,29"`, `cols="64,*,100,64"`, the four static chrome frames, and the message/user/submit frames on canonical routes. |
+| `/chat/content` | `/html/chat_content.html` | Match. 9 s meta refresh, `#100040` well, `MM/DD HH:MM` in `#009988`, nickname in its stored colour, message text escaped. Rendered live from `chat` instead of the generated file. |
+| `/chat/users` | `apax.cgi?Part=Chat&Action=listUsers` | Match. Production's empty shell, same title, refresh and background. |
+| `/chat/submit` | `apax.cgi?Part=Chat&Action=submit` | Match. 29 px bar, Nickname/Message/OK in the dark-blue input chrome, auto-layout spacer giving the production 798/198 column split; inputs at x=355/446/728 at a 996 px viewport, identical to production. |
+
+The four chrome frames (`top`, `left`, `right`, `bottom`) were already
+byte-identical to production and are still served as static files.
+
+### Deliberate deviations
+
+| Deviation | Reason |
+|---|---|
+| The message pane is live from the database | Production polls a generated file that is only rewritten on a post; between posts it goes stale. The frame keeps the same 9 s refresh and line format. |
+| `Part=Chat&Action=…` maps to `/chat/…` | Canonical frame URLs; the legacy entry points still redirect. |
+| The old single-page `/chat` view is gone | The terminal is the frameset, as in production. |
+| `/html/chat_content.html` and `/chat/index.html` remain as stale static copies | Only reached by direct bookmarks; the frameset no longer loads them. |
+
 ## Remaining content pages
 
 Not yet verified against production: `/listen`, `/playlist`, `/mixes`,
-`/muses`, `/request/{station}/{song}`, `/party*`, `/chat`,
+`/muses`, `/request/{station}/{song}`, `/party*`,
 `/webtv/ticker*`, `/iphone`. They are the next slices; add a row here before
 calling any of them done.

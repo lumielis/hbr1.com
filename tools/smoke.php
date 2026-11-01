@@ -69,6 +69,12 @@ $checks = [
     ['/request/trance/1', 200],
     ['/request/code.png', 200],
     ['/chat', 200],
+    ['/chat/', 200],
+    // The frameset's dynamic frames. The four chrome frames are static files
+    // and are resolved by the static fallback below.
+    ['/chat/content', 200],
+    ['/chat/users', 200],
+    ['/chat/submit', 200],
     // The iPhone chooser, and the admin placeholder that replaced the legacy
     // self-redirecting frameset.
     ['/iphone', 200],

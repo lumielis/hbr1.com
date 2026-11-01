@@ -237,7 +237,25 @@ final class LegacyUrlMapper
             return '/';
         }
 
-        return self::RUN_ROUTES[strtolower($run)] ?? '/';
+        $run = strtolower($run);
+
+        // The chat frameset asked apax.cgi for its two dynamic frames by
+        // action. Keep those frame URLs resolving after the Perl tree goes.
+        if ($run === 'chat') {
+            $action = $query['action'] ?? $query['Action'] ?? null;
+
+            if (is_string($action)) {
+                return match (strtolower($action)) {
+                    'listusers' => '/chat/users',
+                    'submit'    => '/chat/submit',
+                    default     => '/chat',
+                };
+            }
+
+            return '/chat';
+        }
+
+        return self::RUN_ROUTES[$run] ?? '/';
     }
 
     private static function withStation(string $base, array $query): string

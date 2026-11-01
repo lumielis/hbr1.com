@@ -1,0 +1,37 @@
+{# The message pane - production `/html/chat_content.html`.
+
+   Production regenerated that file on every post and polled it with a 9 s
+   meta refresh. The port renders the same lines from the `chat` table instead,
+   so the frame is never stale. The line shape is production's:
+
+     MM/DD HH:MM&nbsp;Name: message
+
+   with #009988 for the timestamp and the stored nickname colour for the name.
+   Content is escaped by the engine: the legacy data holds entities for
+   punctuation and the store also holds unmoderated text. #}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="9">
+<title>HBR1 Chat</title>
+<link rel="stylesheet" type="text/css" href="/style/client.css">
+<style>
+body {
+	background-color: #100040;
+	color: #fffaf0;
+	margin: 5px 2px;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+.chat-time {
+	color: #009988;
+}
+</style>
+</head>
+<body>
+{% for msg in messages %}
+<div><span class="chat-time">{{ msg:clock }}</span>&nbsp;<span class="chat-name" style="color: #{{ msg:color }}">{{ msg:name }}: </span>{{ msg:content }}</div>
+{% endfor %}
+</body>
+</html>
