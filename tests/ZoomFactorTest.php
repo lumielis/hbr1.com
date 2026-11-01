@@ -14,13 +14,75 @@ use PHPUnit\Framework\TestCase;
  * a change to one and not the others silently reintroduces the overflow. This
  * test is the link.
  *
- * The two panes that do not link `client.css` (`ltop.htm`, `lbot.html`) and the
- * chat terminal's bare `left.htm`/`right.htm` chrome each carry their own copy
- * for the same reason.
+ * There is a second, easier-to-miss half of the same invariant: a frame
+ * document inherits *nothing* from the frameset around it, so any frame whose
+ * page does not link `client.css` has to declare the zoom itself. Otherwise the
+ * track is scaled and the document is not, and the pane renders a quarter too
+ * small - which is exactly what happened to the navigation bar and the whole
+ * left-hand column. `testFrameDocumentsCarryTheirOwnZoom` is that half.
  */
 class ZoomFactorTest extends TestCase
 {
     private const ROOT = __DIR__ . '/..';
+
+    /**
+     * Frame documents and where their zoom comes from.
+     *
+     * `source` is `own` when the document must declare the zoom itself (it is a
+     * frame and does not link `client.css`) and `css` when it links the
+     * stylesheet and inherits it from there. `none` marks a frame with nothing
+     * to scale, which still has to be listed so that a *new* frame cannot slip
+     * in unexamined.
+     *
+     * @var array<string, array{path: string, source: string, why: string}>
+     */
+    private const FRAME_DOCUMENTS = [
+        '/empty.htm' => [
+            'path'   => 'htdocs/empty.htm',
+            'source' => 'none',
+            'why'    => 'a solid backdrop; there is no artwork to scale',
+        ],
+        '/ltop.htm' => [
+            'path'   => 'htdocs/ltop.htm',
+            'source' => 'own',
+            'why'    => '98+96 px of artwork must fill the scaled 258 px track',
+        ],
+        '/html/lbot.html' => [
+            'path'   => 'htdocs/html/lbot.html',
+            'source' => 'own',
+            'why'    => 'the 194 px music logo must fill the scaled 258 px track',
+        ],
+        '/navigation' => [
+            'path'   => 'views/web/navigation.clarity.html',
+            'source' => 'own',
+            'why'    => 'the buttons are butted inline images on a 686 px canvas',
+        ],
+        '/topframe' => [
+            'path'   => 'views/web/topframe.clarity.html',
+            'source' => 'css',
+            'why'    => 'links client.css directly (it is not a layout child)',
+        ],
+        '/listen' => [
+            'path'   => 'views/web/listen.clarity.html',
+            'source' => 'layout',
+            'why'    => 'extends layouts/page, which declares the zoom',
+        ],
+        '/webtv/ticker/index_left.html' => [
+            'path'   => 'htdocs/webtv/ticker/index_left.html',
+            'source' => 'own',
+            'why'    => '10 px of camera chrome inside a scaled 13.33 px column',
+        ],
+        '/webtv/ticker/index_right.html' => [
+            'path'   => 'htdocs/webtv/ticker/index_right.html',
+            'source' => 'own',
+            'why'    => '24 px of camera chrome inside a scaled 31.99 px column',
+        ],
+        '/webtv/ticker/content.htm' => [
+            'path'   => 'views/web/ticker_page.clarity.html',
+            'source' => 'own',
+            'why'    => 'the ticker text has to fit the scaled 213.28 px column',
+        ],
+    ];
 
     /** The factor the CSS declares; everything else is checked against it. */
     public function testClientCssDeclaresThePageZoom(): void
@@ -117,6 +179,138 @@ class ZoomFactorTest extends TestCase
         }
 
         return false;
+    }
+
+    /**
+     * A frame document must render at the same scale as the track holding it.
+     *
+     * The frameset only scales its *tracks*; each document inside is a separate
+     * page and inherits nothing. A page that links `client.css` gets the zoom
+     * from `body`, but the frames that do not link it - the navigation bar, the
+     * left-hand artwork, the ticker chrome - used to render at 1x inside a track
+     * scaled to 1.333, so they came out a quarter too small and stopped filling
+     * their frame.
+     */
+    public function testFrameDocumentsCarryTheirOwnZoom(): void
+    {
+        foreach (self::FRAME_DOCUMENTS as $url => $doc) {
+            $content = $this->stripComments($this->read($doc['path']));
+
+            if ($doc['source'] === 'none') {
+                self::assertStringNotContainsString('zoom', $content, $url . ' has nothing to scale');
+                continue;
+            }
+
+            if ($doc['source'] === 'css') {
+                self::assertStringContainsString(
+                    'client.css',
+                    $content,
+                    $url . ' is listed as inheriting the zoom from client.css but does not link it'
+                );
+                continue;
+            }
+
+            if ($doc['source'] === 'layout') {
+                self::assertStringContainsString(
+                    'extends "layouts/page"',
+                    $content,
+                    $url . ' is listed as inheriting the zoom from the page layout but does not extend it'
+                );
+                continue;
+            }
+
+            self::assertStringNotContainsString(
+                'client.css',
+                $content,
+                $url . ' must not link client.css; it declares its own zoom'
+            );
+            self::assertMatchesRegularExpression(
+                // `[^}]*` cannot be used here: Clarity placeholders like
+                // `{{ page:bgColor }}` contain closing braces, so the match has
+                // to run on to the brace that starts its own line instead.
+                '/body\s*\{(?:(?!^\s*\}).)*?zoom:\s*1\.333/ms',
+                $content,
+                $url . ' renders at 1x inside a track scaled to 1.333 (' . $doc['why'] . ')'
+            );
+        }
+    }
+
+    /**
+     * Framesets the application actually serves.
+     *
+     * The tree also contains older framesets (`/admin/`, `/stations/`,
+     * `/broadcast/`, `/gallery/`, `/flyers.htm`, `/iphone.html`, those under
+     * `/chat/`), but their frames point at CGI entry points that are gone or at
+     * pages no route reaches. Editing them for the zoom would be inventing work,
+     * so this test governs only what a visitor can load.
+     */
+    private const LIVE_FRAMESETS = [
+        'htdocs/index.html',
+        'views/web/index.clarity.html',
+        'views/web/ticker.clarity.html',
+    ];
+
+    /**
+     * Legacy frame srcs that redirect to a canonical route.
+     *
+     * `htdocs/index.html` is frozen: it is the pre-migration front page, kept
+     * so the old entry point still resolves. Its frames name CGI entry points
+     * that `LegacyUrlMapper` now 301s to the routes in the table above, so the
+     * document that actually renders is the canonical one - already reviewed.
+     *
+     * @var array<string, string>
+     */
+    private const REDIRECTED_FRAMES = [
+        '/cgi-bin/main.php?module=topframe' => '/topframe',
+        '/cgi-bin/main.php?module=listen'   => '/listen',
+        '/perl/apax.cgi?run=navigation'     => '/navigation',
+    ];
+
+    /**
+     * Every frame the live framesets load must be accounted for above.
+     *
+     * The table above is only useful if it is complete, and a frameset is
+     * exactly the kind of markup nobody edits until something is visibly broken.
+     */
+    public function testEveryLiveFrameIsReviewed(): void
+    {
+        $missing = [];
+
+        foreach (self::LIVE_FRAMESETS as $path) {
+            $html = $this->stripComments($this->read($path));
+
+            if (preg_match_all('/<frame\b[^>]*\bsrc\s*=\s*"([^"]*)"/i', $html, $m) === 0) {
+                continue;
+            }
+
+            foreach ($m[1] as $src) {
+                // Frames whose src is a frameset are covered by their own
+                // entries above; only leaf documents need a row.
+                if (in_array($src, ['/webtv/ticker/', '/webtv/ticker'], true)) {
+                    continue;
+                }
+
+                // The frozen legacy front page uses document-relative srcs;
+                // resolve them against / so they match the table's keys.
+                $key = str_starts_with($src, '/') ? $src : '/' . ltrim($src, './');
+
+                if (isset(self::FRAME_DOCUMENTS[$key])) {
+                    continue;
+                }
+                if (isset(self::REDIRECTED_FRAMES[$key])) {
+                    // The redirect target has to be reviewed, not just named.
+                    self::assertArrayHasKey(
+                        self::REDIRECTED_FRAMES[$key],
+                        self::FRAME_DOCUMENTS,
+                        $path . ' redirects ' . $src . ' to a document that is not reviewed'
+                    );
+                    continue;
+                }
+                $missing[$src] = $path;
+            }
+        }
+
+        self::assertSame([], $missing, 'these live frame documents are not covered by FRAME_DOCUMENTS');
     }
 
     public function testTheChatTerminalDoesNotUseAFrameset(): void

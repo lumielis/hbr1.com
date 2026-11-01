@@ -315,7 +315,7 @@ both, and is also what keeps the factor in step across the four places it is
 declared (see below). It found two framesets (`/chat/`, and the WebTV ticker)
 that had been missed by hand.
 
-The factor is declared in four places and they must agree:
+The factor is declared in five places and they must agree:
 
 | Where | Why |
 |---|---|
@@ -323,9 +323,33 @@ The factor is declared in four places and they must agree:
 | `views/layouts/page.clarity.html` `body { zoom }` | the PHP-rendered pages |
 | `htdocs/cgi-htm/jscript/zoom.js` `PAGE_ZOOM` | the frameset track scaler |
 | `views/web/chat_terminal.clarity.html` | the grid tracks and the two stylesheet-less panes |
+| `views/web/ticker_page.clarity.html` | the ticker's rotating pages, in the `lcam` frame |
 
-`ZoomFactorTest` asserts all four, plus `ltop.htm` and `lbot.html` (which do not
-link `client.css` and so carry their own copy).
+### A scaled track does not scale the document inside it
+
+This is the trap that outlived the first pass. `zoom.js` scales the frameset's
+**tracks**; each document inside a frame is a separate page and inherits
+nothing. A frame that links `client.css` (or extends the page layout) picks the
+zoom up from `body`, but a frame that does not has to declare it itself - and
+if it doesn't, the pane is laid out at 1x inside a box 1.333x too big for it, so
+it renders a quarter small and stops filling its frame.
+
+Four documents were missed for exactly this reason, and they are the ones you
+notice: the whole left-hand column and the navigation bar.
+
+| Document | Frame | Why it has no `client.css` |
+|---|---|---|
+| `views/web/navigation.clarity.html` | `bottom` | its global `td { font-size: 0 }` would fight the button geometry |
+| `views/web/ticker_page.clarity.html` | `lcam` centre | rendered from the database, one `<style>` block |
+| `htdocs/webtv/ticker/index_left.html` | `lcam` left | 10 px of JPEG, no head at all |
+| `htdocs/webtv/ticker/index_right.html` | `lcam` right | 24 px of JPEG, no head at all |
+
+`ZoomFactorTest::testFrameDocumentsCarryTheirOwnZoom` now enumerates every live
+frame document and asserts how each one gets its zoom (its own `body` rule,
+`client.css`, or the page layout). `testEveryLiveFrameIsReviewed` fails when a
+frameset loads a frame that is not in that enumeration, so adding a pane cannot
+skip the check. Adding one of these is not cosmetic: without it the pane is
+visibly the wrong size.
 
 **`/mixes` and `/tracklist` were the same data, and are now the same page.**
 HBR1 plays mixes only - there are no standalone songs - so the RadioDJ `songs`
