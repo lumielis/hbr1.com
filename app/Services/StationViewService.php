@@ -268,10 +268,16 @@ class StationViewService
      * `OGG Vorbis (low)` in the config is paired with the `OGG Vorbis` that
      * precedes it and rendered as the bracketed `Low` variant.
      *
-     * @param array<int, array{title: string, file: string}> $playlists
-     * @param string $musesHref   the in-page player, already resolved to a route
+     * Only the Html Player link carries `popup`: the legacy `listen.phtml` and
+     * `playlist.phtml` wrapped it in `openMuses()`, which opens a 310x170
+     * window named `muses`, while the playlist links are plain navigations
+     * (`text/calendar` playlists handed to the desktop player). The views turn
+     * the flag into `onclick`/`target`, so no window handling lives here.
      *
-     * @return array<int, array{type: string, title?: string, href?: string, text?: string}>
+     * @param array<int, array{title: string, file: string}> $playlists
+     * @param string $musesHref   the player popup's route, resolved per station
+     *
+     * @return array<int, array{type: string, title?: string, href?: string, text?: string, popup?: bool}>
      */
     public function streamSegments(array $playlists, string $musesHref): array
     {
@@ -283,12 +289,22 @@ class StationViewService
                 $segments[] = ['type' => 'text', 'text' => ', '];
             }
 
-            $segments[] = ['type' => 'link', 'title' => $pair['title'], 'href' => $pair['file']];
+            $segments[] = [
+                'type'  => 'link',
+                'title' => $pair['title'],
+                'href'  => $pair['file'],
+                'popup' => false,
+            ];
 
             if ($pair['low'] !== null) {
                 $segments[] = ['type' => 'text', 'text' => ' '];
                 $segments[] = ['type' => 'bracket', 'text' => '['];
-                $segments[] = ['type' => 'link', 'title' => 'Low', 'href' => $pair['low']];
+                $segments[] = [
+                    'type'  => 'link',
+                    'title' => 'Low',
+                    'href'  => $pair['low'],
+                    'popup' => false,
+                ];
                 $segments[] = ['type' => 'bracket', 'text' => ']'];
             }
         }
@@ -297,7 +313,12 @@ class StationViewService
             $segments[] = ['type' => 'text', 'text' => ', '];
         }
 
-        $segments[] = ['type' => 'link', 'title' => 'Html Player', 'href' => $musesHref];
+        $segments[] = [
+            'type'  => 'link',
+            'title' => 'Html Player',
+            'href'  => $musesHref,
+            'popup' => true,
+        ];
 
         return $segments;
     }

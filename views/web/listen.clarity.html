@@ -1,10 +1,10 @@
 {# A straight port of `template/listen.phtml`, one panel per station.
 
-   The first pass of this page dropped the frame chrome and the station panels
-   and showed a bare list of three links on a black page. This restores the
-   legacy block per station: the black header with the station name and genre,
-   the "Running:" line with the elapsed countdown, and the "Tune In:" row of
-   stream playlists. #}
+The first pass of this page dropped the frame chrome and the station panels
+and showed a bare list of three links on a black page. This restores the
+legacy block per station: the black header with the station name and genre,
+the "Running:" line with the elapsed countdown, and the "Tune In:" row of
+stream playlists. #}
 {% extends "layouts/page" %}
 
 {% block title %}HBR1 Stations{% endblock %}
@@ -12,92 +12,117 @@
 {% block pageid %}PageID = 'station';{% endblock %}
 
 {% block content %}
-{% if stationList is defined and stationList %}
-  {% for station in stationList %}
-  <table border="0" cellspacing="0" cellpadding="0" width="95%">
-    <tr>
-      <td align="center"><img src="/images/spacer.gif" width="1" height="10" alt=""></td>
-    </tr>
-  </table>
-  <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
-    <tr>
-      <td>
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
-          <tr>
-            <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17" alt=""></td>
-            <td class="station">
-              <b>
-              {# Inside <script> Clarity auto-encodes to a quoted, hex-escaped JS
-                 string literal, so `station:title` needs no surrounding quotes
-                 and no extra filter. #}
-              <script language="JavaScript">
-              <!--
-              document.write( '&nbsp;' + TextLight( {{ station:title }}, "33AA00", "DDFF99" ) );
-              //-->
-              </script>
-              <noscript>
-                <font color="#DDFF99">&nbsp;{{ station:title }}</font>
-              </noscript>
-              </b>
-            </td>
-            <td class="genre" align="right">
-              <script language="JavaScript">
-              <!--
-              document.write( TextFade( {{ station:genre }}, "FFFF88", "FF9966" ) + "&nbsp;" );
-              //-->
-              </script>
-              <noscript>
-                <font color="#FFFFFF">{{ station:genre }}&nbsp;</font>
-              </noscript>
-            </td>
-            <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17" alt=""></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table border="0" cellspacing="0" cellpadding="1">
-          <tr>
-            <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
-            <td class="txt">
-              <table border="0" cellspacing="0" cellpadding="0">
-                <tr><td>
-                  {% if station:running %}
-                    {% if station:running:late %}
-                    <font color="ff9955">Last Played: </font>
-                    {% else %}
-                    <font color="FFFFAA">Running: </font>
-                    <font color="#999999">[-{{ station:running:text }}] </font>
-                    {% endif %}
-                    {{ station:running:caption }}
-                    {% if station:mixId %}
-                    <font color="#6666AA"> (<a href="/mixes/{{ station:slug }}">tracklist</a>)</font>
-                    {% endif %}
-                  {% else %}
-                    <font color="#999999">[no track information]</font>
-                  {% endif %}
-                </td></tr>
-                <tr><td><img src="/images/spacer.gif" width="1" height="6" alt=""></td></tr>
-                <tr><td>
-                  {# The row must be emitted with no whitespace between the
-                     segments: the legacy template looped over `$Stream` and
-                     printed each entry back to back, so the browser saw a
-                     single text run. Whitespace here would add a space after
-                     every link. #}
-                  <font color="FFFFAA">Tune In: </font>{% for seg in station:stream %}{% if seg:type == "link" %}<a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>{% elseif seg:type == "bracket" %}<font color="#66dd99">{{ seg:text }}</font>{% else %}{{ seg:text }}{% endif %}{% endfor %}</td></tr>
-              </table>
-            </td>
-            <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  {% endfor %}
-{% else %}
-  <p><font color="#999999">[no stations configured]</font></p>
-{% endif %}
+  {% if stationList is defined and stationList %}
+    {% for station in stationList %}
+      <table border="0" cellspacing="0" cellpadding="0" width="95%">
+        <tr>
+          <td align="center"><img src="/images/spacer.gif" width="1" height="10" alt=""></td>
+        </tr>
+      </table>
+      <table border="0" cellspacing="1" cellpadding="2" width="96%" align="center">
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#000000">
+              <tr>
+                <td width="1%"><img src="/images/station/station_left.gif" width="16" height="17" alt=""></td>
+                <td class="station">
+                  <b>
+                    {# Inside <script> Clarity auto-encodes to a quoted, hex-escaped JS
+                    string literal, so `station:title` needs no surrounding quotes
+                    and no extra filter. #}
+                    <script language="JavaScript">
+                        <!--
+                      document.write('&nbsp;' + TextLight({{ station:title }}, "33AA00", "DDFF99"));
+                      //-->
+                    </script>
+                    <noscript>
+                      <font color="#DDFF99">&nbsp;{{ station:title }}</font>
+                    </noscript>
+                  </b>
+                </td>
+                <td class="genre" align="right">
+                  <script language="JavaScript">
+                      <!--
+                    document.write(TextFade({{ station:genre }}, "FFFF88", "FF9966") + "&nbsp;");
+                    //-->
+                  </script>
+                  <noscript>
+                    <font color="#FFFFFF">{{ station:genre }}&nbsp;</font>
+                  </noscript>
+                </td>
+                <td width="1%" align="right"><img src="/images/station/station_right.gif" width="16" height="17" alt=""></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="1">
+              <tr>
+                <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
+                <td class="txt">
+                  <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td>
+                        {% if station:running %}
+                          {% if station:running:late %}
+                            <font color="ff9955">Last Played: </font>
+                          {% else %}
+                            <font color="FFFFAA">Running: </font>
+                            <font color="#999999">[-{{ station:running:text }}] </font>
+                          {% endif %}
+                          {{ station:running:caption }}
+                          {% if station:mixId %}
+                            <font color="#6666AA"> (<a href="/mixes/{{ station:slug }}">tracklist</a>)</font>
+                          {% endif %}
+                        {% else %}
+                          <font color="#999999">[no track information]</font>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><img src="/images/spacer.gif" width="1" height="6" alt=""></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {# The row must be emitted with no whitespace between the
+                        segments: the legacy template looped over `$Stream` and
+                        printed each entry back to back, so the browser saw a
+                        single text run. Whitespace here would add a space after
+                        every link.
+
+                        `popup` is the Html Player: `listen.phtml` wrapped it in
+                        `openMuses()`, a 310x170 window named `muses`, and gave
+                        it `target="hbr1_muses"` so it still opens separately
+                        with scripting off. The playlist links have neither. #}
+                        <font color="FFFFAA">Tune In: </font>
+                        {% for seg in station:stream %}
+                          {%- if seg:type == "link" -%}
+                            {%- if seg:popup -%}
+                            <a class="sl1" href="{{ seg:href }}" onclick="return openMuses('{{ seg:href }}')" target="hbr1_muses">{{ seg:title }}</a>
+                            {%- else -%}
+                            <a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>
+                            {%- endif -%}
+                          {%- elseif seg:type == "bracket" -%}
+                            <font color="#66dd99">{{ seg:text }}</font>
+                          {%- else -%}
+                            {{ seg:text }}
+                          {%- endif -%}
+                        {% endfor %}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    {% endfor %}
+  {% else %}
+    <p><font color="#999999">[no stations configured]</font></p>
+  {% endif %}
 
   <table border="0" cellspacing="0" cellpadding="0" width="95%">
     <tr>
@@ -108,7 +133,7 @@
 
 {% block aside %}
   {# The player advert: commented out in `listen.phtml`, live in
-     `playlist.phtml`. Kept on both - its absence was the most visible
-     difference from production on this page. #}
+  `playlist.phtml`. Kept on both - its absence was the most visible
+  difference from production on this page. #}
   {% include "web/_player_advert" %}
 {% endblock %}

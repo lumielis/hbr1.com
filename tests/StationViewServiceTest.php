@@ -322,6 +322,26 @@ class StationViewServiceTest extends TestCase
         self::assertSame('Solo (low)', $links[0]['title']);
     }
 
+    /**
+     * Only the Html Player opens a window.
+     *
+     * The legacy templates gave that one anchor `onclick="return
+     * openMuses(...)"` plus `target="hbr1_muses"`; the playlist links are plain
+     * navigations, because a `.m3u` must be handed to the desktop player rather
+     * than opened in a 310x170 popup.
+     */
+    public function testOnlyTheHtmlPlayerSegmentIsAPopup(): void
+    {
+        $segments = $this->service()->streamSegments([
+            ['title' => 'OGG Vorbis', 'file' => '/playlist/trance.ogg.m3u'],
+            ['title' => 'OGG Vorbis (low)', 'file' => '/playlist/trance-low.ogg.m3u'],
+        ], '/muses/trance');
+
+        $links = array_values(array_filter($segments, static fn($s) => $s['type'] === 'link'));
+
+        self::assertSame([false, false, true], array_column($links, 'popup'));
+    }
+
     // ---------------------------------------------------------------- page ids
 
     /**

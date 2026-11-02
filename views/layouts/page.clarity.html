@@ -175,6 +175,10 @@ function TextFade( text, col_from, col_to ) {
   return out;
 }
 
+// The Html Player popup, exactly as `listen.phtml` and `playlist.phtml` had it:
+// a 310x170 window named `muses`. The anchor also carries
+// `target="hbr1_muses"`, so with scripting off it still opens on its own
+// instead of replacing the station list in the main frame.
 function openMuses( url )
 {
 	url = location.protocol + "//" + location.host + url;

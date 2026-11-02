@@ -466,6 +466,17 @@ whatever the loop ended on - Ambient, hence "HBR1 - Dream Factory" in
 production. `StationService::fallback()` makes that explicit and
 `?module=muses&station=X` now carries the station through to `/muses/x`.
 
+**The Html Player link opens a window, and the port had lost that.** It is a
+plain `/muses/{station}` anchor now, so clicking it replaced the station list in
+the `main` frame - and inside the front page's frameset the player appeared in
+the 794 px column instead of a 310x170 popup. Production's `listen.phtml` and
+`playlist.phtml` wrapped the anchor in `openMuses()` (`window.open(url, "muses",
+"width=310,height=170")`) and also gave it `target="hbr1_muses"`, so it opened on
+its own even with scripting off. Both are back, driven by a `popup` flag that
+`StationViewService::streamSegments()` sets on the Html Player segment only -
+the playlist links stay plain navigations, because a `.m3u` has to reach the
+desktop player rather than a 310x170 window.
+
 **Every thumbnail on the legacy pages is a `vimg.cgi` link.** There are about
 1,300 of them (`/djs.htm` alone has 56 on a page, `/artists.html` 176 links
 across the page, the front page 43), and the port had no route for the viewer,

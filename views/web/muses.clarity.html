@@ -26,7 +26,11 @@ body {
   scrollbar-highlight-color: #000050;
   scrollbar-shadow-color: #002060;
   scrollbar-arrow-color: #002060;
-  margin: 3px;
+  /* `muses.phtml` set `margin-bottom: 0` over the 3 px body margins, which is
+     what keeps the content inside the 310x170 popup's client area (294x148)
+     without a scrollbar. With 3 px on the bottom it measures 161 px, 3 more
+     than production's 158. */
+  margin: 3px 3px 0;
 }
 body, td, th {
   font-family: Verdana, Arial, Helvetica, sans-serif;

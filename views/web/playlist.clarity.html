@@ -87,8 +87,11 @@
 
               {# Same as /listen: no whitespace between segments, and the
                  "Tune In: " label comes from the legacy `$Stream` array's
-                 first entry rather than being a separate literal. #}
-              <font color="FFFFAA">Tune In: </font>{% for seg in station:stream %}{% if seg:type == "link" %}<a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>{% elseif seg:type == "bracket" %}<font color="#66dd99">{{ seg:text }}</font>{% else %}{{ seg:text }}{% endif %}{% endfor %}</td>
+                 first entry rather than being a separate literal.
+
+                 The Html Player carries the popup wiring; see the note in
+                 `web/listen`. #}
+              <font color="FFFFAA">Tune In: </font>{% for seg in station:stream %}{% if seg:type == "link" %}{% if seg:popup %}<a class="sl1" href="{{ seg:href }}" onclick="return openMuses('{{ seg:href }}')" target="hbr1_muses">{{ seg:title }}</a>{% else %}<a class="sl1" href="{{ seg:href }}">{{ seg:title }}</a>{% endif %}{% elseif seg:type == "bracket" %}<font color="#66dd99">{{ seg:text }}</font>{% else %}{{ seg:text }}{% endif %}{% endfor %}</td>
             <td><img src="/images/spacer.gif" width="25" height="1" alt=""></td>
           </tr>
         </table>
