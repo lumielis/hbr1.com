@@ -20,6 +20,12 @@ class ChatService
     public const MAX_NAME = 50;
     public const MAX_CONTENT = 255;
 
+    /**
+     * How long after their last line a nickname still counts as present.
+     * `$Setup{'ChatOnlineTime'}` in cgi-bin/include/config.pab.pl is 600.
+     */
+    public const ONLINE_WINDOW = 600;
+
     public function __construct(
         private \Azera\Db\Database $db,
         private string $timezone = 'Europe/Berlin'
@@ -39,6 +45,23 @@ class ChatService
         return (new \DateTimeImmutable('@' . $timestamp))
             ->setTimezone(new \DateTimeZone($this->timezone))
             ->format('m/d H:i');
+    }
+
+    /**
+     * The user list's activity stamp: `formatTime('%r')`, which POSIX renders
+     * as `hh:mm:ss AM/PM`. Production printed the server's local time and then
+     * labelled it "GMT" in the popup; the label is kept, the clock is not
+     * re-based.
+     */
+    public function formatActivity(int $timestamp): string
+    {
+        if ($timestamp <= 0) {
+            return '';
+        }
+
+        return (new \DateTimeImmutable('@' . $timestamp))
+            ->setTimezone(new \DateTimeZone($this->timezone))
+            ->format('h:i:s A');
     }
 
     /**
@@ -76,6 +99,47 @@ class ChatService
             ],
             $rows
         );
+    }
+
+    /**
+     * The user list: one row per nickname that posted within the last
+     * `ONLINE_WINDOW` seconds.
+     *
+     * A direct port of `Action=listUsers` in
+     * cgi-bin/include/client/chat.pab.pl: the query is ordered by `timestamp
+     * ASC` and the first row seen for a nickname wins
+     * (`$Users{ $row->[0] } = $row` only when that key is unset), so each
+     * nickname appears once, carrying the oldest of its in-window messages.
+     *
+     * @return array<int, array{name: string, color: string, time: string}>
+     */
+    public function online(): array
+    {
+        $rows = $this->db->query(
+            'SELECT `name`, `timestamp`, `color`'
+            . ' FROM `chat` WHERE `timestamp` > ? ORDER BY `timestamp` ASC',
+            [time() - self::ONLINE_WINDOW]
+        )->fetchAll(\PDO::FETCH_ASSOC);
+
+        $users = [];
+
+        foreach ($rows as $row) {
+            $name = (string) $row['name'];
+
+            // An empty nickname cannot be listed or painted; skip it rather
+            // than render a nameless row.
+            if ($name === '' || isset($users[$name])) {
+                continue;
+            }
+
+            $users[$name] = [
+                'name'  => $name,
+                'color' => self::safeColor((string) $row['color']),
+                'time'  => $this->formatActivity((int) $row['timestamp']),
+            ];
+        }
+
+        return array_values($users);
     }
 
     /** @return array<string, string> field => message */

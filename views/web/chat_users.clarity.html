@@ -1,8 +1,21 @@
 {# The user list - production `apax.cgi?Part=Chat&Action=listUsers`.
 
-   The legacy JSM transport that would have filled this frame never had a
-   working state directory (deploy/CHAT-STATE.md), so production served this
-   empty shell with a 9 s meta refresh. Reproduce it. #}
+   Filled from the `chat` table exactly as `Action=listUsers` in
+   cgi-bin/include/client/chat.pab.pl did: every nickname that posted within
+   `$Setup{'ChatOnlineTime'}` (600 s), once each, ordered by the first of those
+   messages. The row markup is the legacy `client/chat_userlist.htm`: a link
+   painted in the nickname's stored colour that pops the nickname and its last
+   activity.
+
+   Production's row markup was quirks-mode `<font color>` inside an unclosed
+   `<p>`; the port keeps the visual result (the `.Text` cell and the stored
+   colour) as a standards-mode document. The colours are validated hex triples
+   in ChatService, so they are safe inside the style attribute.
+
+   Production's popup also printed the remote address of every listed user to
+   everyone. The port drops that line: `chat.remote_addr` is the poster's IP
+   and handing it to the whole room is a disclosure we do not want to add. The
+   room still gets the nickname and its last activity. #}
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,11 +31,33 @@ body {
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 }
+.chat-users {
+	border-collapse: collapse;
+}
+.chat-users a {
+	text-decoration: none;
+}
 </style>
 </head>
 <body>
-<table class="chat-users">
-<tr><td></td></tr>
+<table class="chat-users" cellspacing="0" cellpadding="2">
+{% for user in users %}
+<tr>
+<td class="Text">
+<a href="#" onclick="return chatUserInfo(this);" data-nickname="{{ user:name }}" data-activity="{{ user:time }}" title="Last activity: {{ user:time }}"><span class="chat-name" style="color: #{{ user:color }}">{{ user:name }}</span></a>
+</td>
+</tr>
+{% endfor %}
 </table>
+<script>
+function chatUserInfo(link) {
+	alert(
+		'Nickname is ' + link.getAttribute('data-nickname') + '\n' +
+		'Last message at ' + link.getAttribute('data-activity') + ' GMT'
+	);
+
+	return false;
+}
+</script>
 </body>
 </html>

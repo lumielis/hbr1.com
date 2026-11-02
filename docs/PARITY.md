@@ -80,7 +80,7 @@ detached from the form below it.
 | Entry content is sanitized before rendering | Production printed stored HTML verbatim. An allowlist keeps `<br>`, inline tags and anchors, drops scripts/attributes, then `formatHyperlinks()` links bare URLs, e-mail addresses and domains. |
 | E-mail links are reproduced | The XOR handshake and `/jscript/crypt.js` are kept, so scrapers still cannot read addresses from the markup. |
 
-## Chat — verified 2026-11-01
+## Chat — verified 2026-11-01, user list 2026-11-02
 
 Reference: `https://hbr1.com/chat/` and its six frame documents. The terminal
 is a frameset, not a content page, so it keeps the legacy frameset doctype
@@ -90,7 +90,7 @@ is a frameset, not a content page, so it keeps the legacy frameset doctype
 |---|---|---|
 | `/chat`, `/chat/` | `/chat/` | Match. Same geometry as production's `rows="26,*,26,29"` / `cols="64,*,100,64"`, expressed as one CSS grid instead of a frameset so the whole terminal scales together at the site's 1.333x default zoom. The four chrome panes are still the static files under /chat/; the message/user/submit panes are canonical routes. |
 | `/chat/content` | `/html/chat_content.html` | Match. 9 s meta refresh, `#100040` well, `MM/DD HH:MM` in `#009988`, nickname in its stored colour, message text escaped. Rendered live from `chat` instead of the generated file. |
-| `/chat/users` | `apax.cgi?Part=Chat&Action=listUsers` | Match. Production's empty shell, same title, refresh and background. |
+| `/chat/users` | `apax.cgi?Part=Chat&Action=listUsers` | Match. Live from `chat`: every nickname that posted within `ChatOnlineTime` (600 s), once each, ordered by its earliest in-window message, painted in its stored colour, with the legacy click-through popup (nickname and last activity). Same title, 9 s refresh and background. The popup's "Remote address is …" line is dropped — see deviations. |
 | `/chat/submit` | `apax.cgi?Part=Chat&Action=submit` | Match. 29 px bar pinned to the bottom of the frame, Nickname/Message/OK in the dark-blue input chrome with the 9 px tabs hugging the top, auto-layout spacer giving the production 798/198 column split; inputs at x=355/446/728 at a 996 px viewport, identical to production. |
 
 The four chrome panes (`top`, `left`, `right`, `bottom`) were already
@@ -130,9 +130,12 @@ viewport but obvious inside its pane:
 | Deviation | Reason |
 |---|---|
 | The message pane is live from the database | Production polls a generated file that is only rewritten on a post; between posts it goes stale. The frame keeps the same 9 s refresh and line format. |
+| The user pane is live from the database | Same reason. It reproduces the `Action=listUsers` query (last 600 s, one row per nickname) rather than the stale `/html/chat_userlist.html` that `writeUserlist()` wrote, and that nothing called. |
+| The user popup omits the remote address | Production printed `chat.remote_addr` for every listed nickname to the whole room, which discloses other users' IPs. The nickname and last-activity lines are kept. |
 | `Part=Chat&Action=…` maps to `/chat/…` | Canonical pane URLs; the legacy entry points still redirect. |
 | The old single-page `/chat` view is gone | The terminal is the grid, as in production. |
 | The submit form posts to `/chat/submit`, not `/chat` | The bar is its own pane. Posting to `/chat` left the pane's URL on the terminal, so a refresh loaded the whole terminal inside the 39 px bar. Keeping the URL on `/chat/submit` reproduces what production's frame did. `POST /chat` still works for old clients. |
+| The submit bar reloads `chat_main` and `chat_users` after a post | Production's `chat_submit.htm` did the same (`parent.frames['chat_main'].location.reload()`), so a fresh message and the poster's own nickname appear immediately instead of at the next 9 s tick. |
 | `/html/chat_content.html` and `/chat/index.html` remain as stale static copies | Only reached by direct bookmarks; the terminal no longer loads them. |
 
 ## Remaining content pages

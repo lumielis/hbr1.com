@@ -140,6 +140,22 @@ Two things about the geometry are load-bearing and easy to undo:
 	{% if error %}
 		<div class="chat-error">{{ error }}</div>
 	{% endif %}
+	{% if posted %}
+	<script>
+	// Production's submit frame did this: after a successful post it told the
+	// message pane and the user list to reload, because both are separate
+	// frames and their 9 s meta refresh would lag behind the post.
+	(function () {
+		var panes = [window.parent.frames['chat_main'], window.parent.frames['chat_users']];
+
+		for (var i = 0; i < panes.length; i++) {
+			if (panes[i]) {
+				panes[i].location.reload();
+			}
+		}
+	})();
+	</script>
+	{% endif %}
 </body>
 
 </html>

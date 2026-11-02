@@ -48,7 +48,7 @@ class ChatPageTest extends TestCase
             self::assertStringNotContainsString('<frameset', $body, $path);
             self::assertStringContainsString('class="terminal"', $body, $path);
             self::assertStringContainsString('grid-template-rows: auto 1fr auto auto', $body, $path);
-            self::assertStringContainsString('grid-template-columns: 85px 1fr 133px 85px', $body, $path);
+            self::assertStringContainsString('grid-template-columns: 77px 1fr 100px 77px', $body, $path);
             self::assertStringContainsString('src="/chat/top.htm?1"', $body, $path);
             self::assertStringContainsString('src="/chat/left.htm"', $body, $path);
             self::assertStringContainsString('src="/chat/right.htm"', $body, $path);
@@ -76,14 +76,14 @@ class ChatPageTest extends TestCase
         // would be multiplied twice.
         self::assertStringNotContainsString('/style/client.css', $body);
 
-        // 64 * 1.333 = 85.3, 100 * 1.333 = 133.3. Whole pixels are fine here
-        // because the column is filled, not measured.
-        self::assertStringContainsString('grid-template-columns: 85px 1fr 133px 85px', $body);
+        // 64 * 1.2 = 76.8, 100 * 1.2 = 120. Whole pixels are fine here because
+        // the column is filled, not measured.
+        self::assertStringContainsString('grid-template-columns: 77px 1fr 100px 77px', $body);
 
         // left.htm and right.htm have no stylesheet, so they are scaled here.
         self::assertStringContainsString('.pane-left, .pane-right {', $body);
         self::assertMatchesRegularExpression(
-            '~\.pane-left,\s*\.pane-right\s*\{[^}]*zoom:\s*1\.333~s',
+            '~\.pane-left,\s*\.pane-right\s*\{[^}]*zoom:\s*1\.2~s',
             $body
         );
     }
@@ -108,14 +108,26 @@ class ChatPageTest extends TestCase
         self::assertStringContainsString($expected, $body);
     }
 
-    public function testUsersFrameIsTheLegacyEmptyShell(): void
+    public function testUsersFrameListsWhoIsInTheRoom(): void
     {
         $body = $this->page('/chat/users');
 
         self::assertStringContainsString('<title>HBR1 Chat Users</title>', $body);
         self::assertStringContainsString('<meta http-equiv="refresh" content="9">', $body);
         self::assertStringContainsString('background-color: #100040', $body);
-        self::assertStringContainsString('<table', $body);
+        self::assertStringContainsString('<table class="chat-users"', $body);
+
+        // The pane is no longer the empty shell production served; the rows
+        // themselves are rendered from ChatService::online(), which is pinned
+        // against a real table in ChatOnlineTest. Here the guarantee is that
+        // the frame is filled from that list rather than hard-coded.
+        foreach ($this->chat->online() as $user) {
+            self::assertStringContainsString('style="color: #' . $user['color'] . '"', $body);
+            self::assertStringContainsString('data-nickname="' . $user['name'] . '"', $body);
+        }
+
+        self::assertStringContainsString('function chatUserInfo(', $body);
+        self::assertStringNotContainsString('<tr><td></td></tr>', $body);
     }
 
     public function testSubmitFramePinsTheBarToTheBottomOfTheViewport(): void
@@ -217,6 +229,12 @@ class ChatPageTest extends TestCase
         self::assertStringContainsString('<form action="/chat/submit"', $body);
         self::assertStringContainsString('value="Tester"', $body);
         self::assertStringNotContainsString('<frameset', $body);
+
+        // Production's submit frame reloaded the message pane and the user
+        // list after a post, so the new line and the poster's own nickname
+        // appear at once instead of at the next 9 s refresh.
+        self::assertStringContainsString("window.parent.frames['chat_main']", $body);
+        self::assertStringContainsString("window.parent.frames['chat_users']", $body);
     }
 
     public function testEmptyPostRendersTheSubmitBarWithAnError(): void
@@ -232,6 +250,7 @@ class ChatPageTest extends TestCase
         self::assertSame(400, $response->getStatus());
         self::assertStringContainsString('Please enter a nickname.', $response->getBody());
         self::assertStringContainsString('<form action="/chat/submit"', $response->getBody());
+        self::assertStringNotContainsString('window.parent.frames', $response->getBody());
     }
 
     public function testContentAndSubmitFramesAreWellFormed(): void

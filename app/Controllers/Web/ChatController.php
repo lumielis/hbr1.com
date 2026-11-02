@@ -43,10 +43,15 @@ class ChatController extends BaseController
         ]);
     }
 
-    /** The user list (`chat_users`). Production served an empty shell. */
+    /** The user list (`chat_users`), refreshed by the frame's meta tag. */
     public function usersAction(): string
     {
-        return $this->fragment('web/chat_users');
+        /** @var ChatService $service */
+        $service = $this->service(ChatService::class);
+
+        return $this->fragment('web/chat_users', [
+            'users' => $service->online(),
+        ]);
     }
 
     /** The 29 px submit bar (`chat_submit`). */
@@ -55,6 +60,7 @@ class ChatController extends BaseController
         return $this->fragment('web/chat_submit', [
             'values' => ['name' => $this->savedName(), 'content' => ''],
             'error'  => '',
+            'posted' => false,
             'csrf'   => $this->csrfToken(),
         ]);
     }
@@ -76,6 +82,7 @@ class ChatController extends BaseController
             return Response::html($this->fragment('web/chat_submit', [
                 'values' => $input,
                 'error'  => (string) reset($errors),
+                'posted' => false,
                 'csrf'   => $this->csrfToken(),
             ]), 400);
         }
@@ -93,10 +100,12 @@ class ChatController extends BaseController
 
         // The form is the 29 px bottom frame; redirecting to /chat would load
         // the frameset *inside* that frame. Production re-served the submit
-        // bar and let the message pane's 9 s meta refresh pick up the post.
+        // bar and told the other two frames to reload; `posted` is what makes
+        // the bar emit that script.
         return $this->fragment('web/chat_submit', [
             'values' => ['name' => trim($input['name']), 'content' => ''],
             'error'  => '',
+            'posted' => true,
             'csrf'   => $this->csrfToken(),
         ]);
     }
