@@ -34,7 +34,7 @@ abstract class BaseController extends Controller
     protected function page(string $view, array $vars = []): string
     {
         $config = $this->config();
-        $root   = $config['paths']['legacy'] ?? (BASE_DIR . '/htdocs');
+        $root   = $config['paths']['legacy_docs'] ?? (BASE_DIR . '/public');
 
         // Static assets are served straight from the legacy tree by the web
         // server, so a cached copy survives a stylesheet change. The legacy

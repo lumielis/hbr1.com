@@ -7,7 +7,7 @@ use App\Services\ChatService;
 use Azera\Http\Response;
 
 /**
- * The chat terminal (replaces `cgi-bin/chat.cgi` and the `/chat/` frameset).
+ * The chat terminal (replaces `legacy/archive/cgi-bin/chat.cgi` and the `/chat/` frameset).
  *
  * Production is a four-band frameset: a 26 px header, a column split of
  * 64 px / flexible / 100 px / 64 px holding the chrome, the message pane and
@@ -16,7 +16,7 @@ use Azera\Http\Response;
  * `/chat/`; the three dynamic frames used to be
  * `apax.cgi?Part=Chat&Action=…`. They are canonical routes here, and the
  * message pane renders the `chat` table live instead of the stale generated
- * `htdocs/html/chat_content.html`.
+ * `public/html/chat_content.html`.
  *
  * The terminal itself is a CSS grid rather than a frameset. A frameset's row
  * heights are frameset units that page CSS cannot reach, so once the site

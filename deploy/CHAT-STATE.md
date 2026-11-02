@@ -29,11 +29,11 @@ protocol returns nothing useful.
 There is also a second, different variable in use:
 
 ```perl
-$path{'chat'} = qq(/home/christian/WWWRoot/www.hbr1.com/htdocs/chat);
+$path{'chat'} = qq(/home/christian/WWWRoot/www.hbr1.com/public/chat);
 ```
 
 `jsmp.cgi` writes the CamTV upload to `$path{'chat'} . '/images/camtv/'`, i.e.
-`htdocs/chat/images/camtv/`. That **does** exist and holds the shipped images
+`public/chat/images/camtv/`. That **does** exist and holds the shipped images
 (`empty.jpg`, `LiveChat.jpg`, `Danceroom.jpg`, `loading.jpg`).
 
 ## Consequence: the JSM chat transport is already dead

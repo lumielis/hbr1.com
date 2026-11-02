@@ -113,7 +113,7 @@ class GuestbookPageTest extends TestCase
         self::assertStringNotContainsString('guestbook-intro-left', $body);
         self::assertStringContainsString('<h2 class="guestbook-heading">', $body);
 
-        $css = (string) file_get_contents(dirname(__DIR__) . '/htdocs/style/client.css');
+        $css = (string) file_get_contents(dirname(__DIR__) . '/public/style/client.css');
 
         self::assertStringNotContainsString('.guestbook-heading-left', $css, 'the left override is gone');
         self::assertStringNotContainsString('.guestbook-intro-left', $css, 'the left override is gone');

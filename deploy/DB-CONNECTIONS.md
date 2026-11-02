@@ -85,15 +85,15 @@ Both legacy trees read the same file, so there is one place to rotate:
 | Path | Why |
 |---|---|
 | `env.local.php` | database and Icecast credentials |
-| `htdocs/admin/.htpasswd` | crypt-des hashes are reversible at the speeds they were chosen for; install from the password manager |
+| `legacy/archive/htmldocs/admin/.htpasswd` | crypt-des hashes are reversible at the speeds they were chosen for; install from the password manager |
 
-`htdocs/admin/htaccess.txt` stays — it names the file but holds no hash.
+`legacy/archive/htmldocs/admin/htaccess.txt` stays — it names the file but holds no hash.
 
 ### These values are still in git history
 
 Removing them from the working tree does not remove them from the commits that
 already contain them: `cgi-bin/include/config.php`, `cgi-bin/include/config.pab.pl`,
-`cgi-bin/include/config.pab.pl.old` and `htdocs/admin/.htpasswd` have all been
+`legacy/archive/cgi-bin/include/config.pab.pl.old` and `legacy/archive/htmldocs/admin/.htpasswd` have all been
 committed with live values, and the history predates this change. **Rotating
 every credential reachable from that document root is required regardless of
 what happens to history** — see the Phase 0 runbook.

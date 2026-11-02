@@ -19,8 +19,9 @@ lives in the session artifact `plan.md`. The operational checklist is
 | W5 — gallery | **done** — public pages on the live `GAL_` schema; visual parity with production verified for all four levels, see [`PARITY.md`](PARITY.md); admin upload is W8 |
 | W6 — community | **mostly done** — guestbook, its submit page and the chat frameset verified against production ([`PARITY.md`](PARITY.md)); party calendar, party submission + edit, navigation frame |
 | W7 — webtv / ticker / broadcast | **mostly done** — ticker renders live from the `ticker` table (no more generated `content*.htm`); `broadcast`, `streamstats`, `jsm*`/CamTV upload open |
-| W8 — admin | not started |
+| W8 — admin | not started — the new host has PHP only, so the Perl admin cannot run; W8 replaces it outright |
 | W9 — cutover | not started — see `deploy/DEPLOYMENT.md` |
+| Tree cleanup | **done** — all served assets live in `public/`, the retired trees are in `legacy/archive/`, and the vhosts no longer alias anything (see [`legacy/README.md`](../legacy/README.md)) |
 
 Deployment design (git-based, no composer on the host) is in
 [`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md). What the legacy chat actually
@@ -76,7 +77,7 @@ W6 community pages:
 
 ### The party calendar
 
-`/party` reproduces `htdocs/cgi-htm/client/party_main.htm`, and it is the page
+`/party` reproduces `legacy/archive/htmldocs/cgi-htm/client/party_main.htm`, and it is the page
 that looks *least* like the rest of the port, so it is worth spelling out what
 is deliberate.
 
@@ -115,7 +116,7 @@ keep their defaults.
 ### The party submission form
 
 `/party/new` and `/party/{id}/edit` reproduce
-`htdocs/cgi-htm/client/party_edit.htm`. Two legacy behaviours are deliberately
+`legacy/archive/htmldocs/cgi-htm/client/party_edit.htm`. Two legacy behaviours are deliberately
 **not** reproduced, and both were defects rather than features:
 
 - **The row was created on page view.** `?part=edit&party_id=new` ran
@@ -177,7 +178,7 @@ W7 WebTV ticker:
 ```
 
 The ticker is rendered from the `ticker` table on every request. The legacy
-pipeline instead had `write_ticker()` rewrite `htdocs/webtv/ticker/content*.htm`
+pipeline instead had `write_ticker()` rewrite `public/webtv/ticker/content*.htm`
 from disk on every admin save, and those generated files were committed to the
 repository — so the site showed whatever had last been published, not what the
 admin contained. See [`deploy/WEBTV-TICKER.md`](deploy/WEBTV-TICKER.md).
@@ -190,7 +191,7 @@ had no offsets at all.
 The frameset also loads plain files from the old document root
 (`/ltop.htm`, `/djs.htm`, `/html/lbot.html`, ...). Those are served by
 `App\Http\LegacyStatic`, which only ever returns files with a static extension
-inside `htdocs` - it never serves `.php`, `.pl` or `.inc`, so the Perl
+inside the document root - it never serves `.php`, `.pl` or `.inc`, so the Perl
 configuration stays unreachable.
 
 Every legacy URL form still resolves — `/cgi-bin/main.php?module=…`,
@@ -321,7 +322,7 @@ grow by the zoom. The content then overflows its frame by exactly that factor �
 measured on `/`: the `main` frame was 600 px wide holding 777 px of content, so
 every page grew a horizontal scrollbar.
 
-`htdocs/cgi-htm/jscript/zoom.js` multiplies every fixed track by the zoom,
+`public/cgi-htm/jscript/zoom.js` multiplies every fixed track by the zoom,
 leaving `*` and `%` tracks alone, and must be loaded **before** the `<frameset>`
 tag because the tracks are applied as they parse. `ZoomFactorTest` enforces
 both, and is also what keeps the factor in step across the four places it is
@@ -332,9 +333,9 @@ The factor is declared in five places and they must agree:
 
 | Where | Why |
 |---|---|
-| `htdocs/style/client.css` `body { zoom }` | every page that links it, including the chat panes |
+| `public/style/client.css` `body { zoom }` | every page that links it, including the chat panes |
 | `views/layouts/page.clarity.html` `body { zoom }` | the PHP-rendered pages |
-| `htdocs/cgi-htm/jscript/zoom.js` `PAGE_ZOOM` | the frameset track scaler |
+| `public/cgi-htm/jscript/zoom.js` `PAGE_ZOOM` | the frameset track scaler |
 | `views/web/chat_terminal.clarity.html` | the grid tracks and the two stylesheet-less panes |
 | `views/web/ticker_page.clarity.html` | the ticker's rotating pages, in the `lcam` frame |
 
@@ -354,8 +355,8 @@ notice: the whole left-hand column and the navigation bar.
 |---|---|---|
 | `views/web/navigation.clarity.html` | `bottom` | its global `td { font-size: 0 }` would fight the button geometry |
 | `views/web/ticker_page.clarity.html` | `lcam` centre | rendered from the database, one `<style>` block |
-| `htdocs/webtv/ticker/index_left.html` | `lcam` left | 10 px of JPEG, no head at all |
-| `htdocs/webtv/ticker/index_right.html` | `lcam` right | 24 px of JPEG, no head at all |
+| `public/webtv/ticker/index_left.html` | `lcam` left | 10 px of JPEG, no head at all |
+| `public/webtv/ticker/index_right.html` | `lcam` right | 24 px of JPEG, no head at all |
 
 `ZoomFactorTest::testFrameDocumentsCarryTheirOwnZoom` now enumerates every live
 frame document and asserts how each one gets its zoom (its own `body` rule,
@@ -488,7 +489,7 @@ legacy query string is rejected unless it is a plain relative path with an
 extension. Verified by clicking a thumbnail on `/djs.htm` through to the
 lightbox.
 
-**`/admin` was a frameset that loaded itself.** `htdocs/admin/index.html` is
+**`/admin` was a frameset that loaded itself.** `legacy/archive/htmldocs/admin/index.html` is
 the legacy admin frameset, and its content frame is `/cgi-bin/admin.cgi` -
 which the URL mapper sends back to `/admin`. So the page nested itself as deep
 as the browser allowed, and served the old admin chrome with no authentication
@@ -822,9 +823,9 @@ should tolerate a mangled string rather than assume it is clean.
 
 ### Committed files that are not UTF-8
 
-38 files under `htdocs/`, `cgi-bin/`, `template/` and `docker/legacy-perl/` are
-cp1252/`iso-8859-1`, and 4 under `htdocs/test/` carry a UTF-8 BOM. They are all
-legacy or scheduled for deletion in Phase 0. Anything new must be UTF-8 without
+38 files under `legacy/archive/` and `docker/legacy-perl/` are
+cp1252/`iso-8859-1`, and 4 under the archived `htmldocs/test/` carry a UTF-8 BOM. All of
+them are in `legacy/`, which is never served. Anything new must be UTF-8 without
 a BOM — [`.gitattributes`](../.gitattributes) pins the line endings but cannot
 police encoding, so this stays a review item.
 
@@ -838,10 +839,36 @@ public/         the only web-reachable directory
 db/             schema baseline + migrations
 deploy/         Apache (production truth) and nginx (dev approximation)
 docker/         throwaway Perl 5.10 oracle
-legacy/         frozen Perl tree (created at cutover)
+legacy/         the retired trees, read-only (see legacy/README.md)
 tools/          lint, smoke, redirect and parity helpers
 tests/          PHPUnit
 ```
+
+`public/` is the document root, and it holds **every byte the web server may
+serve** — the front controller *and* the legacy static assets:
+
+```
+public/
+  index.php                     front controller
+  images/  style/  jscript/     the site chrome, CSS and JavaScript
+  gp/                           gallery thumbnails and previews (DB-referenced)
+  playlist/                     the legacy stream playlists
+  chat/  webtv/  html/          frameset chrome and ticker artwork
+  cgi-htm/jscript/              zoom.js, color.js, crypt.js
+  *.htm  *.html                 the pages that are still plain files
+```
+
+None of this is aliased. A URL that names a real file is served by the web
+server; everything else falls through to `index.php`. That matters for
+`/playlist/{station}` and `/webtv/ticker/content.htm`, which are application
+routes that share a prefix with real directories — while the assets lived outside
+the document root, those prefixes had to be aliased, and an alias wins over the
+router even for a file that does not exist. Keeping the files and the routes in
+the same tree removes the conflict instead of working around it.
+
+`legacy/` holds `cgi-bin/`, `template/` and the dead parts of the old document
+root. Nothing serves from it and the vhost denies it; it exists so the port can
+still be read against its source.
 
 ## Why a framework
 

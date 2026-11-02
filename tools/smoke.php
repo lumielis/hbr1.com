@@ -102,7 +102,7 @@ foreach ($checks as [$path, $expected]) {
     // .htm files), so fall through to the static handler before calling it 404.
     if ($route === null) {
         $config = $ctx->Config;
-        $static = new \App\Http\LegacyStatic($config['paths']['legacy'] ?? dirname(__DIR__) . '/htdocs');
+        $static = new \App\Http\LegacyStatic($config['paths']['legacy_docs'] ?? dirname(__DIR__) . '/public');
         $hit    = $static->resolve($path);
 
         // No route and no file is the framework's 404 path.

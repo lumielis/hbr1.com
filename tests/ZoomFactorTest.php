@@ -38,17 +38,17 @@ class ZoomFactorTest extends TestCase
      */
     private const FRAME_DOCUMENTS = [
         '/empty.htm' => [
-            'path'   => 'htdocs/empty.htm',
+            'path'   => 'public/empty.htm',
             'source' => 'own',
             'why'    => 'the 78 px mesh tile fills the scaled side columns',
         ],
         '/ltop.htm' => [
-            'path'   => 'htdocs/ltop.htm',
+            'path'   => 'public/ltop.htm',
             'source' => 'own',
             'why'    => '98+96 px of artwork must fill the scaled 258 px track',
         ],
         '/html/lbot.html' => [
-            'path'   => 'htdocs/html/lbot.html',
+            'path'   => 'public/html/lbot.html',
             'source' => 'own',
             'why'    => 'the 194 px music logo must fill the scaled 258 px track',
         ],
@@ -68,12 +68,12 @@ class ZoomFactorTest extends TestCase
             'why'    => 'extends layouts/page, which declares the zoom',
         ],
         '/webtv/ticker/index_left.html' => [
-            'path'   => 'htdocs/webtv/ticker/index_left.html',
+            'path'   => 'public/webtv/ticker/index_left.html',
             'source' => 'own',
             'why'    => '10 px of camera chrome inside a scaled 13.33 px column',
         ],
         '/webtv/ticker/index_right.html' => [
-            'path'   => 'htdocs/webtv/ticker/index_right.html',
+            'path'   => 'public/webtv/ticker/index_right.html',
             'source' => 'own',
             'why'    => '24 px of camera chrome inside a scaled 31.99 px column',
         ],
@@ -87,7 +87,7 @@ class ZoomFactorTest extends TestCase
     /** The factor the CSS declares; everything else is checked against it. */
     public function testClientCssDeclaresThePageZoom(): void
     {
-        $css = $this->read('htdocs/style/client.css');
+        $css = $this->read('public/style/client.css');
 
         self::assertSame(
             1,
@@ -113,7 +113,7 @@ class ZoomFactorTest extends TestCase
 
     public function testFramesetScriptUsesTheSameZoom(): void
     {
-        $script = $this->read('htdocs/cgi-htm/jscript/zoom.js');
+        $script = $this->read('public/cgi-htm/jscript/zoom.js');
 
         self::assertSame(
             1,
@@ -282,7 +282,7 @@ class ZoomFactorTest extends TestCase
      * so this test governs only what a visitor can load.
      */
     private const LIVE_FRAMESETS = [
-        'htdocs/index.html',
+        'public/index.html',
         'views/web/index.clarity.html',
         'views/web/ticker.clarity.html',
     ];
@@ -290,7 +290,7 @@ class ZoomFactorTest extends TestCase
     /**
      * Legacy frame srcs that redirect to a canonical route.
      *
-     * `htdocs/index.html` is frozen: it is the pre-migration front page, kept
+     * `public/index.html` is frozen: it is the pre-migration front page, kept
      * so the old entry point still resolves. Its frames name CGI entry points
      * that `LegacyUrlMapper` now 301s to the routes in the table above, so the
      * document that actually renders is the canonical one - already reviewed.
@@ -376,7 +376,7 @@ class ZoomFactorTest extends TestCase
     {
         $found  = [];
         $root   = realpath(self::ROOT);
-        $dirs   = [$root . '/htdocs', $root . '/views'];
+        $dirs   = [$root . '/public', $root . '/views'];
         $seen   = 0;
 
         foreach ($dirs as $dir) {
@@ -403,8 +403,13 @@ class ZoomFactorTest extends TestCase
         sort($found);
 
         // The tree must not silently lose its framesets without this test
-        // noticing it stopped covering anything.
-        self::assertGreaterThan(5, $seen, 'expected the legacy framesets to still be found');
+        // noticing it stopped covering anything. Five remain: the three that are
+        // routes (`/`, the ticker, the chat terminal's grid is not a frameset),
+        // plus `flyers.htm` and `iphone.html`. The archived `webtv/index*.html`
+        // and `chat/index.html` used to be counted here; they are applet-era
+        // pages nothing links, and `chat/index.html` would have shadowed the
+        // `/chat/` route.
+        self::assertGreaterThanOrEqual(5, $seen, 'expected the legacy framesets to still be found');
 
         return $found;
     }

@@ -280,7 +280,7 @@ class ChatPageTest extends TestCase
 
     public function testChromeFramesStillResolve(): void
     {
-        $static = new \App\Http\LegacyStatic(dirname(__DIR__) . '/htdocs');
+        $static = new \App\Http\LegacyStatic(dirname(__DIR__) . '/public');
 
         foreach (['/chat/top.htm', '/chat/left.htm', '/chat/right.htm', '/chat/bottom.htm'] as $path) {
             self::assertNotNull($static->resolve($path), $path . ' must still be served');

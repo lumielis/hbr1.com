@@ -9,13 +9,13 @@ use Azera\Db\Database;
  *
  * ## How the old pipeline worked
  *
- * The admin module (`cgi-bin/include/admin/ticker.pl`) stored a row per page in
+ * The admin module (`legacy/archive/cgi-bin/include/admin/ticker.pl`) stored a row per page in
  * the `ticker` table. Every time an entry was saved, killed or re-ordered it
  * called `write_ticker()`, which rewrote the *whole* sequence as static files:
  *
- *     htdocs/webtv/ticker/content.htm     <- page 0
- *     htdocs/webtv/ticker/content1.htm    <- page 1
- *     htdocs/webtv/ticker/content2.htm    <- page 2
+ *     public/webtv/ticker/content.htm     <- page 0
+ *     public/webtv/ticker/content1.htm    <- page 1
+ *     public/webtv/ticker/content2.htm    <- page 2
  *     ...
  *
  * Each file carried `<meta http-equiv="refresh" content="<delay>; URL=content<n+1>.htm">`

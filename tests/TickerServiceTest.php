@@ -56,6 +56,29 @@ class TickerServiceTest extends TestCase
         }
     }
 
+    /**
+     * The generated files must never come back.
+     *
+     * The port renders `content*.htm` from the `ticker` table, and the page is
+     * now a route rather than a file. That only holds while no file of the same
+     * name exists in the document root: the web server serves a real file before
+     * it consults the front controller, so a resurrected `content.htm` would
+     * silently put stale text back in front of visitors - which is precisely the
+     * bug the port removed, and the reason the nginx vhost used to need a
+     * `try_files /dev/null` override for this one prefix.
+     */
+    public function testNoGeneratedTickerFileExistsInTheDocumentRoot(): void
+    {
+        $found = glob(BASE_DIR . '/public/webtv/ticker/content*.htm') ?: [];
+
+        self::assertSame(
+            [],
+            $found,
+            'Generated ticker pages must not exist on disk: '
+            . implode(', ', $found)
+        );
+    }
+
     public function testOnlyRunningPagesAreListed(): void
     {
         $pages = $this->ticker->pages();

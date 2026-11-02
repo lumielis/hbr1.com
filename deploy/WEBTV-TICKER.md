@@ -15,8 +15,8 @@ The ticker was a **file generator**, not a page renderer.
    `border_vertical`, `show_title`, `show_image`, `status`, `position`,
    `object_type` (`n` text / `f` Flash), `flash_movie`.
 2. On every save, re-order or kill, it called `write_ticker()`. That deleted the
-   whole `htdocs/webtv/ticker/content*.htm` sequence and re-rendered it from the
-   table, using the admin template `htdocs/cgi-htm/admin/ticker_template.htm`.
+   whole `public/webtv/ticker/content*.htm` sequence and re-rendered it from the
+   table, using the admin template `legacy/archive/htmldocs/cgi-htm/admin/ticker_template.htm`.
 3. Each generated file carried a meta-refresh pointing at its successor:
 
    ```html
@@ -24,11 +24,11 @@ The ticker was a **file generator**, not a page renderer.
    ```
 
    The last page pointed back at `content.htm`, forming a ring.
-4. `htdocs/webtv/ticker/index.html` is a three-frame frameset
+4. `public/webtv/ticker/index.html` is a three-frame frameset
    (10 / 160 / 24 px). The middle frame loads `content.htm`, so the browser
    follows the ring on its own. The left and right frames are the static camera
    chrome (`index_left.html`, `index_right.html`).
-5. `htdocs/index.html` puts that frameset in the `lcam` frame at
+5. `public/index.html` puts that frameset in the `lcam` frame at
    `rows="189,120,1*"` on the left of the front page.
 
 ### Why the pages you created never appeared
@@ -81,12 +81,12 @@ Anything else — including `[s]` — is left as literal text, as before.
 `git rm` on these; they are outputs, not sources:
 
 ```
-htdocs/webtv/ticker/content.htm … content11.htm
-htdocs/webtv/ticker/index.html
+public/webtv/ticker/content.htm … content11.htm
+public/webtv/ticker/index.html
 ```
 
 `index_left.html`, `index_right.html` and everything under
-`htdocs/webtv/ticker/images/` and `flash/` stay: they are the artwork, and the
+`public/webtv/ticker/images/` and `flash/` stay: they are the artwork, and the
 `images/` directory is where the admin uploads ticker pictures.
 
 ### Flash is not ported
@@ -99,7 +99,7 @@ empty black box. No running row uses it.
 
 - **Admin UI** (`/admin/ticker`). Today the table can only be edited in SQL. The
   admin module is W8, behind `AdminAuthMiddleware` + CSRF; the upload targets are
-  `htdocs/webtv/ticker/images` and `.../flash`.
+  `public/webtv/ticker/images` and `.../flash`.
 - **`broadcast` and `streamstats`** pages — still Perl
   (`cgi-bin/include/admin/streamstats.pab.pl`).
 - **`jsm*` / CamTV upload** (`jsmp.cgi` upload, `jsmg.cgi` serve, `jsmt.cgi` room

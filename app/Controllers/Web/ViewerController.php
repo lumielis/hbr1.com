@@ -29,7 +29,7 @@ class ViewerController extends BaseController
     {
         $target = implode('/', $path);
 
-        $root = $this->config()['paths']['legacy'] ?? \dirname(__DIR__, 3) . '/htdocs';
+        $root = $this->config()['paths']['legacy_docs'] ?? \dirname(__DIR__, 3) . '/public';
 
         $file = (new LegacyStatic($root))->resolve('/' . $target);
 

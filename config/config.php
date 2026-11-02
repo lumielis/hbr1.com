@@ -94,10 +94,14 @@ return [
         // the identical file the legacy `securimage` used, so the digits look
         // the same; `security.ttf` is 38 KB and committed.
         'font_security' => BASE_DIR . '/data/security.ttf',
-        // The retired document root. Still holds the static pages the
-        // frameset references (`/ltop.htm`, `/djs.htm`, …) plus the asset
-        // directories the web server aliases. Read-only.
-        'legacy' => BASE_DIR . '/htdocs',
+        // `public/` is the document root and the only web-reachable tree. The
+        // legacy static assets (images, style, gp, playlist, chat, webtv) and
+        // the handful of still-live `.htm` pages were moved into it, so their
+        // URLs did not change and the vhost needs no aliases.
+        'legacy_docs' => BASE_DIR . '/public',
+        // The retired trees, kept read-only for reference. Nothing serves from
+        // here: the vhost denies it and no code path reads it.
+        'legacy' => BASE_DIR . '/legacy',
     ],
 
     'db' => [

@@ -9,7 +9,7 @@ use Azera\Http\Response;
 /**
  * The frameset front page.
  *
- * `htdocs/index.html` is a frameset whose frames point at the CGI entry
+ * `public/index.html` is a frameset whose frames point at the CGI entry
  * points. This controller serves the same frameset from PHP so the frames can
  * address canonical routes instead of `/cgi-bin/*.cgi`.
  */

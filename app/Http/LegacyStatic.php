@@ -5,17 +5,18 @@ namespace App\Http;
 use Azera\Http\Response;
 
 /**
- * Serves the legacy static tree that still lives outside `public/`.
+ * Serves the legacy static pages that are still plain files.
  *
  * The old document root was `htdocs/` itself, so pages like `/ltop.htm`,
  * `/djs.htm` and `/link_base.htm` were plain files. The new root is `public/`,
- * and the web server only aliases the asset directories (`/images`, `/style`,
- * …). The frameset's own frames are *not* in an aliased directory, so without
- * this they 404 and the front page renders four broken panes.
+ * and those pages were moved into it verbatim, so their URLs are unchanged.
  *
- * Only files that exist are served, and only with a static extension - the
- * legacy root also contains `.pl`, `.inc` and `.pab.pl` files that used to be
- * readable as plain text, and that is exactly the leak Phase 0 closes.
+ * This handler is therefore no longer a second static file server: the web
+ * server serves everything under `public/` directly. It is the fallback for a
+ * request that reached the front controller anyway (a directory index, or a
+ * path the web server declined to serve), and it keeps the extension allowlist
+ * as the second line of defence - `public/` must never publish a `.pl`, `.inc`
+ * or dotfile even if one were dropped there by mistake.
  */
 final class LegacyStatic
 {

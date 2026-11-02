@@ -12,10 +12,14 @@
 #
 # Run:
 #   docker run --rm -p 8080:80 \
-#     -v "$PWD/cgi-bin:/var/www/cgi-bin:ro" \
-#     -v "$PWD/htdocs:/var/www/htdocs:ro" \
-#     -v "$PWD/template:/var/www/template:ro" \
+#     -v "$PWD/legacy/archive/cgi-bin:/var/www/cgi-bin:ro" \
+#     -v "$PWD/public:/var/www/htdocs:ro" \
+#     -v "$PWD/legacy/archive/template:/var/www/template:ro" \
 #     hbr1/legacy-perl:5.10
+#
+# The bind-mount paths follow the cleanup: the Perl tree and the templates were
+# archived, and the document root the scripts expect (`/var/www/htdocs`) is now
+# the live `public/`, which still holds the legacy pages verbatim.
 #
 # The Perl libraries (PAB2, PAB3, ssms) are NOT part of this repository. Copy
 # them into docker/legacy-perl/perl-lib/ from C:\Users\christian\Nextcloud\Perl-Lib

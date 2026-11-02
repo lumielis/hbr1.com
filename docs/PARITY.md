@@ -2,7 +2,7 @@
 
 The port is judged against **production**, not against the repository's legacy
 templates. The two have drifted: production's gallery entrance says
-`GALLERY ENTRANCE`, while `htdocs/cgi-htm/client/galleries.htm` says
+`GALLERY ENTRANCE`, while `legacy/archive/htmldocs/cgi-htm/client/galleries.htm` says
 `PHOTO GALLERIES`. Captures of the live pages are the reference.
 
 ## Policy
@@ -12,7 +12,7 @@ templates. The two have drifted: production's gallery entrance says
 - **Valid HTML5.** No obsolete presentational markup in `views/web/*`: no
   `<font>`, `bgcolor`, `align`, `background`, `cellspacing`, `cellpadding` or
   `border` attributes. Geometry that must not move is expressed in
-  `htdocs/style/client.css`.
+  `public/style/client.css`.
 - **Working links.** Legacy credit markup is rendered as real anchors. The
   old `href\="..."` output was a defect and is not reproduced. Link schemes
   are limited to `http`, `https`, `mailto` and root-relative paths.

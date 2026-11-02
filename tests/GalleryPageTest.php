@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  * The gallery pages against production.
  *
  * Production is the authority, not the repository's legacy templates: the
- * deployed page says "GALLERY ENTRANCE" while `htdocs/cgi-htm/client/
+ * deployed page says "GALLERY ENTRANCE" while `public/cgi-htm/client/
  * galleries.htm` says "PHOTO GALLERIES". The captures under `tests/fixtures/
  * legacy/` and `temp/prod-gallery*.html` are the record of what the old pages
  * actually served.
@@ -239,7 +239,7 @@ class GalleryPageTest extends TestCase
 
     public function testGalleryStylesKeepTheLegacyColoursAndFrameAssets(): void
     {
-        $css = (string) file_get_contents(dirname(__DIR__) . '/htdocs/style/client.css');
+        $css = (string) file_get_contents(dirname(__DIR__) . '/public/style/client.css');
 
         foreach ([
             'category_select_border.gif',
@@ -265,7 +265,7 @@ class GalleryPageTest extends TestCase
      */
     public function testGalleryThumbnailsAreCentredInsideTheirFrame(): void
     {
-        $css = (string) file_get_contents(dirname(__DIR__) . '/htdocs/style/client.css');
+        $css = (string) file_get_contents(dirname(__DIR__) . '/public/style/client.css');
 
         self::assertMatchesRegularExpression(
             '/\.gallery-frame\s+img\s*\{[^}]*margin-left:\s*auto[^}]*margin-right:\s*auto[^}]*\}/s',

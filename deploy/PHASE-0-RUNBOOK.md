@@ -22,17 +22,22 @@ Reference: `plan.md` §2 (diagnosis) and §3 (this runbook).
 
 ## 1. Remove the webshells
 
-Two remote shells are committed to the repository **and** were on the server:
+Two remote shells were on the server in what was then the ticker upload directory.
+That directory is now `public/webtv/ticker/images/`, so the paths below follow it:
 
 | File | What it is |
 |---|---|
-| `htdocs/webtv/ticker/images/.x.php` | b374k 2.8 remote shell (99 KB) |
-| `htdocs/webtv/ticker/images/xm.php` | `eval(base64_decode(...))` + `eval(urldecode($_POST['ev']))` uploader |
+| `public/webtv/ticker/images/.x.php` | b374k 2.8 remote shell (99 KB) |
+| `public/webtv/ticker/images/xm.php` | `eval(base64_decode(...))` + `eval(urldecode($_POST['ev']))` uploader |
+
+Neither is tracked in git (`tests/SecretsTest.php` asserts that no `.php` other
+than `public/index.php` is tracked under the document root), so this is a
+server-side deletion only.
 
 - [ ] Delete both from the server:
       ```bash
-      rm -f /home/christian/WWWRoot/www.hbr1.com/htdocs/webtv/ticker/images/.x.php
-      rm -f /home/christian/WWWRoot/www.hbr1.com/htdocs/webtv/ticker/images/xm.php
+      rm -f /home/christian/WWWRoot/www.hbr1.com/public/webtv/ticker/images/.x.php
+      rm -f /home/christian/WWWRoot/www.hbr1.com/public/webtv/ticker/images/xm.php
       ```
 - [ ] Search for other copies dropped through them (these shells typically
       leave siblings):
@@ -141,10 +146,22 @@ Until W4 replaces the module, add a whitelist to `cgi-bin/main.php`:
 
 ## 8. Delete dead weight
 
-- [ ] `htdocs/test/` — 9.8 MB of `.rar` archives, `config.xml`, an unversioned
-      favicon; no traffic, high attack surface.
-- [ ] `htdocs/chat_old/`
-- [ ] `htdocs/extra/`
+The repository cleanup already moved this content out of the served tree: it now
+lives under `legacy/archive/`, which the vhost denies and git keeps only for
+reference. These steps remove it from the **server checkout**, which is a
+different operation and still worth doing.
+
+- [ ] `htdocs/test/` — the `.rar` archive and `config.xml` were deleted from the
+      repository; the directory is now `legacy/archive/htmldocs/test/`. Remove it
+      from the server.
+- [ ] `htdocs/chat_old/` → `legacy/archive/htmldocs/chat_old/`
+- [ ] `htdocs/extra/` → `legacy/archive/htmldocs/extra/`
+- [ ] `htdocs/` itself should no longer exist after the cutover: the document root
+      is `public/`, and every static asset that is still used was moved into it.
+      Confirm nothing is left behind:
+      ```bash
+      ls -la /home/christian/WWWRoot/www.hbr1.com/
+      ```
 - [ ] Confirm with the access log first:
       ```bash
       for d in test chat_old extra; do

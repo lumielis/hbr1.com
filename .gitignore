@@ -25,8 +25,13 @@ composer.phar
 /docker/legacy-perl/build/
 
 # The admin gate - crypt hashes are credentials. Install from the password
-# manager; see deploy/apache/www.hbr1.com.conf for the location.
+# manager; see deploy/apache/www.hbr1.com.conf for the location. The archived
+# copy under legacy/archive/ must stay ignored too, or a `git add -A` after the
+# cleanup would pick it up again.
 /htdocs/admin/.htpasswd
+/legacy/archive/**/.htpasswd
+/public/**/.htpasswd
 
 # Legacy config backups - they hold credentials by definition.
 cgi-bin/include/*.old
+legacy/archive/cgi-bin/include/*.old

@@ -14,7 +14,7 @@ least these tracked files:
 | `cgi-bin/include/config.pab.pl` | the same pair, plus an Icecast admin URL with basic credentials inside it, twelve times |
 | `cgi-bin/include/config.pab.pl.old` | a tracked backup with the credentials and the unmasked Icecast URL |
 | `cgi-bin/include/settings.inc` | a Shoutcast admin password, `pass=`, on five URLs |
-| `htdocs/admin/.htpasswd` | four crypt-des hashes |
+| `legacy/archive/htmldocs/admin/.htpasswd` | four crypt-des hashes (was `htdocs/admin/`) |
 | `deploy/PHASE-0-RUNBOOK.md` | the Icecast password, in prose |
 
 Those values have been removed from the working tree, and `tests/SecretsTest.php`
@@ -206,7 +206,7 @@ rotate one and forget the other.
 
 ## 5. The admin gate
 
-`htdocs/admin/.htpasswd` carried four crypt-des hashes. Des is reversible at
+`htdocs/admin/.htpasswd` - now archived at `legacy/archive/htmldocs/admin/.htpasswd` - carried four crypt-des hashes. Des is reversible at
 the speeds it was chosen for, so treat the passwords as known.
 
 - [ ] Change all four passwords (`christian`, `relda`, `willi`, `4711007`).
@@ -214,7 +214,7 @@ the speeds it was chosen for, so treat the passwords as known.
 - [ ] Regenerate the file with a modern hash, not des:
 
       ```bash
-      sudo htpasswd -B -C 12 /home/christian/WWWRoot/www.hbr1.com/htdocs/admin/.htpasswd christian
+      sudo htpasswd -B -C 12 /home/christian/WWWRoot/www.hbr1.com/legacy/archive/htmldocs/admin/.htpasswd christian
       ```
 
       `-B` is bcrypt; `-2y` also works if Apache is recent. Do **not** omit the
@@ -223,7 +223,7 @@ the speeds it was chosen for, so treat the passwords as known.
 - [ ] Keep it out of git. It is now in `.gitignore`; confirm:
 
       ```bash
-      cd /path/to/checkout && git check-ignore -v htdocs/admin/.htpasswd
+      cd /path/to/checkout && git check-ignore -v legacy/archive/htmldocs/admin/.htpasswd
       ```
 
 - [ ] Find out what enforces the 401. `htaccess.txt` is not an active
@@ -232,7 +232,7 @@ the speeds it was chosen for, so treat the passwords as known.
 
       ```bash
       grep -rn 'admin' /etc/apache2/sites-enabled/ /etc/apache2/conf-enabled/ | head
-      ls -la /home/christian/WWWRoot/www.hbr1.com/htdocs/admin/
+      ls -la /home/christian/WWWRoot/www.hbr1.com/legacy/archive/htmldocs/admin/
       ```
 
 ---

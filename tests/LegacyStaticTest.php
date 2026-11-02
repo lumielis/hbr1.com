@@ -7,18 +7,18 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
- * The legacy document root is still served for static files, because the
- * frameset loads `.htm` pages that predate the application.
+ * The legacy document root is now `public/`, and the `.htm` pages the frameset
+ * loads still live there as plain files.
  *
  * That makes this the one place where a path-traversal bug would expose the
- * whole checkout - `htdocs` sits next to `cgi-bin/`, which still contains the
- * Perl configuration with database credentials.
+ * whole checkout - a few directories above `public/` sit `legacy/archive/` (the
+ * Perl configuration, credentials included) and the application itself.
  */
 class LegacyStaticTest extends TestCase
 {
     private function handler(): LegacyStatic
     {
-        return new LegacyStatic(dirname(__DIR__) . '/htdocs');
+        return new LegacyStatic(dirname(__DIR__) . '/public');
     }
 
     public function testServesAKnownLegacyPage(): void
@@ -31,10 +31,12 @@ class LegacyStaticTest extends TestCase
 
     public function testDirectoryResolvesToItsIndex(): void
     {
-        // The frameset still loads static directory pages like /chat/, and
-        // /broadcast/ is a plain file page. The ticker used to be the example
-        // here, but its index.html is gone: /webtv/ticker/ is now a route.
-        $hit = $this->handler()->resolve('/broadcast/');
+        // Requests for a directory resolve to its `index.html`, the way Apache's
+        // DirectoryIndex did. `/shop/` is the surviving example. The chat and
+        // ticker framesets used to be the example, but their `index.html` is
+        // gone: both `/chat/` and `/webtv/ticker/` are routes now, and a file of
+        // that name would be served ahead of the route.
+        $hit = $this->handler()->resolve('/shop/');
 
         self::assertNotNull($hit);
         self::assertStringEndsWith('index.html', str_replace('\\', '/', $hit['file']));

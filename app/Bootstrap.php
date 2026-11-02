@@ -135,8 +135,9 @@ class Bootstrap implements BootstrapProvider
                 AppContext::instance()->dbManager()->getDefault(),
                 AppContext::instance()->Config['app']['timezone'] ?? 'Europe/Berlin',
                 // `path['images'] . '/party/flyer'` in the legacy settings: the
-                // one place the party form writes a file.
-                (AppContext::instance()->Config['paths']['legacy'] ?? BASE_DIR . '/htdocs')
+                // one place the party form writes a file. It resolves against
+                // the document root now, so uploaded flyers are served directly.
+                (AppContext::instance()->Config['paths']['legacy_docs'] ?? BASE_DIR . '/public')
                     . '/images/party/flyer'
             )
         );
@@ -254,7 +255,7 @@ class Bootstrap implements BootstrapProvider
 
         // The administration area is W8. Until it exists, `/admin` must be
         // ours - otherwise it falls through to the legacy frameset in
-        // `htdocs/admin/`, whose content frame redirects back here.
+        // `legacy/archive/htmldocs/admin/`, whose content frame redirects back here.
         $router->add('GET', '/admin', 'Web\\AdminController::indexAction');
 
         // Community (W6).

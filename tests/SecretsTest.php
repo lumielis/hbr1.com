@@ -30,9 +30,9 @@ class SecretsTest extends TestCase
     public static function trackedConfigFiles(): array
     {
         return [
-            'legacy php config'   => ['cgi-bin/include/config.php'],
-            'legacy perl config'  => ['cgi-bin/include/config.pab.pl'],
-            'legacy perl settings' => ['cgi-bin/include/settings.inc'],
+            'legacy php config'   => ['legacy/archive/cgi-bin/include/config.php'],
+            'legacy perl config'  => ['legacy/archive/cgi-bin/include/config.pab.pl'],
+            'legacy perl settings' => ['legacy/archive/cgi-bin/include/settings.inc'],
             'env defaults'        => ['env.php'],
             'app config'          => ['config/config.php'],
             'env example'         => ['deploy/env.example.php'],
@@ -72,15 +72,14 @@ class SecretsTest extends TestCase
      */
     public function testTheLegacyTreesReadTheEnvironment(): void
     {
-        self::assertStringContainsString('DB_PASSWORD', $this->tracked('cgi-bin/include/config.php'));
-        self::assertStringContainsString("__DIR__ . '/../../env.php'", $this->tracked('cgi-bin/include/config.php'));
+        self::assertStringContainsString('DB_PASSWORD', $this->tracked('legacy/archive/cgi-bin/include/config.php'));
+        self::assertStringContainsString("__DIR__ . '/../../env.php'", $this->tracked('legacy/archive/cgi-bin/include/config.php'));
 
-        $perl = $this->tracked('cgi-bin/include/config.pab.pl');
+        $perl = $this->tracked('legacy/archive/cgi-bin/include/config.pab.pl');
 
         self::assertStringContainsString('HBR1_DB_PASSWORD', $perl);
         self::assertStringContainsString('HBR1_ICECAST_URL', $perl);
-        self::assertStringContainsString("'/etc/hbr1/env.php'", $perl);
-    }
+        self::assertStringContainsString("'/etc/hbr1/env.php'", $perl);    }
 
     /**
      * A URL that carries `user:password@` is a credential wherever it appears.
@@ -89,10 +88,10 @@ class SecretsTest extends TestCase
     public static function trackedSources(): array
     {
         return [
-            'perl config'    => ['cgi-bin/include/config.pab.pl'],
-            'perl settings'  => ['cgi-bin/include/settings.inc'],
-            'php config'     => ['cgi-bin/include/config.php'],
-            'legacy main'    => ['cgi-bin/main.php'],
+            'perl config'    => ['legacy/archive/cgi-bin/include/config.pab.pl'],
+            'perl settings'  => ['legacy/archive/cgi-bin/include/settings.inc'],
+            'php config'     => ['legacy/archive/cgi-bin/include/config.php'],
+            'legacy main'    => ['legacy/archive/cgi-bin/main.php'],
             'phase 0 runbook' => ['deploy/PHASE-0-RUNBOOK.md'],
         ];
     }
@@ -119,8 +118,8 @@ class SecretsTest extends TestCase
     public static function trackedPasswordParams(): array
     {
         return [
-            'perl settings'   => ['cgi-bin/include/settings.inc'],
-            'perl config'     => ['cgi-bin/include/config.pab.pl'],
+            'perl settings'   => ['legacy/archive/cgi-bin/include/settings.inc'],
+            'perl config'     => ['legacy/archive/cgi-bin/include/config.pab.pl'],
             'phase 0 runbook' => ['deploy/PHASE-0-RUNBOOK.md'],
             'db connections'  => ['deploy/DB-CONNECTIONS.md'],
         ];
@@ -147,22 +146,109 @@ class SecretsTest extends TestCase
 
     /**
      * The admin gate must not be tracked. Crypt-des is reversible at the speeds
-     * it was chosen for, so the hashes are credentials too. The file still
-     * belongs on disk - the dev vhost and production both read it - it just
-     * must not be published.
+     * it was chosen for, so the hashes are credentials too.
+     *
+     * The file belongs on disk - the old vhost read it - and it moved with the
+     * rest of the legacy admin into `legacy/archive/`. That made it *more*
+     * important that git ignores it: an archived path is exactly what a
+     * `git add -A` after a cleanup would sweep back into the repository.
      */
     public function testTheAdminPasswordFileIsNotTracked(): void
     {
-        $listed = $this->git(['ls-files', 'htdocs/admin/.htpasswd']);
+        $path = 'legacy/archive/htmldocs/admin/.htpasswd';
 
-        self::assertSame('', trim($listed), 'htdocs/admin/.htpasswd must not be tracked.');
+        self::assertSame(
+            '',
+            trim($this->git(['ls-files', $path])),
+            "{$path} must not be tracked."
+        );
 
         // And it must be ignored, so `git add -A` cannot pick it up again.
         self::assertSame(
-            'htdocs/admin/.htpasswd',
-            trim($this->git(['check-ignore', 'htdocs/admin/.htpasswd'])),
-            'htdocs/admin/.htpasswd must be git-ignored.'
+            $path,
+            trim($this->git(['check-ignore', $path])),
+            "{$path} must be git-ignored."
         );
+    }
+
+    /**
+     * `public/` is the document root, so anything tracked there is published.
+     *
+     * The cleanup moved the live static tree into `public/`. That makes every
+     * file under it web-reachable by definition - there is no alias list left
+     * to keep a stray `.inc`, `.pl` or `.htpasswd` out of reach. The extensions
+     * below were all reachable as plain text in the old tree and are exactly
+     * what Phase 0 closed.
+     */
+    public function testNoExecutableOrSecretExtensionIsTrackedUnderPublic(): void
+    {
+        $listed = $this->git(['ls-files', 'public']);
+
+        $offending = [];
+
+        foreach (preg_split('/\r?\n/', trim($listed)) ?: [] as $path) {
+            if ($path === '') {
+                continue;
+            }
+
+            if (preg_match('/\.(htpasswd|htaccess|inc|pl|pm|pab|cgi|xp|phtml|sh|bak|old|orig|swp)$/i', $path) === 1) {
+                $offending[] = $path;
+            }
+
+            // A dotfile anywhere under the document root is either a
+            // credential (.htpasswd) or editor/VCS droppings.
+            if (preg_match('#(^|/)\.#', $path) === 1) {
+                $offending[] = $path;
+            }
+        }
+
+        self::assertSame(
+            [],
+            $offending,
+            "These tracked files under public/ would be published: \n" . implode("\n", $offending)
+        );
+    }
+
+    /**
+     * The only PHP file in the document root may be the front controller.
+     *
+     * A second `.php` under `public/` is executed by the web server with no
+     * routing in front of it - which is how the old tree ended up serving
+     * uploaded webshells from `/webtv/ticker/images/`. Naming the single allowed
+     * path, rather than counting, means an added file has to be justified.
+     */
+    public function testOnlyTheFrontControllerIsPhpUnderPublic(): void
+    {
+        $php = [];
+
+        foreach (preg_split('/\r?\n/', trim($this->git(['ls-files', 'public']))) ?: [] as $path) {
+            if ($path !== '' && str_ends_with(strtolower($path), '.php')) {
+                $php[] = $path;
+            }
+        }
+
+        self::assertSame(
+            ['public/index.php'],
+            $php,
+            'public/ must contain exactly one PHP file, the front controller.'
+        );
+    }
+
+    /**
+     * The archive keeps the Perl tree, credentials included, out of the
+     * published root - but git still tracks those files, so they must not be
+     * re-added to an executable location by a careless `git mv`.
+     *
+     * This pins the archive's shape so the guard above cannot be satisfied by
+     * putting the tree back where it was.
+     */
+    public function testThePerlTreeIsArchivedAndNotServed(): void
+    {
+        self::assertDirectoryDoesNotExist(BASE_DIR . '/cgi-bin', 'cgi-bin/ must live under legacy/archive/.');
+        self::assertDirectoryDoesNotExist(BASE_DIR . '/htdocs', 'htdocs/ must no longer exist.');
+
+        self::assertFileExists(BASE_DIR . '/legacy/archive/cgi-bin/include/config.pab.pl');
+        self::assertFileExists(BASE_DIR . '/legacy/README.md');
     }
 
     /**

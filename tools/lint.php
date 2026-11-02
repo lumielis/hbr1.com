@@ -17,7 +17,7 @@ $verbose = in_array('-v', $argv, true) || in_array('--verbose', $argv, true);
 /**
  * Directories to leave unvisited, relative to the project root.
  *
- * `legacy/` holds the frozen Perl tree and `vendor/` third-party code; neither
+ * `legacy/` holds the archived Perl tree and `vendor/` third-party code; neither
  * is ours to fix. `var/`, `temp/` and `.git/` hold generated or internal files.
  */
 $skipRelative = ['vendor', 'temp', 'var', 'legacy', '.git', '.vscode', 'node_modules'];

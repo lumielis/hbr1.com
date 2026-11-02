@@ -40,7 +40,7 @@ urls=(
   "/perl/apax.cgi?run=navigation"
   "/cgi-bin/asx.cgi?trance"
   "/cgi-bin/main.php?module=../../htdocs/index"
-  # Static assets must keep working from the legacy tree.
+  # Static assets must be served straight from the document root, with no alias.
   "/style/client.css"
   "/playlist/trance.ogg.m3u"
   "/chat/index.html"

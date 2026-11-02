@@ -8,7 +8,7 @@ use Azera\Http\Response;
 /**
  * Placeholder for the administration area, which is W8.
  *
- * `/admin` used to fall through to `htdocs/admin/index.html`, the legacy
+ * `/admin` used to fall through to `legacy/archive/htmldocs/admin/index.html`, the legacy
  * frameset. Its content frame is `/cgi-bin/admin.cgi`, which the URL mapper
  * sends back to `/admin` - so the page nested itself as deep as the browser
  * allowed, and showed the old admin chrome with no authentication in front of

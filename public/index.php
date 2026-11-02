@@ -40,7 +40,7 @@ if ($route === null) {
     // (`/ltop.htm`, `/djs.htm`, `/link_base.htm`, ...). The frameset's own
     // frames live here, so they have to keep working.
     $config     = $ctx->Config;
-    $legacyRoot = $config['paths']['legacy'] ?? (__DIR__ . '/../htdocs');
+    $legacyRoot = $config['paths']['legacy_docs'] ?? (__DIR__);
     $static     = new \App\Http\LegacyStatic($legacyRoot);
     $hit        = $static->response($request->path());
 
