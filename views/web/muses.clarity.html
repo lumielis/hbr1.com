@@ -5,8 +5,9 @@
   fragment - it has its own <body> colours and must not inherit the site frame.
 
   The player is `hosted.muses.org/mrp.js`; only the stream URL varies per
-  station. The legacy page passed the OGG playlist URL; `$station['stream']['ogg']`
-  is the same value from `config.php`'s `JOrbisPL`.
+  station. It must be an `https://` mount: this page is reached over TLS and a
+  browser refuses to load an `http://` media resource from it (mixed content).
+  `streamUrl` is resolved by `StationService::browserStreamUrl()`.
 #}
 <!DOCTYPE html>
 <html>
@@ -80,7 +81,7 @@ a:hover { color: #FF0055; }
     <script type="text/javascript" src="https://hosted.muses.org/mrp.js"></script>
     <script type="text/javascript">
       MRP.insert({
-        'url': {{ station:stream:ogg|json|raw }},
+        'url': {{ streamUrl|json|raw }},
         'lang': 'en',
         'codec': 'ogg',
         'volume': 100,

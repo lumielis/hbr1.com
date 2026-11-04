@@ -478,6 +478,20 @@ its own even with scripting off. Both are back, driven by a `popup` flag that
 the playlist links stay plain navigations, because a `.m3u` has to reach the
 desktop player rather than a 310x170 window.
 
+**The Html Player has to be given an `https://` stream.** It was passed
+`station.stream.ogg`, which is `http://radio.hbr1.com:19800/...`, so the popup
+was silent under `https://www.hbr1.com/muses/{station}` while the same page over
+plain HTTP played. The site is served over TLS, and a browser will not fetch a
+mixed-content media resource. Worse, the rewrite that Chrome applies keeps the
+port, so the retry went to `https://radio.hbr1.com:19800/...` - the same Icecast
+listener, which speaks plain HTTP and closed the connection
+(`net::ERR_CONNECTION_CLOSED`). Icecast has no TLS listener at all; TLS is a
+separate nginx proxy on 443, which exposes the same mounts and already sends
+`Access-Control-Allow-Origin: *`. `stream.secure` in `config/config.php` holds
+those proxy mounts and `StationService::browserStreamUrl()` is what the popup
+uses. The `.m3u`/`.pls` files handed to desktop players keep the `:19800` URL,
+because a native player opens them and older clients do not do TLS.
+
 **Every thumbnail on the legacy pages is a `vimg.cgi` link.** There are about
 1,300 of them (`/djs.htm` alone has 56 on a page, `/artists.html` 176 links
 across the page, the front page 43), and the port had no route for the viewer,

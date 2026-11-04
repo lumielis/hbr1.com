@@ -21,6 +21,10 @@ $stations = [
         'stream' => [
             'ogg' => 'http://radio.hbr1.com:19800/trance.ogg',
             'aac' => 'http://radio.hbr1.com:19800/trance.aac',
+            'secure' => [
+                'ogg' => 'https://radio.hbr1.com/trance.ogg',
+                'aac' => 'https://radio.hbr1.com/trance.aac',
+            ],
         ],
         'muses_url'  => 'http://radio.hbr1.com:19800/trance',
         'iphone_url' => 'http://radio.hbr1.com:19800/trance.aac.m3u',
@@ -41,6 +45,10 @@ $stations = [
         'stream' => [
             'ogg' => 'http://radio.hbr1.com:19800/tronic.ogg',
             'aac' => 'http://radio.hbr1.com:19800/tronic.aac',
+            'secure' => [
+                'ogg' => 'https://radio.hbr1.com/tronic.ogg',
+                'aac' => 'https://radio.hbr1.com/tronic.aac',
+            ],
         ],
         'muses_url'  => 'http://radio.hbr1.com:19800/tronic',
         'iphone_url' => 'http://radio.hbr1.com:19800/tronic.aac.m3u',
@@ -61,6 +69,10 @@ $stations = [
         'stream' => [
             'ogg' => 'http://radio.hbr1.com:19800/ambient.ogg',
             'aac' => 'http://radio.hbr1.com:19800/ambient.aac',
+            'secure' => [
+                'ogg' => 'https://radio.hbr1.com/ambient.ogg',
+                'aac' => 'https://radio.hbr1.com/ambient.aac',
+            ],
         ],
         'muses_url'  => 'http://radio.hbr1.com:19800/ambient',
         'iphone_url' => 'http://radio.hbr1.com:19800/ambient.aac.m3u',

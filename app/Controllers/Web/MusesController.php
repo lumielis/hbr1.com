@@ -45,6 +45,7 @@ class MusesController extends BaseController
         return $this->fragment('web/muses', [
             'title'   => 'HBR1 - ' . $station['title'] . ' - Muses Radio Player',
             'station' => $station,
+            'streamUrl' => $stations->browserStreamUrl($station),
         ]);
     }
 }

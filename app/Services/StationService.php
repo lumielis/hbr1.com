@@ -75,4 +75,28 @@ class StationService
     {
         return $station['slug'];
     }
+
+    /**
+     * The OGG stream URL to hand to a player running inside a browser.
+     *
+     * Browsers will not fetch an `http://` media resource from an `https://`
+     * page: the request is either blocked as mixed content or rewritten to
+     * `https://` on the *same port*, which fails because `radio.hbr1.com:19800`
+     * speaks plain HTTP only (Icecast has no TLS listener there - the TLS
+     * front end is a separate nginx proxy on port 443). Either way the player
+     * stays silent while the page itself looks fine.
+     *
+     * `stream.secure` holds the mounts reached through that proxy, so the
+     * player works under both schemes; an HTTPS resource on an HTTP page is
+     * allowed. Stations without it (the fixtures in tests) fall back to the
+     * plain mount, which is also what desktop players keep using through the
+     * `.m3u`/`.pls` files - those are opened by a native application, not by
+     * the browser, so they must stay `http://` for the older clients.
+     */
+    public function browserStreamUrl(array $station): ?string
+    {
+        return $station['stream']['secure']['ogg']
+            ?? $station['stream']['ogg']
+            ?? null;
+    }
 }

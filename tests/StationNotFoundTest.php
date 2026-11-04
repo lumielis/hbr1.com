@@ -86,6 +86,26 @@ class StationNotFoundTest extends TestCase
     }
 
     /**
+     * The player popup is served over TLS, so the URL it hands to `MRP.insert`
+     * must be `https://` too. A browser drops a mixed-content media request -
+     * and because the port stays attached to the upgraded URL it retries
+     * `https://radio.hbr1.com:19800/...`, where nothing listens. The page then
+     * renders normally and simply never plays, which is what was reported.
+     */
+    public function testMusesHandsThePlayerASecureStreamUrl(): void
+    {
+        $this->useStations();
+
+        $body = (new MusesController())->stationAction('trance');
+
+        self::assertStringContainsString(
+            "'url': \"https://radio.hbr1.com/trance.ogg\"",
+            $body
+        );
+        self::assertStringNotContainsString(':19800', $body);
+    }
+
+    /**
      * The chooser pages themselves must stay 200 - only the station-scoped
      * routes can 404 on an unknown name.
      */
@@ -135,7 +155,10 @@ class StationNotFoundTest extends TestCase
                 'slug'       => 'trance',
                 'title'      => 'Trance',
                 'genre'      => 'Trance',
-                'stream'     => ['ogg' => 'http://radio.hbr1.com:19800/trance.ogg'],
+                'stream'     => [
+                    'ogg'    => 'http://radio.hbr1.com:19800/trance.ogg',
+                    'secure' => ['ogg' => 'https://radio.hbr1.com/trance.ogg'],
+                ],
                 'muses_url'  => '',
                 'iphone_url' => '',
                 'radiodj_db' => 'radiodj_trance',
